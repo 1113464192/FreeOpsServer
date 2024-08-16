@@ -1,0 +1,1469 @@
+definitions:
+  api.BindRoleRelationReq:
+    properties:
+      associationType:
+        description: '1: api 2: menu 3: button'
+        type: integer
+      objectIds:
+        items:
+          type: integer
+        type: array
+      roleId:
+        description: 角色id
+        type: integer
+    required:
+    - associationType
+    - objectIds
+    - roleId
+    type: object
+  api.BindUserRolesReq:
+    properties:
+      roleIds:
+        items:
+          type: integer
+        type: array
+      userId:
+        type: integer
+    required:
+    - roleIds
+    - userId
+    type: object
+  api.IdsReq:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - ids
+    type: object
+  api.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      msg:
+        type: string
+    type: object
+  api.UpdateButtonReq:
+    properties:
+      buttonCode:
+        type: string
+      buttonDesc:
+        type: string
+      menuId:
+        type: integer
+    required:
+    - buttonCode
+    - menuId
+    type: object
+  api.UpdateButtonsReq:
+    properties:
+      buttons:
+        items:
+          $ref: '#/definitions/api.UpdateButtonReq'
+        type: array
+    required:
+    - buttons
+    type: object
+  api.UpdateMenuReq:
+    properties:
+      activeMenu:
+        description: 没有则不传
+        type: string
+      component:
+        type: string
+      constant:
+        description: 是常量(访问该路由时将不会进行登录验证和权限验证)路由则传1，否则不传
+        type: boolean
+      fixedIndexInTab:
+        description: 固定在页签中的序号
+        maximum: 127
+        type: integer
+      hideInMenu:
+        description: 隐藏标签页则传1，否则不传
+        type: boolean
+      href:
+        type: string
+      i18nKey:
+        type: string
+      icon:
+        type: string
+      iconType:
+        description: 1(iconify),2(local)
+        enum:
+        - 1
+        - 2
+        type: integer
+      id:
+        description: 修改才需要传，没有传算新增
+        type: integer
+      keepAlive:
+        type: boolean
+      menuName:
+        type: string
+      menuType:
+        description: 1(directory),2(menu)
+        enum:
+        - 1
+        - 2
+        type: integer
+      multiTab:
+        description: 是多标签页则传1，否则不传
+        type: boolean
+      order:
+        type: integer
+      parentId:
+        description: 一级菜单填0
+        type: integer
+      props:
+        description: 路由属性作跳转路由则直接传true，否则传完整json
+      query:
+        description: 查询条件，json传送
+        type: string
+      routeName:
+        type: string
+      routePath:
+        type: string
+      showRole:
+        type: boolean
+      status:
+        description: 1(enabled),2(disabled)
+        enum:
+        - 1
+        - 2
+        type: integer
+    required:
+    - menuName
+    - menuType
+    - order
+    - routeName
+    - routePath
+    - status
+    type: object
+info:
+  contact: {}
+paths:
+  /apis:
+    delete:
+      description: 删除apis
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传新增/修改API的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除apis
+      tags:
+      - API相关
+    get:
+      description: 查询apis信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: apiGroup
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取apis信息
+      tags:
+      - API相关
+    post:
+      description: 新增不用传ID，修改才传ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: apiGroup
+        required: true
+        type: string
+      - in: formData
+        name: description
+        type: string
+      - in: formData
+        name: id
+        type: integer
+      - description: 必须大写
+        in: formData
+        name: method
+        required: true
+        type: string
+      - description: 如果API为/user就/user，不要写成/user/
+        in: formData
+        name: path
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改API信息
+      tags:
+      - API相关
+  /apis/group:
+    get:
+      description: 获取API所有组
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取API所有组
+      tags:
+      - API相关
+  /auth/error:
+    get:
+      description: 自定义错误返回
+      parameters:
+      - in: query
+        name: code
+        required: true
+        type: string
+      - in: query
+        name: msg
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 自定义错误返回
+      tags:
+      - 公共相关
+  /auth/login:
+    post:
+      description: 用户名长度不少于4位，密码不少于6位
+      parameters:
+      - in: formData
+        maxLength: 18
+        minLength: 6
+        name: password
+        required: true
+        type: string
+      - in: formData
+        maxLength: 16
+        minLength: 4
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 用户登录
+      tags:
+      - 用户相关
+  /auth/refreshToken:
+    post:
+      description: refreshToken放在data请求
+      parameters:
+      - description: refreshToken
+        in: formData
+        name: refreshToken
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 刷新Token
+      tags:
+      - 用户相关
+  /buttons:
+    delete:
+      description: 删除指定按钮
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 按钮ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除按钮
+      tags:
+      - 按钮相关
+    get:
+      description: 查询所有/指定条件按钮的信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: buttonCode
+        type: string
+      - in: query
+        name: buttonDesc
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - description: 修改才需要传，没有传算新增
+        in: query
+        name: id
+        type: integer
+      - in: query
+        name: menuId
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询按钮信息
+      tags:
+      - 按钮相关
+    post:
+      description: 新增不用传ID，修改才传ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传新增/修改按钮的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateButtonsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改按钮信息
+      tags:
+      - 按钮相关
+  /menus:
+    delete:
+      description: 删除菜单信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 删除菜单的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除菜单
+      tags:
+      - 菜单相关
+    get:
+      description: 查询菜单信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询菜单信息
+      tags:
+      - 菜单相关
+    post:
+      description: 新增不用传ID，修改才传ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传新增/修改菜单的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.UpdateMenuReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改菜单信息
+      tags:
+      - 菜单相关
+  /menus/all-pages:
+    get:
+      description: 获取所有页面
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取所有页面
+      tags:
+      - 菜单相关
+  /menus/buttons:
+    get:
+      description: 获取菜单的关联按钮列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 菜单ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取菜单的关联按钮列表
+      tags:
+      - 菜单相关
+  /menus/constant-routes:
+    get:
+      description: 获取所有常量路由
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取所有常量路由
+      tags:
+      - 菜单相关
+  /menus/is-route-exist:
+    get:
+      description: 判断路由是否存在
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 路由名称
+        in: query
+        name: routeName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 判断路由是否存在
+      tags:
+      - 菜单相关
+  /menus/tree:
+    get:
+      description: 获取菜单树
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取菜单树
+      tags:
+      - 菜单相关
+  /ping:
+    get:
+      description: 无设置权限，返回"Hello world!~~(无权限版)"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            type: ""
+      summary: 测试Gin能否正常访问
+      tags:
+      - 测试相关
+  /ping2:
+    get:
+      description: 设置权限，返回"Hello world!~~(验证权限版)"
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            type: ""
+      summary: 测试Gin能否正常访问
+      tags:
+      - 测试相关
+  /roles:
+    get:
+      description: 查询所有/指定条件角色的信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: roleCode
+        type: string
+      - in: query
+        name: roleName
+        type: string
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      - in: query
+        name: status
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询角色信息
+      tags:
+      - 角色相关
+    post:
+      description: 新增不用传ID，修改才传ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 修改才需要传，没有传算新增
+        in: formData
+        name: id
+        type: integer
+      - in: formData
+        name: roleCode
+        required: true
+        type: string
+      - in: formData
+        name: roleDesc
+        type: string
+      - in: formData
+        name: roleName
+        required: true
+        type: string
+      - enum:
+        - 1
+        - 2
+        in: formData
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改角色信息
+      tags:
+      - 角色相关
+  /roles/:
+    delete:
+      description: 删除指定角色
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 角色ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除角色
+      tags:
+      - 角色相关
+  /roles/all-summary:
+    get:
+      description: 查询所有角色的简略信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 所有角色简略信息
+      tags:
+      - 角色相关
+  /roles/apis:
+    get:
+      description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取角色的API权限列表
+      tags:
+      - 角色相关
+  /roles/bind:
+    put:
+      description: '1: api 2: menu 3: button'
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 'associationType参数 1: api 2: menu 3: button'
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.BindRoleRelationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 关联角色关系
+      tags:
+      - 角色相关
+  /roles/menus:
+    get:
+      description: 获取角色的关联菜单列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取角色的关联菜单列表
+      tags:
+      - 角色相关
+  /roles/users:
+    get:
+      description: 获取角色的关联用户列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取角色的关联用户列表
+      tags:
+      - 角色相关
+  /users:
+    get:
+      description: 获取用户列表
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: nickname
+        type: string
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      - in: query
+        name: status
+        type: integer
+      - in: query
+        name: userEmail
+        type: string
+      - in: query
+        name: userGender
+        type: integer
+      - in: query
+        name: userPhone
+        type: string
+      - in: query
+        name: username
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取用户列表
+      tags:
+      - 用户相关
+    post:
+      description: 新增不用传用户ID，修改才传用户ID，返回用户密码
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 修改才需要传，没有传算新增
+        in: formData
+        name: id
+        type: integer
+      - in: formData
+        name: nickname
+        required: true
+        type: string
+      - enum:
+        - 1
+        - 2
+        in: formData
+        name: status
+        required: true
+        type: integer
+      - in: formData
+        name: userEmail
+        type: string
+      - in: formData
+        name: userGender
+        required: true
+        type: integer
+      - in: formData
+        name: userPhone
+        type: string
+      - in: formData
+        maxLength: 16
+        minLength: 4
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改用户信息
+      tags:
+      - 用户相关
+  /users/:
+    delete:
+      description: 删除指定用户
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除用户
+      tags:
+      - 用户相关
+  /users/bind-roles:
+    put:
+      description: 用户绑定角色
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传用户ID与roleCodes
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.BindUserRolesReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"修改权限成功，刷新Token"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 用户绑定角色
+      tags:
+      - 用户相关
+  /users/history-action:
+    get:
+      description: 查询月份操作记录
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - description: 用户ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      - description: 年月，如：2006_01
+        in: query
+        name: string
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 月份操作记录
+      tags:
+      - 用户相关
+  /users/history-month-exist:
+    get:
+      description: 获取存在记录的月份
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 存在记录的月份
+      tags:
+      - 用户相关
+  /users/logout:
+    post:
+      description: 登出 - 把JWT拉入黑名单
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 登出
+      tags:
+      - 用户相关
+  /users/password:
+    patch:
+      description: 修改指定用户密码
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: id
+        required: true
+        type: integer
+      - in: formData
+        maxLength: 18
+        minLength: 6
+        name: newPassword
+        required: true
+        type: string
+      - in: formData
+        name: oldPassword
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 修改密码
+      tags:
+      - 用户相关
+  /users/privilege:
+    get:
+      description: 获取用户权限
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 用户权限
+      tags:
+      - 用户相关
+  /users/roles:
+    get:
+      description: 查询用户的角色
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 用户ID
+        in: query
+        name: uid
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询用户的角色
+      tags:
+      - 用户相关
+  /users/ssh-key:
+    put:
+      description: '文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa'
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 私钥文件上传
+        in: formData
+        name: keyFile
+        type: file
+      - description: 私钥文本内容上传
+        in: formData
+        name: keyStr
+        type: string
+      - description: 私钥通行证密码上传
+        in: formData
+        name: Passphrase
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 提交自身私钥
+      tags:
+      - 用户相关
+swagger: "2.0"

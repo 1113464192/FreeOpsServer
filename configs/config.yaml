@@ -1,0 +1,91 @@
+mysql:
+  conf: "root:fqh123456@tcp(106.52.66.254:20001)/ops?charset=utf8&parseTime=True&loc=Local"
+#  conf: "root:passwd@tcp(192.168.18.36:3306)/ops?charset=utf8&parseTime=True&loc=Local"
+  # 设置Mysql的批处理大小
+  createBatchSize: 1000
+  # 慢日志阈值(秒)
+  slowThreshold: 1
+  # 数据库日志等级: Silent: 1 | Error: 2 | Warn: 3 | Info: 4
+  logLevel: 4
+  # 软删除数据删除日期，-30表示30天前的数据
+  softDeleteRetainDays: -30
+
+
+logger:
+  # Error | Warning | Info | Debug
+  level: "Info"
+  #  七天前删除就填-7
+  expiredDay: -7
+
+sshConfig:
+  # 仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
+  # ssh建立Client超时时间，默认1m
+  sshClientTimeout: 1m
+
+clientSide:
+  isSSL: "true" # 是否启用SSL
+  port: 8081
+
+webssh:
+  # 读写缓存大小
+  readBufferSize: 4096
+  writeBufferSize: 1024
+  # 握手超时时间
+  handshakeTimeout: 1m
+  # 回显是否开启，1为开启，0为关闭
+  # 是否在终端上显示输入。设置为0表示不显示输入，这在输入密码等敏感信息时很有用
+  sshEcho: 1
+  # 设置终端输入输出速度，视带宽而定(单位为byte)
+  sshTtyOpIspeed: 14400
+  sshTtyOpOspeed: 14400
+  # 支持最大同时连接的终端数量
+  maxConnNumber: 100
+
+
+# 允许多少个任务同时执行，设置为0则无并发上限
+concurrency:
+  number: 5000
+
+# webhook的secret
+gitWebhook:
+  githubSecret: "test"
+#  githubSecret: "fanqihang"
+  gitlabSecret: "test"
+#  gitlabSecret: "fanqihang"
+  # 只是临时测试一下，一般情况下可以用/data/git_ci_script和/data/git_ci_repo
+  gitCiScriptDir: "/tmp"
+  gitCiRepo: "/tmp"
+
+system:
+  # mode: "product"
+  mode: "develop"
+
+securityVars:
+  # AES的KEY与IV
+  aesKey: "0388f9c2cd9e83960fe64123"
+  aesIv: "b0bddbefd6ac8ds6"
+  # jwt签发名
+  jwtIssuer: "opsManager"
+  # tokentime  仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
+  tokenExpireDuration: "24h"
+  refreshTokenExpireDuration: "168h"
+  # token key
+  tokenKey: "52995df076de0cf040lp1a9e932687209c194a95cz098p5a22c341a84e4e33dc"
+  # Client Req md5 Key
+  clientReqMd5Key: "arhgfdbgfghfgdsfsfgfds"
+  # 允许的CIDR
+  allowedCIDR: "0.0.0.0/0"
+
+# 腾讯云AKSK
+cloud:
+  allowConsecutiveCreateTimes: 3
+  tencentCloud:
+    ak: testak
+    sk: testsk
+  aliyunCloud:
+    ak: testak
+    sk: testsk
+  volcengineCloud:
+    ak: testak
+    sk: testsk
+
