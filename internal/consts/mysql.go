@@ -20,6 +20,9 @@ const (
 	MysqlTableNameButton     = "button"
 	MysqlTableNameJwt        = "jwt_blacklist"
 	MysqlTableNameUserRecord = "act_record"
+	// GORM默认Bool类型的True是1，False是0
+	MysqlGormBoolTrue  = 1
+	MysqlGormBoolFalse = 0
 )
 
 // 角色常量
@@ -29,14 +32,11 @@ const (
 
 // 菜单常量
 const (
-	MenuModelMenuTypeIsDirectory  = 1
-	MenuModelMenuTypeIsMenu       = 2
-	MenuModeIconTypeIsIconify     = 1
-	MenuModeIconTypeIsLocal       = 2
-	MenuModelHideInMenuIsYes      = 1
-	MenuModelMultiTabIsYes        = 1
-	MenuModelIsConstantRouteIsYes = 1
-	MenuModelPropsIsTrue          = "true"
+	MenuModelMenuTypeIsDirectory = 1
+	MenuModelMenuTypeIsMenu      = 2
+	MenuModeIconTypeIsIconify    = 1
+	MenuModeIconTypeIsLocal      = 2
+	MenuModelPropsIsTrue         = "true"
 )
 
 // 用户常量

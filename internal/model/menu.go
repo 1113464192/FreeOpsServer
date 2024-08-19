@@ -9,11 +9,11 @@ type Menu struct {
 	MenuType        uint    `json:"menuType" gorm:"comment:菜单类型: 1(directory),2(menu);type:tinyint"`
 	MenuName        string  `json:"menuName" gorm:"type:varchar(30);unique;comment:菜单名称"`
 	RouteName       string  `json:"routeName" gorm:"type:varchar(30);uniqueIndex;comment:路由名称"`
-	RoutePath       string  `json:"routePath" gorm:"type:varchar(50);comment:路由地址"`
+	RoutePath       string  `json:"routePath" gorm:"type:varchar(255);comment:路由地址"`
 	Component       string  `json:"component" gorm:"type:varchar(100);comment:组件"`
 	Order           uint    `json:"order" gorm:"type:tinyint;comment:排序标记"`
 	I18nKey         string  `json:"i18nKey" gorm:"type:varchar(100);comment:国际化key"`
-	Icon            string  `json:"icon" gorm:"type:varchar(100);comment:图标"`
+	Icon            *string `json:"icon" gorm:"type:varchar(100);comment:图标"`
 	IconType        uint    `json:"iconType" gorm:"type:tinyint;comment:图标类型: 1(iconify),2(local),"`
 	MultiTab        bool    `json:"multiTab" gorm:"comment:是否多标签页: 0(no),1(yes)"`
 	HideInMenu      bool    `json:"hideInMenu" gorm:"comment:是否隐藏菜单: 0(no),1(yes)"`

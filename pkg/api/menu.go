@@ -62,7 +62,7 @@ type MenuRes struct {
 	Href            string          `json:"href,omitempty" form:"href"`
 	RoleCodes       []string        `json:"roles,omitempty" form:"roles"` // 角色Codes
 	Buttons         []MenuButtonRes `json:"buttons,omitempty"`
-	Children        []MenuRes       `json:"children,omitempty"`
+	Children        *[]MenuRes      `json:"children,omitempty"`
 }
 
 type GetMenuRes struct {
@@ -72,7 +72,7 @@ type GetMenuRes struct {
 	Total    int64     `json:"total"`
 }
 
-type GetConstantRoutesMetaRes struct {
+type GetRoutesMetaRes struct {
 	Title           string   `json:"title" form:"title"`
 	I18nKey         string   `json:"i18nKey" form:"i18nKey"`
 	Order           uint     `json:"order" form:"order"`
@@ -89,19 +89,19 @@ type GetConstantRoutesMetaRes struct {
 	Query           string   `json:"query,omitempty" form:"query"`                     // 查询条件，json传送
 }
 
-type GetConstantRoutesRes struct {
-	Name      string                   `json:"name" form:"name"`
-	Path      string                   `json:"path" form:"path"`
-	Component string                   `json:"component" form:"component"`
-	Props     any                      `json:"props,omitempty" form:"props"` // 路由属性作跳转路由则直接传true，否则传完整json
-	ParentId  uint                     `json:"-"`
-	Meta      GetConstantRoutesMetaRes `json:"meta,omitempty" form:"meta"`
-	Children  []GetConstantRoutesRes   `json:"children,omitempty" form:"children"`
+type GetRoutesRes struct {
+	Name      string           `json:"name" form:"name"`
+	Path      string           `json:"path" form:"path"`
+	Component string           `json:"component" form:"component"`
+	Props     any              `json:"props,omitempty" form:"props"` // 路由属性作跳转路由则直接传true，否则传完整json
+	ParentId  uint             `json:"-"`
+	Meta      GetRoutesMetaRes `json:"meta,omitempty" form:"meta"`
+	Children  *[]GetRoutesRes  `json:"children,omitempty" form:"children"`
 }
 
 type GetMenuTreeRes struct {
-	Id       uint             `json:"id" form:"id"`
-	Label    string           `json:"label" form:"label"`
-	Pid      uint             `json:"pid" form:"pid"`
-	Children []GetMenuTreeRes `json:"children,omitempty" form:"children"`
+	Id       uint              `json:"id" form:"id"`
+	Label    string            `json:"label" form:"label"`
+	Pid      uint              `json:"pid" form:"pid"`
+	Children *[]GetMenuTreeRes `json:"children,omitempty" form:"children"`
 }

@@ -77,12 +77,16 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		menu.Component = params.Component
 		menu.Order = params.Order
 		menu.I18nKey = params.I18nKey
-		menu.Icon = params.Icon
 		menu.IconType = params.IconType
 		menu.MultiTab = params.MultiTab
 		menu.HideInMenu = params.HideInMenu
 		menu.KeepAlive = params.KeepAlive
 		menu.ShowRole = params.ShowRole
+		if params.Icon == "" {
+			menu.Icon = nil
+		} else {
+			menu.Icon = &params.Icon
+		}
 		if params.ActiveMenu == "" {
 			menu.ActiveMenu = nil
 		} else {
@@ -129,12 +133,16 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 			Component:  params.Component,
 			Order:      params.Order,
 			I18nKey:    params.I18nKey,
-			Icon:       params.Icon,
 			IconType:   params.IconType,
 			MultiTab:   params.MultiTab,
 			HideInMenu: params.HideInMenu,
 			ShowRole:   params.ShowRole,
 			KeepAlive:  params.KeepAlive,
+		}
+		if params.Icon == "" {
+			menu.Icon = nil
+		} else {
+			menu.Icon = &params.Icon
 		}
 		if params.ActiveMenu == "" {
 			menu.ActiveMenu = nil
@@ -304,20 +312,115 @@ func (s *MenuService) GetAllPages() (routeNames []string, err error) {
 	return routeNames, err
 }
 
-func (s *MenuService) getConstantRoutesRes(menus *[]model.Menu) (*[]api.GetConstantRoutesRes, error) {
+func (s *MenuService) GetConstantRoutes() (result *[]api.GetRoutesRes, err error) {
+	var menus []model.Menu
+	if err = model.DB.Model(&model.Menu{}).Where("is_constant_route = ?", consts.MysqlGormBoolTrue).Find(&menus).Error; err != nil {
+		return nil, fmt.Errorf("查询路由失败: %v", err)
+	}
+	result, err = s.GetRoutesRes(&menus)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (s *MenuService) GetUserRoutes(roles *[]model.Role) (result *[]api.GetRoutesRes, err error) {
+	var menus []model.Menu
+	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolFalse).Find(&menus).Error; err != nil {
+		return nil, fmt.Errorf("查询路由失败: %v", err)
+	}
+	var limitRoleMenus []model.Menu
+	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolTrue).Find(&limitRoleMenus).Error; err != nil {
+		return nil, fmt.Errorf("查询路由失败: %v", err)
+	}
+
+	var count int64
+	for _, menu := range limitRoleMenus {
+		// 看看menu绑定的角色和roles是否有重合，有的话append到menus
+		for _, role := range *roles {
+			if role.RoleCode == consts.RoleModelAdminCode {
+				menus = append(menus, menu)
+				break
+			}
+			if err = model.DB.Model(&model.Menu{}).
+				Joins("JOIN menu_role ON menu_role.menu_id = menu.id").
+				Where("menu_role.role_id = ? AND menu.id = ?", role.ID, menu.ID).Count(&count).Error; err != nil {
+				return nil, fmt.Errorf("查询菜单角色关联失败: %v", err)
+			}
+			if count > 0 {
+				menus = append(menus, menu)
+				break
+			}
+		}
+	}
+
+	result, err = s.GetRoutesRes(&menus)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (s *MenuService) GetMenuTree() (*[]api.GetMenuTreeRes, error) {
+	var menus []model.Menu
+	var err error
+	if err = model.DB.Find(&menus).Error; err != nil {
+		return nil, fmt.Errorf("查询菜单失败: %v", err)
+	}
+	menuMap := make(map[uint]*api.GetMenuTreeRes)
+	// 将所有菜单项转换为指针，便于修改
+	for _, menu := range menus {
+		menuMap[menu.ID] = &api.GetMenuTreeRes{
+			Id:    menu.ID,
+			Label: menu.MenuName,
+			Pid:   menu.ParentId,
+		}
+	}
+
+	// 构建父子关系
+	for _, menu := range menus {
+		if menu.ParentId != 0 { // 非顶级菜单
+			if parent, ok := menuMap[menu.ParentId]; ok {
+				if parent.Children == nil {
+					parent.Children = &[]api.GetMenuTreeRes{}
+				}
+				*parent.Children = append(*parent.Children, *menuMap[menu.ID])
+			}
+		}
+	}
+
+	var result []api.GetMenuTreeRes
+	// 从map中提取所有顶级菜单
+	for _, menu := range menuMap {
+		if menu.Pid == 0 {
+			result = append(result, *menu)
+		}
+	}
+
+	return &result, err
+}
+
+func (s *MenuService) IsRouteExist(routeName string) (bool, error) {
+	var count int64
+	if err := model.DB.Model(&model.Menu{}).Where("route_name = ?", routeName).Count(&count).Error; err != nil {
+		return false, fmt.Errorf("查询路由失败: %v", err)
+	}
+	return count > 0, nil
+}
+
+func (s *MenuService) GetRoutesRes(menus *[]model.Menu) (*[]api.GetRoutesRes, error) {
 	var (
-		res    api.GetConstantRoutesRes
-		result []api.GetConstantRoutesRes
+		result []api.GetRoutesRes
 		err    error
 	)
-	menuMap := make(map[uint]*api.GetConstantRoutesRes)
+	menuMap := make(map[uint]*api.GetRoutesRes)
 	for _, menu := range *menus {
-		res = api.GetConstantRoutesRes{
+		res := api.GetRoutesRes{
 			Name:      menu.RouteName,
 			Path:      menu.RoutePath,
 			Component: menu.Component,
 			ParentId:  menu.ParentId,
-			Meta: api.GetConstantRoutesMetaRes{
+			Meta: api.GetRoutesMetaRes{
 				Title:   menu.RouteName,
 				I18nKey: menu.I18nKey,
 				Order:   menu.Order,
@@ -332,12 +435,14 @@ func (s *MenuService) getConstantRoutesRes(menus *[]model.Menu) (*[]api.GetConst
 				}
 			}
 		}
-		if menu.IconType == consts.MenuModeIconTypeIsIconify {
-			res.Meta.Icon = menu.Icon
-		} else if menu.IconType == consts.MenuModeIconTypeIsLocal {
-			res.Meta.LocalIcon = menu.Icon
-		} else {
-			return nil, fmt.Errorf("菜单ID %d 的图标类型错误为: %d", menu.ID, menu.IconType)
+		if menu.Icon != nil {
+			if menu.IconType == consts.MenuModeIconTypeIsIconify {
+				res.Meta.Icon = *menu.Icon
+			} else if menu.IconType == consts.MenuModeIconTypeIsLocal {
+				res.Meta.LocalIcon = *menu.Icon
+			} else {
+				return nil, fmt.Errorf("菜单ID %d 的图标类型错误为: %d", menu.ID, menu.IconType)
+			}
 		}
 		if menu.Href != nil {
 			res.Meta.Href = *menu.Href
@@ -365,74 +470,25 @@ func (s *MenuService) getConstantRoutesRes(menus *[]model.Menu) (*[]api.GetConst
 	}
 
 	for _, value := range menuMap {
+		if value.ParentId != 0 {
+			if parent, ok := menuMap[value.ParentId]; ok {
+				if parent.Children == nil {
+					parent.Children = &[]api.GetRoutesRes{}
+				}
+				*parent.Children = append(*parent.Children, *value)
+			} else {
+				return nil, fmt.Errorf("路由: %s 的父ID路由(%d)不在menuMap中, menuMap：\n %v", value.Name, value.ParentId, menuMap)
+			}
+		}
+	}
+
+	for _, value := range menuMap {
 		if value.ParentId == 0 {
 			result = append(result, *value)
-		} else {
-			if parent, ok := menuMap[value.ParentId]; ok {
-				parent.Children = append(parent.Children, *value)
-			} else {
-				return nil, fmt.Errorf("路由: %s 的父ID %d 不是常量(导航)路由", value.Name, value.ParentId)
-			}
 		}
 	}
 
 	return &result, err
-}
-
-func (s *MenuService) GetConstantRoutes() (result *[]api.GetConstantRoutesRes, err error) {
-	var menus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Find(&menus).Error; err != nil {
-		return nil, fmt.Errorf("查询路由失败: %v", err)
-	}
-	result, err = s.getConstantRoutesRes(&menus)
-	if err != nil {
-		return nil, err
-	}
-	return result, err
-}
-
-func (s *MenuService) GetMenuTree() (*[]api.GetMenuTreeRes, error) {
-	var menus []model.Menu
-	var err error
-	if err = model.DB.Find(&menus).Error; err != nil {
-		return nil, fmt.Errorf("查询菜单失败: %v", err)
-	}
-	menuMap := make(map[uint]*api.GetMenuTreeRes)
-	// 将所有菜单项转换为指针，便于修改
-	for _, menu := range menus {
-		menuMap[menu.ID] = &api.GetMenuTreeRes{
-			Id:    menu.ID,
-			Label: menu.MenuName,
-			Pid:   menu.ParentId,
-		}
-	}
-
-	// 构建父子关系
-	for _, menu := range menus {
-		if menu.ParentId != 0 { // 非顶级菜单
-			if parent, ok := menuMap[menu.ParentId]; ok {
-				parent.Children = append(parent.Children, *menuMap[menu.ID])
-			}
-		}
-	}
-
-	var result []api.GetMenuTreeRes
-	// 从map中提取所有顶级菜单
-	for _, menu := range menuMap {
-		if menu.Pid == 0 {
-			result = append(result, *menu)
-		}
-	}
-
-	return &result, err
-}
-
-func (s *MenuService) IsRouteExist(routeName string) (bool, error) {
-	var count int64
-	if err := model.DB.Model(&model.Menu{}).Where("route_name = ?", routeName).Count(&count).Error; err != nil {
-		return false, fmt.Errorf("查询路由失败: %v", err)
-	}
-	return count > 0, nil
 }
 
 // 返回菜单结果
@@ -456,13 +512,15 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 				Component:       menu.Component,
 				Order:           menu.Order,
 				I18nKey:         menu.I18nKey,
-				Icon:            menu.Icon,
 				IconType:        menu.IconType,
 				MultiTab:        menu.MultiTab,
 				KeepAlive:       menu.KeepAlive,
 				HideInMenu:      menu.HideInMenu,
 				IsConstantRoute: menu.IsConstantRoute,
 				FixedIndexInTab: menu.FixedIndexInTab,
+			}
+			if menu.Icon != nil {
+				res.Icon = *menu.Icon
 			}
 			if menu.ActiveMenu != nil {
 				res.ActiveMenu = *menu.ActiveMenu
@@ -517,14 +575,22 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 			return &result, err
 		}
 		for _, menu := range menuMap {
-			if menu.ParentId == 0 {
-				result = append(result, *menu)
-			} else {
+			if menu.ParentId != 0 {
 				if parent, ok := menuMap[menu.ParentId]; ok {
-					parent.Children = append(parent.Children, *menu)
+					if parent.Children == nil {
+						parent.Children = &[]api.MenuRes{}
+					}
+					*parent.Children = append(*parent.Children, *menu)
 				}
 			}
 		}
+
+		for _, value := range menuMap {
+			if value.ParentId == 0 {
+				result = append(result, *value)
+			}
+		}
+
 		return &result, err
 	}
 	if menu, ok := menuObj.(*model.Menu); ok {
@@ -539,13 +605,15 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 			Component:       menu.Component,
 			Order:           menu.Order,
 			I18nKey:         menu.I18nKey,
-			Icon:            menu.Icon,
 			IconType:        menu.IconType,
 			MultiTab:        menu.MultiTab,
 			KeepAlive:       menu.KeepAlive,
 			HideInMenu:      menu.HideInMenu,
 			IsConstantRoute: menu.IsConstantRoute,
 			FixedIndexInTab: menu.FixedIndexInTab,
+		}
+		if menu.Icon != nil {
+			res.Icon = *menu.Icon
 		}
 		if menu.ActiveMenu != nil {
 			res.ActiveMenu = *menu.ActiveMenu

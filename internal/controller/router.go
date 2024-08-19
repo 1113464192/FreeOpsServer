@@ -24,6 +24,7 @@ func NewRoute() *gin.Engine {
 		authRoute.POST("login", UserLogin)
 		authRoute.POST("refreshToken", RefreshToken)
 		authRoute.GET("error", CustomError)
+		authRoute.GET("constant-routes", GetConstantRoutes) // 获取所有常量路由
 	}
 
 	// ---------Git-Webhook相关----------
@@ -79,14 +80,14 @@ func NewRoute() *gin.Engine {
 		// ------------菜单相关--------------
 		menuRoute := r.Group("menus")
 		{
-			menuRoute.POST("", UpdateMenu)                      // 新增/修改组
-			menuRoute.GET("", GetMenus)                         // 获取菜单信息
-			menuRoute.DELETE("", DeleteMenu)                    // 删除菜单
-			menuRoute.GET("buttons", GetMenuButtons)            // 获取所有按钮
-			menuRoute.GET("all-pages", GetAllPages)             // 获取所有页面
-			menuRoute.GET("constant-routes", GetConstantRoutes) // 获取所有常量路由
-			menuRoute.GET("tree", GetMenuTree)                  // 获取菜单树
-			menuRoute.GET("is-route-exist", IsRouteExist)       // 判断路由是否存在
+			menuRoute.POST("", UpdateMenu)                // 新增/修改组
+			menuRoute.GET("", GetMenus)                   // 获取菜单信息
+			menuRoute.DELETE("", DeleteMenu)              // 删除菜单
+			menuRoute.GET("buttons", GetMenuButtons)      // 获取所有按钮
+			menuRoute.GET("all-pages", GetAllPages)       // 获取所有页面
+			menuRoute.GET("user-routes", GetUserRoutes)   // 获取用户路由
+			menuRoute.GET("tree", GetMenuTree)            // 获取菜单树
+			menuRoute.GET("is-route-exist", IsRouteExist) // 判断路由是否存在
 		}
 
 		// -------------API相关---------------

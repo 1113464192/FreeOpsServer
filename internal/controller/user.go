@@ -15,7 +15,7 @@ import (
 )
 
 // UserLogin
-// @Tags 用户相关
+// @Tags 公共相关
 // @title 用户登录
 // @description 用户名长度不少于4位，密码不少于6位
 // @Summary 用户登录
@@ -59,7 +59,7 @@ func UserLogin(c *gin.Context) {
 }
 
 // RefreshToken
-// @Tags 用户相关
+// @Tags 公共相关
 // @title 刷新Token
 // @description refreshToken放在data请求
 // @Summary 刷新Token

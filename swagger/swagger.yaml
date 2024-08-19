@@ -290,6 +290,27 @@ paths:
       summary: 获取API所有组
       tags:
       - API相关
+  /auth/constant-routes:
+    get:
+      description: 获取所有常量路由
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取所有常量路由
+      tags:
+      - 公共相关
   /auth/error:
     get:
       description: 自定义错误返回
@@ -345,7 +366,7 @@ paths:
             $ref: '#/definitions/api.Response'
       summary: 用户登录
       tags:
-      - 用户相关
+      - 公共相关
   /auth/refreshToken:
     post:
       description: refreshToken放在data请求
@@ -368,7 +389,7 @@ paths:
             $ref: '#/definitions/api.Response'
       summary: 刷新Token
       tags:
-      - 用户相关
+      - 公共相关
   /buttons:
     delete:
       description: 删除指定按钮
@@ -642,33 +663,6 @@ paths:
       summary: 获取菜单的关联按钮列表
       tags:
       - 菜单相关
-  /menus/constant-routes:
-    get:
-      description: 获取所有常量路由
-      parameters:
-      - description: 格式为：Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"data":{},"meta":{msg":"Success"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "403":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "500":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-      summary: 获取所有常量路由
-      tags:
-      - 菜单相关
   /menus/is-route-exist:
     get:
       description: 判断路由是否存在
@@ -726,6 +720,33 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 获取菜单树
+      tags:
+      - 菜单相关
+  /menus/user-routes:
+    get:
+      description: 获取用户路由
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取用户路由
       tags:
       - 菜单相关
   /ping:

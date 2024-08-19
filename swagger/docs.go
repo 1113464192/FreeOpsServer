@@ -236,6 +236,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/auth/constant-routes": {
+            "get": {
+                "description": "获取所有常量路由",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "公共相关"
+                ],
+                "summary": "获取所有常量路由",
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/error": {
             "get": {
                 "description": "自定义错误返回",
@@ -283,7 +315,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户相关"
+                    "公共相关"
                 ],
                 "summary": "用户登录",
                 "parameters": [
@@ -327,7 +359,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "用户相关"
+                    "公共相关"
                 ],
                 "summary": "刷新Token",
                 "parameters": [
@@ -768,47 +800,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/constant-routes": {
-            "get": {
-                "description": "获取所有常量路由",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "菜单相关"
-                ],
-                "summary": "获取所有常量路由",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "格式为：Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/menus/is-route-exist": {
             "get": {
                 "description": "判断路由是否存在",
@@ -867,6 +858,47 @@ const docTemplate = `{
                     "菜单相关"
                 ],
                 "summary": "获取菜单树",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/menus/user-routes": {
+            "get": {
+                "description": "获取用户路由",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "菜单相关"
+                ],
+                "summary": "获取用户路由",
                 "parameters": [
                     {
                         "type": "string",
