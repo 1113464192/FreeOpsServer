@@ -216,10 +216,11 @@ func (s *MenuService) GetMenus(param *api.IdPageReq) (*api.GetMenuRes, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	result = api.GetMenuRes{
 		MenuRes:  *res,
-		Page:     param.Page,
-		PageSize: param.PageSize,
+		Page:     1,
+		PageSize: int(count + 10),
 		Total:    count,
 	}
 	return &result, err

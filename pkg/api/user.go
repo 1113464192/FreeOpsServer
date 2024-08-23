@@ -13,7 +13,7 @@ type UserRes struct {
 	Status     uint   `json:"status"`
 	Username   string `json:"username"`
 	Password   string `json:"password,omitempty"`
-	UserGender uint   `json:"userGender"`
+	UserGender string `json:"userGender"`
 	Nickname   string `json:"nickname"`
 	UserPhone  string `json:"userPhone"`
 	UserEmail  string `json:"userEmail"`
@@ -23,7 +23,7 @@ type GetUsersReq struct {
 	ID         uint   `json:"id" form:"id"`
 	Status     uint   `json:"status" form:"status"`
 	Username   string `json:"username" form:"username"`
-	UserGender uint   `json:"userGender" form:"userGender"`
+	UserGender string `json:"userGender" form:"userGender"`
 	Nickname   string `json:"nickname" form:"nickname"`
 	UserPhone  string `json:"userPhone" form:"userPhone"`
 	UserEmail  string `json:"userEmail" form:"userEmail"`
@@ -71,7 +71,7 @@ type UpdateUserReq struct {
 	ID         uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
 	Status     uint   `form:"status" json:"status" binding:"required,oneof=1 2"`
 	Username   string `form:"username" json:"username" binding:"required,min=4,max=16"`
-	UserGender uint   `form:"userGender" json:"userGender" binding:"required"`
+	UserGender string `form:"userGender" json:"userGender" binding:"required"`
 	Nickname   string `form:"nickname" json:"nickname" binding:"required"`
 	UserPhone  string `form:"userPhone" json:"userPhone"`
 	UserEmail  string `form:"userEmail" json:"userEmail"`

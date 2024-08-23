@@ -112,7 +112,7 @@ func UserLogout(c *gin.Context) {
 	}
 	logger.Log().Info("user", "jwt拉入黑名单成功")
 	c.JSON(200, api.Response{
-		Code: consts.SERVICE_LOGOUT_CODE,
+		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "用户登出成功",
 	})
 }
@@ -268,7 +268,7 @@ func DeleteUsers(c *gin.Context) {
 
 	for _, id := range param.Ids {
 		if user.ID == id {
-			c.JSON(200, api.Response{
+			c.JSON(500, api.Response{
 				Code: consts.SERVICE_ERROR_CODE,
 				Msg:  "不能删除自己",
 			})
@@ -491,7 +491,7 @@ func BindUserRoles(c *gin.Context) {
 
 	logger.Log().Info("user", "绑定用户角色成功", fmt.Sprintf("用户ID: %d————角色IDs: %s", params.UserId, params.RoleIds))
 	c.JSON(200, api.Response{
-		Code: consts.SERVICE_REFRESH_TOKEN_CODES,
+		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "修改权限成功，刷新Token",
 	})
 }

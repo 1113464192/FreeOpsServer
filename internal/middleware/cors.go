@@ -17,7 +17,7 @@ func Cors() gin.HandlerFunc {
 		if err != nil {
 			logger.Log().Error("net", "生成cidrNet错误: %s", err.Error())
 			c.JSON(500, api.Response{
-				Code: consts.SERVICE_SUCCESS_CODE,
+				Code: consts.SERVICE_ERROR_CODE,
 				Msg:  fmt.Sprintf("生成cidrNet错误: %s", err.Error()),
 			})
 			c.Abort()
@@ -26,7 +26,7 @@ func Cors() gin.HandlerFunc {
 		ip := net.ParseIP(c.ClientIP())
 		if ip == nil || !cidrNet.Contains(ip) {
 			c.JSON(403, api.Response{
-				Code: consts.SERVICE_SUCCESS_CODE,
+				Code: consts.SERVICE_ERROR_CODE,
 				Msg:  fmt.Sprintf("非法请求,IP:%s  不在白名单内", c.ClientIP()),
 			})
 			c.Abort()

@@ -70,7 +70,7 @@ func BindErrorResponse(err error) api.Response {
 	}
 
 	return api.Response{
-		Code: consts.SERVICE_INVALID_PARAMS_CODE,
+		Code: consts.SERVICE_ERROR_CODE,
 		Msg:  errMessage,
 		Data: map[string]string{
 			"error": err.Error(),

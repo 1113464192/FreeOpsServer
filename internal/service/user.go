@@ -60,17 +60,17 @@ func (s *UserService) RefreshToken(refreshToken string) (res *api.AuthLoginRes, 
 
 	var user model.User
 	if err = model.DB.Model(&model.User{}).Where("id = ?", claims.User.ID).First(&user).Error; err != nil {
-		return res, consts.SERVICE_ERROR_CODE, err
+		return res, consts.SERVICE_SUCCESS_CODE, err
 	}
 
 	jwtBlack := &model.JwtBlacklist{Jwt: refreshToken}
 	if err := JwtServiceApp().JwtAddBlacklist(jwtBlack); err != nil {
-		return res, consts.SERVICE_ERROR_CODE, err
+		return res, consts.SERVICE_SUCCESS_CODE, err
 	}
 
 	token, refreshToken, err := util.GenToken(user)
 	if err != nil {
-		return res, consts.SERVICE_ERROR_CODE, err
+		return res, consts.SERVICE_SUCCESS_CODE, err
 	}
 	res = &api.AuthLoginRes{
 		Token:        token,
@@ -180,7 +180,7 @@ func (s *UserService) GetUsers(params api.GetUsersReq) (result *api.GetUsersRes,
 		// rolename不为空则模糊查询
 		getDB = getDB.Where("UPPER(username) LIKE ?", "%"+params.Username+"%")
 	}
-	if params.UserGender != 0 {
+	if params.UserGender != "" {
 		getDB = getDB.Where("user_gender = ?", params.UserGender)
 	}
 	if params.Nickname != "" {

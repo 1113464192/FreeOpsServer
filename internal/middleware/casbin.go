@@ -57,7 +57,7 @@ func CasbinHandler() gin.HandlerFunc {
 			}
 		}
 		c.JSON(403, api.Response{
-			Code: consts.SERVICE_SUCCESS_CODE,
+			Code: consts.SERVICE_ERROR_CODE,
 			Msg:  "权限不足",
 		})
 		c.Abort()
