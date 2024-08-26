@@ -242,18 +242,6 @@ func (s *RoleService) BindRoleRelation(param api.BindRoleRelationReq) (err error
 	if err = model.DB.Model(&model.Role{}).Where("id = ?", param.RoleId).Count(&count).Error; count < 1 || err != nil {
 		return fmt.Errorf("角色ID不存在, 如果查询角色失败: %v", err)
 	}
-	// 更改当前角色对应的所有用户的updateAt，先获取根据第三方表获取对应的所有用户，再更新用户的updateAt
-	mBool, err := s.HasBoundUsers(param.RoleId)
-	if err != nil {
-		return err
-	}
-	if mBool {
-		// GORM使用joins+where+update偶发不知名报错，因此这里使用原生sql规避
-		sql := `UPDATE user JOIN user_role ON user_role.user_id = user.id SET updated_at = ? WHERE user_role.role_id = ?`
-		if err = model.DB.Exec(sql, time.Now(), param.RoleId).Error; err != nil {
-			return fmt.Errorf("更新用户时间失败: %v", err)
-		}
-	}
 
 	switch param.AssociationType {
 	case consts.RoleAssociationTypeApi:
@@ -309,6 +297,25 @@ func (s *RoleService) GetRoleMenus(params api.IdsReq) ([]uint, error) {
 	var res []uint
 	for _, menu := range menus {
 		res = append(res, menu.ID)
+	}
+	return res, err
+}
+
+func (s *RoleService) GetRoleButtons(params api.IdsReq) ([]uint, error) {
+	var buttons []model.Button
+	var err error
+
+	if err = model.DB.Model(&model.Button{}).
+		Joins("JOIN role_button ON role_button.button_id = button.id").
+		Where("role_button.role_id IN (?)", params.Ids).
+		Select("DISTINCT id").
+		Find(&buttons).Error; err != nil {
+		return nil, fmt.Errorf("查询角色按钮失败: %v", err)
+	}
+
+	var res []uint
+	for _, button := range buttons {
+		res = append(res, button.ID)
 	}
 	return res, err
 }

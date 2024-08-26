@@ -1,6 +1,7 @@
 package service
 
 import (
+	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/util"
@@ -27,7 +28,7 @@ func (s *ButtonService) UpdateButtons(params *api.UpdateButtonsReq) (err error) 
 			tx.Rollback()
 		}
 	}()
-	// 删除包含菜单的所有按钮
+
 	for _, param := range params.Buttons {
 		if err = tx.Model(&button).Where("button_code = ?", param.ButtonCode).Count(&count).Error; err != nil || count > 0 {
 			return fmt.Errorf("按钮代码(%s)已存在, 或有错误信息: %v", param.ButtonCode, err)
@@ -56,6 +57,19 @@ func (s *ButtonService) UpdateButtons(params *api.UpdateButtonsReq) (err error) 
 		return fmt.Errorf("创建按钮失败: %v", err)
 	}
 	tx.Commit()
+	// 绑定按钮和管理员关系
+	var adminRoleId uint
+	if err = model.DB.Model(&model.Role{}).Where("role_code = ?", consts.RoleModelAdminCode).Select("id").Scan(&adminRoleId).Error; err != nil {
+		return fmt.Errorf("查询管理员角色ID失败: %v", err)
+	}
+	for _, button = range buttons {
+		if err = model.DB.Create(&model.RoleButton{
+			ButtonId: button.ID,
+			RoleId:   adminRoleId,
+		}).Error; err != nil {
+			return fmt.Errorf("创建按钮角色关联失败: %v", err)
+		}
+	}
 	return err
 }
 

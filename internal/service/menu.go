@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 )
 
 type MenuService struct{}
@@ -217,8 +218,27 @@ func (s *MenuService) GetMenus(param *api.IdPageReq) (*api.GetMenuRes, error) {
 		return nil, err
 	}
 
+	// 对Children进行排序
+	for _, menu := range *res {
+		if menu.Children != nil {
+			sort.SliceStable(*menu.Children, func(i, j int) bool {
+				return (*menu.Children)[i].Order < (*menu.Children)[j].Order
+			})
+		}
+	}
+
+	var topLevelMenus []api.MenuRes
+	for _, menu := range *res {
+		if menu.ParentId == 0 {
+			topLevelMenus = append(topLevelMenus, menu)
+		}
+	}
+	sort.SliceStable(topLevelMenus, func(i, j int) bool {
+		return topLevelMenus[i].Order < topLevelMenus[j].Order
+	})
+
 	result = api.GetMenuRes{
-		MenuRes:  *res,
+		MenuRes:  topLevelMenus,
 		Page:     1,
 		PageSize: int(count + 10),
 		Total:    count,
@@ -315,7 +335,7 @@ func (s *MenuService) GetAllPages() (routeNames []string, err error) {
 
 func (s *MenuService) GetConstantRoutes() (result *[]api.GetRoutesRes, err error) {
 	var menus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Where("is_constant_route = ?", consts.MysqlGormBoolTrue).Find(&menus).Error; err != nil {
+	if err = model.DB.Model(&model.Menu{}).Where("is_constant_route = ?", consts.MysqlGormBoolIsTrue).Find(&menus).Error; err != nil {
 		return nil, fmt.Errorf("查询路由失败: %v", err)
 	}
 	result, err = s.GetRoutesRes(&menus)
@@ -327,11 +347,11 @@ func (s *MenuService) GetConstantRoutes() (result *[]api.GetRoutesRes, err error
 
 func (s *MenuService) GetUserRoutes(roles *[]model.Role) (result *[]api.GetRoutesRes, err error) {
 	var menus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolFalse).Find(&menus).Error; err != nil {
+	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolIsFalse).Find(&menus).Error; err != nil {
 		return nil, fmt.Errorf("查询路由失败: %v", err)
 	}
 	var limitRoleMenus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolTrue).Find(&limitRoleMenus).Error; err != nil {
+	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolIsTrue).Find(&limitRoleMenus).Error; err != nil {
 		return nil, fmt.Errorf("查询路由失败: %v", err)
 	}
 

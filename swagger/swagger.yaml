@@ -1003,6 +1003,40 @@ paths:
       summary: 关联角色关系
       tags:
       - 角色相关
+  /roles/buttons:
+    get:
+      description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取角色的按钮权限列表
+      tags:
+      - 角色相关
   /roles/menus:
     get:
       description: 获取角色的关联菜单列表
@@ -1106,7 +1140,7 @@ paths:
         type: string
       - in: query
         name: userGender
-        type: integer
+        type: string
       - in: query
         name: userPhone
         type: string
@@ -1160,7 +1194,7 @@ paths:
       - in: formData
         name: userGender
         required: true
-        type: integer
+        type: string
       - in: formData
         name: userPhone
         type: string

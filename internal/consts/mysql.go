@@ -21,8 +21,8 @@ const (
 	MysqlTableNameJwt        = "jwt_blacklist"
 	MysqlTableNameUserRecord = "act_record"
 	// GORM默认Bool类型的True是1，False是0
-	MysqlGormBoolTrue  = 1
-	MysqlGormBoolFalse = 0
+	MysqlGormBoolIsTrue  = 1
+	MysqlGormBoolIsFalse = 0
 )
 
 // 角色常量

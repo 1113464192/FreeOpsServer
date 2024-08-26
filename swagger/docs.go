@@ -1316,6 +1316,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/roles/buttons": {
+            "get": {
+                "description": "由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3\u0026ids=4",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "获取角色的按钮权限列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 登录返回的用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "ids",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/roles/menus": {
             "get": {
                 "description": "获取角色的关联菜单列表",
@@ -1476,7 +1527,7 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "name": "userGender",
                         "in": "query"
                     },
@@ -1557,7 +1608,7 @@ const docTemplate = `{
                         "in": "formData"
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "name": "userGender",
                         "in": "formData",
                         "required": true

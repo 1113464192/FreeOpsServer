@@ -66,6 +66,7 @@ func NewRoute() *gin.Engine {
 			roleRoute.PUT("bind", BindRoleRelation)          // 角色绑定关系
 			roleRoute.GET("menus", GetRoleMenus)             // 获取角色的菜单
 			roleRoute.GET("apis", GetRoleApis)               // 获取角色的API
+			roleRoute.GET("buttons", GetRoleButtons)         // 获取角色的按钮
 			roleRoute.GET("users", GetRoleUsers)             // 获取角色绑定的用户
 		}
 
@@ -83,7 +84,7 @@ func NewRoute() *gin.Engine {
 			menuRoute.POST("", UpdateMenu)                // 新增/修改组
 			menuRoute.GET("", GetMenus)                   // 获取菜单信息
 			menuRoute.DELETE("", DeleteMenu)              // 删除菜单
-			menuRoute.GET("buttons", GetMenuButtons)      // 获取所有按钮
+			menuRoute.GET("buttons", GetMenuButtons)      // 获取菜单下所有按钮
 			menuRoute.GET("all-pages", GetAllPages)       // 获取所有页面
 			menuRoute.GET("user-routes", GetUserRoutes)   // 获取用户路由
 			menuRoute.GET("tree", GetMenuTree)            // 获取菜单树
