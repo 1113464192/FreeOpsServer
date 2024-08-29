@@ -140,3 +140,30 @@ func GetApiGroup(c *gin.Context) {
 		Data: res,
 	})
 }
+
+// GetApiTree
+// @Tags API相关
+// @title 获取API树
+// @description 获取API树
+// @Summary 获取API树
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /apis/tree [get]
+func GetApiTree(c *gin.Context) {
+	res, err := service.ApiServiceApp().GetApiTree()
+	if err != nil {
+		logger.Log().Error("api", "获取API树失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取API树失败", err))
+		return
+	}
+
+	logger.Log().Info("api", "获取API树成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}

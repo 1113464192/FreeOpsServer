@@ -18,7 +18,6 @@ type Menu struct {
 	MultiTab        bool    `json:"multiTab" gorm:"comment:是否多标签页: 0(no),1(yes)"`
 	HideInMenu      bool    `json:"hideInMenu" gorm:"comment:是否隐藏菜单: 0(no),1(yes)"`
 	KeepAlive       bool    `json:"keepAlive" gorm:"comment:是否缓存: 0(no),1(yes)"`
-	ShowRole        bool    `json:"showRole" gorm:"comment:是否根据角色显示: 0(no),1(yes)"`
 	ActiveMenu      *string `json:"activeMenu" gorm:"type:varchar(50);comment:激活菜单(指定当进入某个路由时，哪个菜单项应该被激活)"`
 	IsConstantRoute bool    `json:"constant" gorm:"comment:是否是常量(访问该路由时将不会进行登录验证和权限验证)路由: 0(no),1(yes)"`
 	FixedIndexInTab uint8   `json:"fixedIndexInTab" gorm:"type:tinyint;comment:固定在页签中的序号"`

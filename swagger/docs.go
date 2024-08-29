@@ -236,6 +236,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/apis/tree": {
+            "get": {
+                "description": "获取API树",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API相关"
+                ],
+                "summary": "获取API树",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/constant-routes": {
             "get": {
                 "description": "获取所有常量路由",
@@ -2158,6 +2199,9 @@ const docTemplate = `{
                 }
             }
         },
+        "api.MenuQuery": {
+            "type": "object"
+        },
         "api.Response": {
             "type": "object",
             "properties": {
@@ -2284,16 +2328,16 @@ const docTemplate = `{
                 },
                 "query": {
                     "description": "查询条件，json传送",
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/api.MenuQuery"
+                    }
                 },
                 "routeName": {
                     "type": "string"
                 },
                 "routePath": {
                     "type": "string"
-                },
-                "showRole": {
-                    "type": "boolean"
                 },
                 "status": {
                     "description": "1(enabled),2(disabled)",

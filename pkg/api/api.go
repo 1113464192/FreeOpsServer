@@ -22,3 +22,10 @@ type GetApiRes struct {
 	PageSize int         `json:"size" form:"size"`       // 每页大小
 	Total    int64       `json:"total"`
 }
+
+type GetApiTreeRes struct {
+	Id       int              `json:"id" form:"id"`
+	Label    string           `json:"label" form:"label"`
+	Group    string           `json:"-"`
+	Children *[]GetApiTreeRes `json:"children,omitempty" form:"children"`
+}

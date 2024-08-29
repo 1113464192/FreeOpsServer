@@ -37,6 +37,8 @@ definitions:
     required:
     - ids
     type: object
+  api.MenuQuery:
+    type: object
   api.Response:
     properties:
       code:
@@ -120,13 +122,13 @@ definitions:
         description: 路由属性作跳转路由则直接传true，否则传完整json
       query:
         description: 查询条件，json传送
-        type: string
+        items:
+          $ref: '#/definitions/api.MenuQuery'
+        type: array
       routeName:
         type: string
       routePath:
         type: string
-      showRole:
-        type: boolean
       status:
         description: 1(enabled),2(disabled)
         enum:
@@ -288,6 +290,33 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 获取API所有组
+      tags:
+      - API相关
+  /apis/tree:
+    get:
+      description: 获取API树
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取API树
       tags:
       - API相关
   /auth/constant-routes:

@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"sort"
+	"strings"
 )
 
 type MenuService struct{}
@@ -18,17 +19,50 @@ func MenuServiceApp() *MenuService {
 	return &insMenu
 }
 
+func (s *MenuService) validateComponentName(component, routeName string) bool {
+	// 分割 Component 字符串
+	parts := strings.Split(component, "$")
+	// 如果parts切片长度不等于1或者2就返回false
+	if len(parts) != 1 && len(parts) != 2 {
+		return false
+	}
+	if len(parts) == 2 {
+		if strings.Contains(parts[1], "layout") {
+			return false
+		}
+	}
+	// 查找包含 view 的部分
+	for _, part := range parts {
+		partSlice := strings.Split(part, ".")
+		if len(partSlice) != 2 {
+			return false
+		}
+		if partSlice[0] == "view" {
+			return partSlice[1] == routeName
+		}
+	}
+	return false
+}
+
 func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 	var (
 		menu  model.Menu
 		count int64
 		props string
+		query *string
 	)
 
 	// 判断父ID是否存在于菜单
 	if params.ParentId != 0 {
 		if err = model.DB.Model(&model.Menu{}).Where("id = ?", params.ParentId).Count(&count).Error; err != nil || count < 1 {
 			return fmt.Errorf("menu ID不存在: %d, 或有错误信息: %v", params.ID, err)
+		}
+	}
+
+	// 判断菜单页面的component命名是否符合前端规范
+	if params.Component != "" && params.MenuType == consts.MenuModelMenuTypeIsMenu {
+		if !s.validateComponentName(params.Component, params.RouteName) {
+			return fmt.Errorf("component命名不符合规范: %s", params.Component)
 		}
 	}
 
@@ -40,19 +74,39 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 	}
 
 	// 判断Props是否符合规范
-	switch params.Props.(type) {
+	switch v := params.Props.(type) {
 	case nil:
 		props = ""
 	case bool:
-		if propsBool := params.Props.(bool); propsBool == true {
+		if v {
 			props = consts.MenuModelPropsIsTrue
 		} else {
 			props = ""
 		}
-	case string:
-		props = params.Props.(string)
+	case map[string]any:
+		propsMap := params.Props.(map[string]any)
+		propsByte, err := json.Marshal(propsMap)
+		if err != nil {
+			return fmt.Errorf("props序列化失败: %v", err)
+		}
+		props = string(propsByte)
 	default:
 		return fmt.Errorf("props类型错误: %T", params.Props)
+	}
+
+	if params.Query != nil {
+		if len(params.Query) == 0 {
+			query = nil
+		} else {
+			queryByte, err := json.Marshal(params.Query)
+			if err != nil {
+				return fmt.Errorf("query序列化失败: %v", err)
+			}
+			queryString := string(queryByte)
+			query = &queryString
+		}
+	} else {
+		query = nil
 	}
 
 	if params.ID != 0 {
@@ -82,7 +136,6 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		menu.MultiTab = params.MultiTab
 		menu.HideInMenu = params.HideInMenu
 		menu.KeepAlive = params.KeepAlive
-		menu.ShowRole = params.ShowRole
 		if params.Icon == "" {
 			menu.Icon = nil
 		} else {
@@ -100,11 +153,7 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		} else {
 			menu.Props = &props
 		}
-		if params.Query == "" {
-			menu.Query = nil
-		} else {
-			menu.Query = &params.Query
-		}
+		menu.Query = query
 		if params.Href == "" {
 			menu.Href = nil
 		} else {
@@ -137,7 +186,6 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 			IconType:   params.IconType,
 			MultiTab:   params.MultiTab,
 			HideInMenu: params.HideInMenu,
-			ShowRole:   params.ShowRole,
 			KeepAlive:  params.KeepAlive,
 		}
 		if params.Icon == "" {
@@ -157,11 +205,7 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		} else {
 			menu.Props = &props
 		}
-		if params.Query == "" {
-			menu.Query = nil
-		} else {
-			menu.Query = &params.Query
-		}
+		menu.Query = query
 		if params.Href == "" {
 			menu.Href = nil
 		} else {
@@ -326,11 +370,11 @@ func (s *MenuService) GetMenuButtons(id uint) (res *[]api.GetButtonReq, err erro
 	return res, err
 }
 
-func (s *MenuService) GetAllPages() (routeNames []string, err error) {
-	if err = model.DB.Model(&model.Menu{}).Where("menu_type = ?", consts.MenuModelMenuTypeIsMenu).Pluck("route_name", &routeNames).Error; err != nil {
-		return routeNames, fmt.Errorf("查询页面失败: %v", err)
+func (s *MenuService) GetAllPages() (pages []string, err error) {
+	if err = model.DB.Model(&model.Menu{}).Where("menu_type = ?", consts.MenuModelMenuTypeIsMenu).Pluck("route_name", &pages).Error; err != nil {
+		return pages, fmt.Errorf("查询页面失败: %v", err)
 	}
-	return routeNames, err
+	return pages, err
 }
 
 func (s *MenuService) GetConstantRoutes() (result *[]api.GetRoutesRes, err error) {
@@ -347,11 +391,11 @@ func (s *MenuService) GetConstantRoutes() (result *[]api.GetRoutesRes, err error
 
 func (s *MenuService) GetUserRoutes(roles *[]model.Role) (result *[]api.GetRoutesRes, err error) {
 	var menus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolIsFalse).Find(&menus).Error; err != nil {
+	if err = model.DB.Model(&model.Menu{}).Where("is_constant_route = ?", consts.MysqlGormBoolIsTrue).Find(&menus).Error; err != nil {
 		return nil, fmt.Errorf("查询路由失败: %v", err)
 	}
 	var limitRoleMenus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Where("show_role = ?", consts.MysqlGormBoolIsTrue).Find(&limitRoleMenus).Error; err != nil {
+	if err = model.DB.Model(&model.Menu{}).Where("is_constant_route = ?", consts.MysqlGormBoolIsFalse).Find(&limitRoleMenus).Error; err != nil {
 		return nil, fmt.Errorf("查询路由失败: %v", err)
 	}
 
@@ -474,7 +518,7 @@ func (s *MenuService) GetRoutesRes(menus *[]model.Menu) (*[]api.GetRoutesRes, er
 		}
 		res.Meta.MultiTab = menu.MultiTab
 		res.Meta.KeepAlive = menu.KeepAlive
-		if menu.ShowRole {
+		if !menu.IsConstantRoute {
 			if err = model.DB.Model(&model.Role{}).
 				Joins("JOIN menu_role ON menu_role.role_id = role.id").
 				Where("menu_role.menu_id = ?", menu.ID).
@@ -485,7 +529,9 @@ func (s *MenuService) GetRoutesRes(menus *[]model.Menu) (*[]api.GetRoutesRes, er
 		res.Meta.IsConstantRoute = menu.IsConstantRoute
 		res.Meta.FixedIndexInTab = menu.FixedIndexInTab
 		if menu.Query != nil {
-			res.Meta.Query = *menu.Query
+			if err = json.Unmarshal([]byte(*menu.Query), &res.Meta.Query); err != nil {
+				return nil, fmt.Errorf("JSON 解码失败: %v", err)
+			}
 		}
 		menuMap[menu.ID] = &res
 	}
@@ -562,7 +608,7 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 			if menu.ActiveMenu != nil {
 				res.ActiveMenu = *menu.ActiveMenu
 			}
-			if menu.ShowRole {
+			if !menu.IsConstantRoute {
 				if err = model.DB.Model(&model.Role{}).
 					Joins("JOIN menu_role ON menu_role.role_id = role.id").
 					Where("menu_role.menu_id = ?", menu.ID).
@@ -571,7 +617,9 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 				}
 			}
 			if menu.Query != nil {
-				res.Query = *menu.Query
+				if err = json.Unmarshal([]byte(*menu.Query), &res.Query); err != nil {
+					return nil, fmt.Errorf("JSON 解码失败: %v", err)
+				}
 			}
 
 			if err = model.DB.Model(&model.Button{}).Where("menu_id = ?", menu.ID).Count(&count).Error; err == nil && count > 0 {
@@ -655,7 +703,7 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 		if menu.ActiveMenu != nil {
 			res.ActiveMenu = *menu.ActiveMenu
 		}
-		if menu.ShowRole {
+		if !menu.IsConstantRoute {
 			if err = model.DB.Model(&model.Role{}).
 				Joins("JOIN menu_role ON menu_role.role_id = role.id").
 				Where("menu_role.menu_id = ?", menu.ID).
@@ -664,7 +712,9 @@ func (s *MenuService) GetResults(menuObj any) (*[]api.MenuRes, error) {
 			}
 		}
 		if menu.Query != nil {
-			res.Query = *menu.Query
+			if err = json.Unmarshal([]byte(*menu.Query), &res.Query); err != nil {
+				return nil, fmt.Errorf("JSON 解码失败: %v", err)
+			}
 		}
 
 		if err = model.DB.Model(&model.Button{}).Where("menu_id = ?", menu.ID).Count(&count).Error; err == nil && count > 0 {

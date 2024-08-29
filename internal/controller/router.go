@@ -98,6 +98,7 @@ func NewRoute() *gin.Engine {
 			apiRoute.GET("", GetApis)          // 获取API列表
 			apiRoute.DELETE("", DeleteApi)     // 删除API
 			apiRoute.GET("group", GetApiGroup) // 获取存在的API组
+			apiRoute.GET("tree", GetApiTree)   // 获取API树
 		}
 	}
 	return r

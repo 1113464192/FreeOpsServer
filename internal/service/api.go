@@ -136,3 +136,50 @@ func (s *ApiService) DeleteApi(params api.IdsReq) (err error) {
 	}
 	return err
 }
+
+func (s *ApiService) GetApiTree() (*[]api.GetApiTreeRes, error) {
+	var apis []model.Api
+	var err error
+	if err = model.DB.Find(&apis).Error; err != nil {
+		return nil, fmt.Errorf("查询Api失败: %v", err)
+	}
+	var apiGroup *[]string
+	if apiGroup, err = s.GetApiGroup(); err != nil {
+		return nil, fmt.Errorf("查询Api组失败: %v", err)
+	}
+
+	apiMap := make(map[int]api.GetApiTreeRes)
+	for _, value := range apis {
+		apiMap[int(value.ID)] = api.GetApiTreeRes{
+			Id:    int(value.ID),
+			Label: fmt.Sprintf("%s————————%s", value.Path, value.Method),
+			Group: value.ApiGroup,
+		}
+	}
+	// 创建父目录
+	vid := -1
+	for _, value := range *apiGroup {
+		apiMap[vid] = api.GetApiTreeRes{
+			Id:       vid,
+			Label:    value,
+			Group:    value,
+			Children: &[]api.GetApiTreeRes{},
+		}
+		// 获取children
+		for _, apiValue := range apis {
+			if apiValue.ApiGroup == value {
+				*apiMap[vid].Children = append(*apiMap[vid].Children, apiMap[int(apiValue.ID)])
+			}
+		}
+		vid--
+	}
+
+	var result []api.GetApiTreeRes
+	// 从map中提取所有顶级菜单
+	for _, value := range apiMap {
+		if value.Id < 0 {
+			result = append(result, value)
+		}
+	}
+	return &result, nil
+}
