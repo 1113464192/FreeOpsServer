@@ -38,6 +38,11 @@ definitions:
     - ids
     type: object
   api.MenuQuery:
+    properties:
+      key:
+        type: string
+      value:
+        type: string
     type: object
   api.Response:
     properties:
@@ -428,7 +433,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 按钮ID
+      - description: 菜单ID
         in: body
         name: ids
         required: true
@@ -579,6 +584,9 @@ paths:
       - in: query
         name: id
         type: integer
+      - in: query
+        name: menuName
+        type: string
       - description: 每页大小
         in: query
         name: size

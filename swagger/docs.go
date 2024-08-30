@@ -567,7 +567,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "按钮ID",
+                        "description": "菜单ID",
                         "name": "ids",
                         "in": "body",
                         "required": true,
@@ -625,6 +625,11 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "menuName",
                         "in": "query"
                     },
                     {
@@ -2200,7 +2205,15 @@ const docTemplate = `{
             }
         },
         "api.MenuQuery": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
         },
         "api.Response": {
             "type": "object",

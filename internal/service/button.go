@@ -37,8 +37,8 @@ func (s *ButtonService) UpdateButtons(params *api.UpdateButtonsReq) (err error) 
 			menuIDs = append(menuIDs, param.MenuId)
 		}
 	}
-	if err = tx.Where("menu_id IN (?)", menuIDs).Delete(&model.Button{}).Error; err != nil {
-		return fmt.Errorf("清空菜单按钮失败: %v", err)
+	if err = s.DeleteButtons(menuIDs); err != nil {
+		return fmt.Errorf("清空按钮失败: %v", err)
 	}
 	for _, param := range params.Buttons {
 		if err = tx.Model(&model.Menu{}).Where("id = ?", param.MenuId).Count(&count).Error; count != 1 || err != nil {
@@ -88,7 +88,6 @@ func (s *ButtonService) GetButtons(params *api.GetButtonsReq) (*api.GetButtonsRe
 	}
 	if params.MenuId != 0 {
 		getDB = getDB.Where("menu_id = ?", params.MenuId)
-
 	}
 	// 获取符合上面叠加条件的总数
 	if err = getDB.Model(&model.Button{}).Count(&count).Error; err != nil {
@@ -120,6 +119,7 @@ func (s *ButtonService) GetButtons(params *api.GetButtonsReq) (*api.GetButtonsRe
 }
 
 // DeleteButtons
+// @param ids: 菜单IDs
 func (s *ButtonService) DeleteButtons(ids []uint) (err error) {
 	tx := model.DB.Begin()
 	defer func() {
@@ -127,12 +127,17 @@ func (s *ButtonService) DeleteButtons(ids []uint) (err error) {
 			tx.Rollback()
 		}
 	}()
-	if err = tx.Where("button_id IN (?)", ids).Delete(&model.RoleButton{}).Error; err != nil {
+	var buttonIds []uint
+	if err = tx.Model(model.Button{}).Where("menu_id IN (?)", ids).Pluck("id", &buttonIds).Error; err != nil {
+		return fmt.Errorf("查询按钮ID失败 %d: %v", ids, err)
+	}
+	if err = tx.Where("button_id IN (?)", buttonIds).Delete(&model.RoleButton{}).Error; err != nil {
 		return fmt.Errorf("删除角色按钮关系失败 %d: %v", ids, err)
 	}
-	if err = tx.Where("id IN (?)", ids).Delete(&model.Button{}).Error; err != nil {
+	if err = tx.Where("id IN (?)", buttonIds).Delete(&model.Button{}).Error; err != nil {
 		return fmt.Errorf("删除按钮失败 %d: %v", ids, err)
 	}
+	tx.Commit()
 	return nil
 }
 

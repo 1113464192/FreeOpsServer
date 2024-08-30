@@ -30,11 +30,8 @@ type MenuButtonRes struct {
 }
 
 type GetMenusReq struct {
-	ID       uint   `form:"id" json:"id"`
-	Status   uint   `form:"status" json:"status"  binding:"required,oneof=1 2"`
-	RoleName string `form:"roleName" json:"roleName"`
-	RoleCode string `form:"roleCode" json:"roleCode"`
-	PageInfo
+	IdPageReq
+	MenuName string `json:"menuName" form:"menuName"`
 }
 
 type MenuRes struct {

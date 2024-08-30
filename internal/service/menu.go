@@ -235,26 +235,31 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 	}
 }
 
-func (s *MenuService) GetMenus(param *api.IdPageReq) (*api.GetMenuRes, error) {
+func (s *MenuService) GetMenus(param *api.GetMenusReq) (*api.GetMenuRes, error) {
 	var err error
 	var count int64
 	var menus []model.Menu
-	if err = model.DB.Model(&model.Menu{}).Count(&count).Error; err != nil {
-		return nil, fmt.Errorf("查询菜单总数失败: %v", err)
-	}
+	getDB := model.DB
 	if param.Id != 0 {
-		if err = model.DB.First(&menus, param.Id).Error; err != nil {
-			return nil, fmt.Errorf("查询菜单失败: %v", err)
-		}
-	} else if param.Page == 0 && param.PageSize == 0 {
-		if err = model.DB.Find(&menus).Error; err != nil {
+		getDB = getDB.Where("id = ?", param.Id)
+	}
+	if param.MenuName != "" {
+		getDB = getDB.Where("menu_name = ?", param.MenuName)
+	}
+	if param.Page != 0 && param.PageSize != 0 {
+		if err = getDB.Offset((param.Page - 1) * param.PageSize).Limit(param.PageSize).Find(&menus).Error; err != nil {
 			return nil, fmt.Errorf("查询菜单失败: %v", err)
 		}
 	} else {
-		if err = model.DB.Offset((param.Page - 1) * param.PageSize).Limit(param.PageSize).Find(&menus).Error; err != nil {
+		if err = getDB.Find(&menus).Error; err != nil {
 			return nil, fmt.Errorf("查询菜单失败: %v", err)
 		}
 	}
+
+	if err = getDB.Model(&model.Menu{}).Count(&count).Error; err != nil {
+		return nil, fmt.Errorf("查询菜单总数失败: %v", err)
+	}
+
 	var res *[]api.MenuRes
 	var result api.GetMenuRes
 	res, err = s.GetResults(&menus)
@@ -262,31 +267,44 @@ func (s *MenuService) GetMenus(param *api.IdPageReq) (*api.GetMenuRes, error) {
 		return nil, err
 	}
 
-	// 对Children进行排序
-	for _, menu := range *res {
-		if menu.Children != nil {
-			sort.SliceStable(*menu.Children, func(i, j int) bool {
-				return (*menu.Children)[i].Order < (*menu.Children)[j].Order
-			})
-		}
-	}
-
 	var topLevelMenus []api.MenuRes
-	for _, menu := range *res {
-		if menu.ParentId == 0 {
-			topLevelMenus = append(topLevelMenus, menu)
+	if param.Id == 0 && param.MenuName == "" {
+		// 对Children进行排序
+		for _, menu := range *res {
+			if menu.Children != nil {
+				sort.SliceStable(*menu.Children, func(i, j int) bool {
+					return (*menu.Children)[i].Order < (*menu.Children)[j].Order
+				})
+			}
 		}
-	}
-	sort.SliceStable(topLevelMenus, func(i, j int) bool {
-		return topLevelMenus[i].Order < topLevelMenus[j].Order
-	})
 
+		for _, menu := range *res {
+			if menu.ParentId == 0 {
+				topLevelMenus = append(topLevelMenus, menu)
+			}
+		}
+		sort.SliceStable(topLevelMenus, func(i, j int) bool {
+			return topLevelMenus[i].Order < topLevelMenus[j].Order
+		})
+	}
+
+	var menuRes []api.MenuRes
+	if topLevelMenus != nil {
+		menuRes = topLevelMenus
+	} else {
+		menuRes = *res
+	}
 	result = api.GetMenuRes{
-		MenuRes:  topLevelMenus,
+		MenuRes:  menuRes,
 		Page:     1,
 		PageSize: int(count + 10),
 		Total:    count,
 	}
+	if param.Page != 0 && param.PageSize != 0 {
+		result.Page = param.Page
+		result.PageSize = param.PageSize
+	}
+
 	return &result, err
 }
 

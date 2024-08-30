@@ -82,7 +82,7 @@ func GetButtons(c *gin.Context) {
 // @Summary 删除按钮
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param ids body api.IdsReq true "按钮ID"
+// @Param ids body api.IdsReq true "菜单ID"
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
