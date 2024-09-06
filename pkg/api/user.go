@@ -1,6 +1,8 @@
 package api
 
-import "FreeOps/internal/model"
+import (
+	"time"
+)
 
 type AuthLoginReq struct {
 	Username string `form:"username" json:"username" binding:"required,min=4,max=16"`
@@ -48,16 +50,31 @@ type AuthLoginRes struct {
 
 // 查询用户操作记录
 type GetUserRecordLogsReq struct {
-	Id   uint   `json:"id" form:"id" binding:"required"`         // 用户ID
-	Date string `json:"string" form:"string" binding:"required"` // 年月，如：2006_01
+	Username string `json:"username" form:"username"`            // 用户名
+	Date     string `json:"date" form:"date" binding:"required"` // 年月，如：2006_01
 	PageInfo
 }
 
+type GetUserRecordLogsServiceRes struct {
+	Id        uint          `json:"id"`
+	CreatedAt time.Time     `json:"createdAt"`
+	Ip        string        `json:"ip"`
+	Method    string        `json:"method"`
+	Path      string        `json:"path"`
+	Agent     string        `json:"agent"`
+	Body      string        `json:"body"`
+	UserId    uint          `json:"userId"`
+	Username  string        `json:"username"`
+	Status    int           `json:"status"`
+	Latency   time.Duration `json:"latency"`
+	Resp      string        `json:"resp"`
+}
+
 type GetUserRecordLogsRes struct {
-	Logs     *[]model.UserRecord `json:"records" form:"records"`
-	Page     int                 `json:"current" form:"current"` // 页码
-	PageSize int                 `json:"size" form:"size"`       // 每页大小
-	Total    int64               `json:"total"`
+	Logs     *[]GetUserRecordLogsServiceRes `json:"records" form:"records"`
+	Page     int                            `json:"current" form:"current"` // 页码
+	PageSize int                            `json:"size" form:"size"`       // 每页大小
+	Total    int64                          `json:"total"`
 }
 
 type GetUserPrivilegeRes struct {

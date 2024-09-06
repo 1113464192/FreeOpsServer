@@ -1069,11 +1069,6 @@ const docTemplate = `{
                         "description": "每页大小",
                         "name": "size",
                         "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "status",
-                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -1134,16 +1129,6 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "name": "roleName",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "enum": [
-                            1,
-                            2
-                        ],
-                        "type": "integer",
-                        "name": "status",
                         "in": "formData",
                         "required": true
                     }
@@ -1820,9 +1805,9 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
-                        "type": "integer",
-                        "description": "用户ID",
-                        "name": "id",
+                        "type": "string",
+                        "description": "年月，如：2006_01",
+                        "name": "date",
                         "in": "query",
                         "required": true
                     },
@@ -1834,10 +1819,9 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "年月，如：2006_01",
-                        "name": "string",
-                        "in": "query",
-                        "required": true
+                        "description": "用户名",
+                        "name": "username",
+                        "in": "query"
                     }
                 ],
                 "responses": {

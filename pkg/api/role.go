@@ -2,7 +2,6 @@ package api
 
 type UpdateRoleReq struct {
 	ID       uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
-	Status   uint   `form:"status" json:"status" binding:"required,oneof=1 2"`
 	RoleName string `form:"roleName" json:"roleName" binding:"required"`
 	RoleCode string `form:"roleCode" json:"roleCode" binding:"required"`
 	RoleDesc string `form:"roleDesc" json:"roleDesc"`
@@ -10,7 +9,6 @@ type UpdateRoleReq struct {
 
 type GetRolesReq struct {
 	ID       uint   `form:"id" json:"id"`
-	Status   uint   `form:"status" json:"status"`
 	RoleName string `form:"roleName" json:"roleName"`
 	RoleCode string `form:"roleCode" json:"roleCode"`
 	PageInfo

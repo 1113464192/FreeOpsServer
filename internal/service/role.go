@@ -101,9 +101,6 @@ func (s *RoleService) GetRoles(params *api.GetRolesReq) (*api.GetRolesRes, error
 	if params.ID != 0 {
 		getDB = getDB.Where("id = ?", params.ID)
 	}
-	if params.Status != 0 {
-		getDB = getDB.Where("status = ?", params.Status)
-	}
 	if params.RoleName != "" {
 		// rolename不为空则模糊查询
 		getDB = getDB.Where("UPPER(role_name) LIKE ?", "%"+params.RoleName+"%")

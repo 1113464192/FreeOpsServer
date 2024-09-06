@@ -235,6 +235,28 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 	}
 }
 
+// 对菜单树进行排序
+func (s *MenuService) sortMenuTree(menuRes *[]api.MenuRes) (topLevelMenus []api.MenuRes) {
+	// 对Children进行排序
+	for _, menu := range *menuRes {
+		if menu.Children != nil {
+			sort.SliceStable(*menu.Children, func(i, j int) bool {
+				return (*menu.Children)[i].Order < (*menu.Children)[j].Order
+			})
+		}
+	}
+
+	for _, menu := range *menuRes {
+		if menu.ParentId == 0 {
+			topLevelMenus = append(topLevelMenus, menu)
+		}
+	}
+	sort.SliceStable(topLevelMenus, func(i, j int) bool {
+		return topLevelMenus[i].Order < topLevelMenus[j].Order
+	})
+	return topLevelMenus
+}
+
 func (s *MenuService) GetMenus(param *api.GetMenusReq) (*api.GetMenuRes, error) {
 	var err error
 	var count int64
@@ -262,30 +284,13 @@ func (s *MenuService) GetMenus(param *api.GetMenusReq) (*api.GetMenuRes, error) 
 
 	var res *[]api.MenuRes
 	var result api.GetMenuRes
-	res, err = s.GetResults(&menus)
-	if err != nil {
+	if res, err = s.GetResults(&menus); err != nil {
 		return nil, err
 	}
 
 	var topLevelMenus []api.MenuRes
 	if param.Id == 0 && param.MenuName == "" {
-		// 对Children进行排序
-		for _, menu := range *res {
-			if menu.Children != nil {
-				sort.SliceStable(*menu.Children, func(i, j int) bool {
-					return (*menu.Children)[i].Order < (*menu.Children)[j].Order
-				})
-			}
-		}
-
-		for _, menu := range *res {
-			if menu.ParentId == 0 {
-				topLevelMenus = append(topLevelMenus, menu)
-			}
-		}
-		sort.SliceStable(topLevelMenus, func(i, j int) bool {
-			return topLevelMenus[i].Order < topLevelMenus[j].Order
-		})
+		topLevelMenus = s.sortMenuTree(res)
 	}
 
 	var menuRes []api.MenuRes

@@ -71,15 +71,76 @@ func (s *ApiService) UpdateApi(params *api.UpdateApiReq) (err error) {
 	}
 }
 
+// 生成父子关系
+func (s *ApiService) getApiResTree(apis []model.Api, apiGroup string) (apiMap map[int]api.ApiRes, err error) {
+	apiMap = make(map[int]api.ApiRes)
+	for _, value := range apis {
+		apiMap[int(value.ID)] = api.ApiRes{
+			ID:          int(value.ID),
+			Path:        value.Path,
+			Method:      value.Method,
+			ApiGroup:    value.ApiGroup,
+			Description: value.Description,
+		}
+	}
+
+	var apiGroups *[]string
+	if apiGroup == "" {
+		if apiGroups, err = s.GetApiGroup(); err != nil {
+			return nil, fmt.Errorf("查询Api组失败: %v", err)
+		}
+	} else {
+		apiGroups = &[]string{apiGroup}
+	}
+
+	// 创建父目录
+	vid := -1
+	for _, value := range *apiGroups {
+		apiMap[vid] = api.ApiRes{
+			ID:          vid,
+			Path:        fmt.Sprintf("/%s", value),
+			Method:      "GET",
+			ApiGroup:    value,
+			Description: "模拟生成的父目录,无实际数据",
+			Children:    &[]api.ApiRes{},
+		}
+		// 获取children
+		for _, apiValue := range apis {
+			if apiValue.ApiGroup == value {
+				*apiMap[vid].Children = append(*apiMap[vid].Children, apiMap[int(apiValue.ID)])
+			}
+		}
+		vid--
+	}
+	return apiMap, err
+}
+
 func (s *ApiService) GetApis(params *api.GetApiReq) (*api.GetApiRes, error) {
 	var apis []model.Api
 	var err error
 	var count int64
+	if params.ID != 0 {
+		if err = model.DB.Where("id = ?", params.ID).Find(&apis).Error; err != nil {
+			return nil, fmt.Errorf("查询api失败: %v", err)
+		}
+		res := []api.ApiRes{{
+			ID:          int(apis[0].ID),
+			Path:        apis[0].Path,
+			Method:      apis[0].Method,
+			ApiGroup:    apis[0].ApiGroup,
+			Description: apis[0].Description,
+		},
+		}
+		result := api.GetApiRes{
+			Records:  res,
+			Page:     params.Page,
+			PageSize: params.PageSize,
+			Total:    count,
+		}
+		return &result, err
+	}
 	// 调用Where方法时，它并不会直接修改原始的DB对象，而是返回一个新的*gorm.DB实例，这个新的实例包含了新的查询条件。所以，当你连续调用Where方法时，每次都会返回一个新的*gorm.DB实例，这个新的实例包含了所有之前的查询条件
 	getDB := model.DB
-	if params.ID != 0 {
-		getDB = getDB.Where("id = ?", params.ID)
-	}
 	if params.ApiGroup != "" {
 		getDB = getDB.Where("api_group = ?", params.ApiGroup)
 	}
@@ -92,8 +153,22 @@ func (s *ApiService) GetApis(params *api.GetApiReq) (*api.GetApiRes, error) {
 	if err = getDB.Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&apis).Error; err != nil {
 		return nil, fmt.Errorf("查询角色失败: %v", err)
 	}
+
+	var apiMap map[int]api.ApiRes
+	if apiMap, err = s.getApiResTree(apis, params.ApiGroup); err != nil {
+		return nil, fmt.Errorf("生成父子关系失败: %v", err)
+	}
+
+	var res []api.ApiRes
+	// 从map中提取所有顶级菜单
+	for _, value := range apiMap {
+		if value.ID < 0 {
+			res = append(res, value)
+		}
+	}
+
 	result := api.GetApiRes{
-		Records:  apis,
+		Records:  res,
 		Page:     params.Page,
 		PageSize: params.PageSize,
 		Total:    count,
@@ -152,7 +227,7 @@ func (s *ApiService) GetApiTree() (*[]api.GetApiTreeRes, error) {
 	for _, value := range apis {
 		apiMap[int(value.ID)] = api.GetApiTreeRes{
 			Id:    int(value.ID),
-			Label: fmt.Sprintf("%s————————%s", value.Path, value.Method),
+			Label: fmt.Sprintf("%s——————%s", value.Path, value.Method),
 			Group: value.ApiGroup,
 		}
 	}

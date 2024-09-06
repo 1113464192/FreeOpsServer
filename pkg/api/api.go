@@ -1,7 +1,5 @@
 package api
 
-import "FreeOps/internal/model"
-
 type UpdateApiReq struct {
 	ID          uint   `json:"id" form:"id"`
 	Path        string `json:"path" form:"path" binding:"required"`     // 如果API为/user就/user，不要写成/user/
@@ -16,11 +14,20 @@ type GetApiReq struct {
 	PageInfo
 }
 
+type ApiRes struct {
+	ID          int       `json:"id" form:"id"`
+	Path        string    `json:"path" form:"path"`
+	Method      string    `json:"method" form:"method"`
+	ApiGroup    string    `json:"apiGroup" form:"apiGroup"`
+	Description string    `json:"description" form:"description"`
+	Children    *[]ApiRes `json:"children,omitempty"`
+}
+
 type GetApiRes struct {
-	Records  []model.Api `json:"records" form:"records"`
-	Page     int         `json:"current" form:"current"` // 页码
-	PageSize int         `json:"size" form:"size"`       // 每页大小
-	Total    int64       `json:"total"`
+	Records  []ApiRes `json:"records" form:"records"`
+	Page     int      `json:"current" form:"current"` // 页码
+	PageSize int      `json:"size" form:"size"`       // 每页大小
+	Total    int64    `json:"total"`
 }
 
 type GetApiTreeRes struct {

@@ -844,9 +844,6 @@ paths:
         in: query
         name: size
         type: integer
-      - in: query
-        name: status
-        type: integer
       produces:
       - application/json
       responses:
@@ -888,13 +885,6 @@ paths:
         name: roleName
         required: true
         type: string
-      - enum:
-        - 1
-        - 2
-        in: formData
-        name: status
-        required: true
-        type: integer
       produces:
       - application/json
       responses:
@@ -1338,19 +1328,18 @@ paths:
         in: query
         name: current
         type: integer
-      - description: 用户ID
+      - description: 年月，如：2006_01
         in: query
-        name: id
+        name: date
         required: true
-        type: integer
+        type: string
       - description: 每页大小
         in: query
         name: size
         type: integer
-      - description: 年月，如：2006_01
+      - description: 用户名
         in: query
-        name: string
-        required: true
+        name: username
         type: string
       produces:
       - application/json
