@@ -68,6 +68,7 @@ func NewRoute() *gin.Engine {
 			roleRoute.GET("apis", GetRoleApis)               // 获取角色的API
 			roleRoute.GET("buttons", GetRoleButtons)         // 获取角色的按钮
 			roleRoute.GET("users", GetRoleUsers)             // 获取角色绑定的用户
+			roleRoute.GET("projects", GetRoleProjects)       // 获取角色绑定的项目
 		}
 
 		// ------------Button相关------------
@@ -81,7 +82,7 @@ func NewRoute() *gin.Engine {
 		// ------------菜单相关--------------
 		menuRoute := r.Group("menus")
 		{
-			menuRoute.POST("", UpdateMenu)                // 新增/修改组
+			menuRoute.POST("", UpdateMenu)                // 新增/修改菜单
 			menuRoute.GET("", GetMenus)                   // 获取菜单信息
 			menuRoute.DELETE("", DeleteMenu)              // 删除菜单
 			menuRoute.GET("buttons", GetMenuButtons)      // 获取菜单下所有按钮
@@ -99,6 +100,30 @@ func NewRoute() *gin.Engine {
 			apiRoute.DELETE("", DeleteApi)     // 删除API
 			apiRoute.GET("group", GetApiGroup) // 获取存在的API组
 			apiRoute.GET("tree", GetApiTree)   // 获取API树
+		}
+
+		// ------------项目相关--------------
+		projectRoute := r.Group("projects")
+		{
+			projectRoute.POST("", UpdateProject)       // 新增/修改项目
+			projectRoute.GET("", GetProjects)          // 查询项目
+			projectRoute.DELETE("", DeleteProjects)    // 删除项目
+			projectRoute.GET("hosts", GetProjectHosts) // 查询项目关联的服务器
+			// projectRoute.GET("games", GetGamesAss)   // 查询项目关联的游戏
+		}
+		// ----------服务器相关---------------
+		hostRoute := r.Group("hosts")
+		{
+			hostRoute.POST("", UpdateHost)    // 新增/修改服务器
+			hostRoute.GET("", GetHosts)       // 查询服务器
+			hostRoute.DELETE("", DeleteHosts) // 删除服务器
+		}
+		// ---------游戏服务相关------------
+		gameRoute := r.Group("games")
+		{
+			gameRoute.POST("", UpdateGame)    // 新增/修改游戏
+			gameRoute.GET("", GetGames)       // 查询游戏
+			gameRoute.DELETE("", DeleteGames) // 删除游戏
 		}
 	}
 	return r

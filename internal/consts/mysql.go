@@ -18,6 +18,7 @@ const (
 	MysqlTableNameMenu       = "menu"
 	MysqlTableNameApi        = "api"
 	MysqlTableNameButton     = "button"
+	MysqlTableNameProject    = "project"
 	MysqlTableNameJwt        = "jwt_blacklist"
 	MysqlTableNameUserRecord = "act_record"
 	// GORM默认Bool类型的True是1，False是0

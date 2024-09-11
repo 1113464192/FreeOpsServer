@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	"strings"
 	"time"
 )
 
@@ -178,13 +179,15 @@ func (s *UserService) GetUsers(params api.GetUsersReq) (result *api.GetUsersRes,
 	}
 	if params.Username != "" {
 		// rolename不为空则模糊查询
-		getDB = getDB.Where("UPPER(username) LIKE ?", "%"+params.Username+"%")
+		sqlUsername := "%" + strings.ToUpper(params.Username) + "%"
+		getDB = getDB.Where("UPPER(username) LIKE ?", sqlUsername)
 	}
 	if params.UserGender != "" {
 		getDB = getDB.Where("user_gender = ?", params.UserGender)
 	}
 	if params.Nickname != "" {
-		getDB = getDB.Where("UPPER(nickname) LIKE ?", "%"+params.Nickname+"%")
+		sqlNickname := "%" + strings.ToUpper(params.Nickname) + "%"
+		getDB = getDB.Where("UPPER(nickname) LIKE ?", sqlNickname)
 	}
 	if params.UserPhone != "" {
 		getDB = getDB.Where("user_phone = ?", params.UserPhone)
@@ -257,20 +260,19 @@ func (s *UserService) DeleteUsers(ids []uint) (err error) {
 }
 
 // 修改指定用户密码
-func (s *UserService) ChangeUserPassword(params api.ChangeUserPasswordReq, isAdmin bool) (err error) {
-	var user model.User
+func (s *UserService) ChangeUserPassword(params api.ChangeUserPasswordReq) (err error) {
+	var (
+		user     model.User
+		password string
+	)
 	if err = model.DB.Where("id = ?", params.ID).First(&user).Error; err != nil {
 		return fmt.Errorf("查询用户 %d 失败: %v", params.ID, err)
 	}
-	if !isAdmin {
-		if !util.CheckPassword(user.Password, params.OldPassword) {
-			return errors.New("原密码错误")
-		}
-	}
-	password, err := util.GenerateFromPassword(params.NewPassword)
-	if err != nil {
+
+	if password, err = util.GenerateFromPassword(params.NewPassword); err != nil {
 		return fmt.Errorf("密码加密失败: %v", err)
 	}
+
 	if err = model.DB.Model(&user).Update("password", password).Error; err != nil {
 		return fmt.Errorf("更新用户 %d 密码失败: %v", params.ID, err)
 	}

@@ -303,14 +303,17 @@ func DeleteUsers(c *gin.Context) {
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Router /users/password [patch]
 func ChangeUserPassword(c *gin.Context) {
-	var param api.ChangeUserPasswordReq
-	if err := c.ShouldBind(&param); err != nil {
+	var (
+		param   api.ChangeUserPasswordReq
+		err     error
+		isAllow bool
+	)
+	if err = c.ShouldBind(&param); err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
 	// 判断是否管理员操作
-	isAdmin, err := util.IsSelfAdmin(c)
-	if err != nil {
+	if isAllow, err = util.IsSelfAdmin(c); err != nil {
 		c.JSON(200, api.Response{
 			Code: consts.SERVICE_MODAL_LOGOUT_CODE,
 			Msg:  err.Error(),
@@ -318,7 +321,26 @@ func ChangeUserPassword(c *gin.Context) {
 		return
 	}
 
-	if err := service.UserServiceApp().ChangeUserPassword(param, isAdmin); err != nil {
+	// 非管理员则判断是否本用户自己操作
+	if !isAllow {
+		if isAllow, err = util.IsSelf(c, param.ID); err != nil {
+			c.JSON(200, api.Response{
+				Code: consts.SERVICE_MODAL_LOGOUT_CODE,
+				Msg:  err.Error(),
+			})
+			return
+		}
+	}
+
+	if !isAllow {
+		c.JSON(500, api.Response{
+			Code: consts.SERVICE_ERROR_CODE,
+			Msg:  "没有权限修改他人密码",
+		})
+		return
+	}
+
+	if err = service.UserServiceApp().ChangeUserPassword(param); err != nil {
 		logger.Log().Error("user", "修改用户密码失败", err)
 		c.JSON(500, util.ServerErrorResponse("修改用户密码失败", err))
 		return

@@ -5,4 +5,5 @@ const (
 	RoleAssociationTypeApi
 	RoleAssociationTypeMenu
 	RoleAssociationTypeButton
+	RoleAssociationTypeProject
 )

@@ -29,6 +29,6 @@ type GetAllRolesSummaryRes struct {
 
 type BindRoleRelationReq struct {
 	RoleId          uint   `json:"roleId"  binding:"required"`                                 // 角色id
-	AssociationType uint8  `form:"associationType" json:"associationType"  binding:"required"` // 1: api 2: menu 3: button
+	AssociationType uint8  `form:"associationType" json:"associationType"  binding:"required"` // 1: api 2: menu 3: button 4: project
 	ObjectIds       []uint `form:"objectIds" json:"objectIds"  binding:"required"`
 }

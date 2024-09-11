@@ -1333,10 +1333,22 @@ paths:
         name: date
         required: true
         type: string
+      - description: 请求ip
+        in: query
+        name: ip
+        type: string
+      - description: 请求方法
+        in: query
+        name: method
+        type: string
       - description: 每页大小
         in: query
         name: size
         type: integer
+      - description: 返回状态
+        in: query
+        name: status
+        type: string
       - description: 用户名
         in: query
         name: username

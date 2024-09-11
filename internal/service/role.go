@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -103,7 +104,8 @@ func (s *RoleService) GetRoles(params *api.GetRolesReq) (*api.GetRolesRes, error
 	}
 	if params.RoleName != "" {
 		// rolename不为空则模糊查询
-		getDB = getDB.Where("UPPER(role_name) LIKE ?", "%"+params.RoleName+"%")
+		sqlRoleName := "%" + strings.ToUpper(params.RoleName) + "%"
+		getDB = getDB.Where("UPPER(role_name) LIKE ?", sqlRoleName)
 	}
 	if params.RoleCode != "" {
 		getDB = getDB.Where("role_code = ?", params.RoleCode)
@@ -234,6 +236,48 @@ func (s *RoleService) bindRoleButtons(roleId uint, buttonIds []uint) (err error)
 	return nil
 }
 
+func (s *RoleService) bindRoleProjects(roleId uint, projectIds []uint) (err error) {
+	var count int64
+	if err = model.DB.Model(&model.Project{}).Where("id IN (?)", projectIds).Count(&count).Error; count != int64(len(projectIds)) || err != nil {
+		notExistIds, err2 := util.FindNotExistIDs(consts.MysqlTableNameProject, projectIds)
+		if err2 != nil {
+			return fmt.Errorf("查询项目失败: %v", err2)
+		}
+		return fmt.Errorf("项目 不存在ID: %d, 如果查询项目失败: %v", notExistIds, err)
+	}
+
+	tx := model.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil || err != nil {
+			tx.Rollback()
+		}
+	}()
+	// 要先清空角色的当前关联
+	if err = tx.Where("role_id = ?", roleId).Delete(&model.RoleProject{}).Error; err != nil {
+		return fmt.Errorf("清空角色项目关联失败: %v", err)
+	}
+
+	var projects []model.Project
+	if err = model.DB.Where("id in (?)", projectIds).Select("id").Find(&projects).Error; err != nil {
+		return fmt.Errorf("查询项目失败: %v", err)
+	}
+	var roleProjects []model.RoleProject
+	for _, project := range projects {
+		roleProject := model.RoleProject{
+			ProjectId: project.ID,
+			RoleId:    roleId,
+		}
+		roleProjects = append(roleProjects, roleProject)
+	}
+
+	if err = tx.Create(&roleProjects).Error; err != nil {
+		return fmt.Errorf("绑定角色项目失败: %v", err)
+	}
+
+	tx.Commit()
+	return nil
+}
+
 func (s *RoleService) BindRoleRelation(param api.BindRoleRelationReq) (err error) {
 	var count int64
 	if err = model.DB.Model(&model.Role{}).Where("id = ?", param.RoleId).Count(&count).Error; count < 1 || err != nil {
@@ -252,6 +296,10 @@ func (s *RoleService) BindRoleRelation(param api.BindRoleRelationReq) (err error
 		}
 	case consts.RoleAssociationTypeButton:
 		if err = s.bindRoleButtons(param.RoleId, param.ObjectIds); err != nil {
+			return err
+		}
+	case consts.RoleAssociationTypeProject:
+		if err = s.bindRoleProjects(param.RoleId, param.ObjectIds); err != nil {
 			return err
 		}
 	default:
@@ -275,6 +323,25 @@ func (s *RoleService) GetRoleUsers(params api.IdPageReq) ([]uint, error) {
 	var res []uint
 	for _, user := range users {
 		res = append(res, user.ID)
+	}
+	return res, err
+}
+
+func (s *RoleService) GetRoleProjects(params api.IdPageReq) ([]uint, error) {
+	var projects []model.Project
+	var err error
+
+	if err = model.DB.Model(&model.Project{}).
+		Joins("JOIN role_project ON role_project.project_id = project.id").
+		Where("role_project.role_id = ?", params.Id).
+		Select("DISTINCT id").
+		Find(&projects).Error; err != nil {
+		return nil, fmt.Errorf("查询角色项目失败: %v", err)
+	}
+
+	var res []uint
+	for _, project := range projects {
+		res = append(res, project.ID)
 	}
 	return res, err
 }

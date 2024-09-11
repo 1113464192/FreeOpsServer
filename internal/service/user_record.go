@@ -74,7 +74,20 @@ func (s *UserRecord) GetUserRecordLogs(param api.GetUserRecordLogsReq) (logs *[]
 
 	getDB := model.DB.Table(tableName)
 	if param.Username != "" {
-		getDB = getDB.Where("username = ?", param.Username)
+		sqlUsername := "%" + strings.ToUpper(params.Username) + "%"
+		getDB = getDB.Where("UPPER(username) LIKE ?", sqlUsername)
+	}
+
+	if param.Method != "" {
+		getDB = getDB.Where("method = ?", param.Method)
+	}
+
+	if param.Ip != "" {
+		getDB = getDB.Where("ip = ?", param.Ip)
+	}
+
+	if param.Status != "" {
+		getDB = getDB.Where("status LIKE ?", param.Status)
 	}
 
 	// 先取出total
