@@ -3,6 +3,7 @@ package api
 type UpdateGameReq struct {
 	ID             uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
 	Name           string `form:"name" json:"name" binding:"required"`
+	ServerId       uint   `form:"serverId" json:"serverId" binding:"required"`
 	Type           uint8  `form:"type" json:"type" binding:"required"`
 	Status         uint8  `form:"status" json:"status" binding:"required"`
 	LbName         string `form:"lbName" json:"lbName" binding:"required"`
@@ -17,6 +18,7 @@ type UpdateGameReq struct {
 type GetGameReq struct {
 	ID          uint   `form:"id" json:"id"`
 	Name        string `form:"name" json:"name"`
+	ServerId    uint   `form:"serverId" json:"serverId"`
 	Type        uint8  `form:"type" json:"type"`
 	Status      uint8  `form:"status" json:"status"`
 	ProjectName string `form:"projectName" json:"projectName"`
@@ -33,6 +35,7 @@ type GetGamesReq struct {
 type GetGameRes struct {
 	ID             uint   `form:"id" json:"id"`
 	Name           string `form:"name" json:"name"`
+	ServerId       uint   `form:"serverId" json:"serverId"`
 	Type           uint8  `form:"type" json:"type"`
 	Status         uint8  `form:"status" json:"status"`
 	LbName         string `form:"lbName" json:"lbName"`

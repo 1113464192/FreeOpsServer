@@ -105,6 +105,14 @@ func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjec
 }
 
 func (s *ProjectService) DeleteProjects(ids []uint) (err error) {
+	var count int64
+	if err = model.DB.Model(&model.Host{}).Where("project_id IN (?)", ids).Count(&count).Error; err != nil {
+		return fmt.Errorf("查询项目关联服务器失败: %v", err)
+	}
+	if count > 0 {
+		return errors.New("项目下还有服务器存在")
+	}
+
 	tx := model.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil || err != nil {
@@ -126,6 +134,13 @@ func (s *ProjectService) GetProjectHosts(params api.IdsReq) (hostIds []uint, err
 		return nil, fmt.Errorf("查询项目服务器IDs失败: %v", err)
 	}
 	return hostIds, err
+}
+
+func (s *ProjectService) GetProjectGames(params api.IdsReq) (gameIds []uint, err error) {
+	if err = model.DB.Model(model.Game{}).Where("project_id IN (?)", params.Ids).Pluck("id", &gameIds).Error; err != nil {
+		return nil, fmt.Errorf("查询项目游戏服IDs失败: %v", err)
+	}
+	return gameIds, err
 }
 
 func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error) {

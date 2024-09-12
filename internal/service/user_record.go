@@ -74,7 +74,7 @@ func (s *UserRecord) GetUserRecordLogs(param api.GetUserRecordLogsReq) (logs *[]
 
 	getDB := model.DB.Table(tableName)
 	if param.Username != "" {
-		sqlUsername := "%" + strings.ToUpper(params.Username) + "%"
+		sqlUsername := "%" + strings.ToUpper(param.Username) + "%"
 		getDB = getDB.Where("UPPER(username) LIKE ?", sqlUsername)
 	}
 

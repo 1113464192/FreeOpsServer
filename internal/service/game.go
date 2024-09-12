@@ -1,6 +1,7 @@
 package service
 
 import (
+	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
 	"errors"
@@ -38,6 +39,7 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 			return fmt.Errorf("游戏服查询失败: %v", err)
 		}
 		game.Name = params.Name
+		game.ServerId = params.ServerId
 		game.Type = params.Type
 		game.Status = params.Status
 		game.LbName = params.LbName
@@ -65,6 +67,7 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		}
 		game = model.Game{
 			Name:           params.Name,
+			ServerId:       params.ServerId,
 			Type:           params.Type,
 			Status:         params.Status,
 			LbName:         params.LbName,
@@ -94,6 +97,10 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 	getDB := model.DB.Model(&model.Game{})
 	if params.ID != 0 {
 		getDB = getDB.Where("id = ?", params.ID)
+	}
+
+	if params.ServerId != 0 {
+		getDB = getDB.Where("server_id = ?", params.ServerId)
 	}
 
 	if params.Name != "" {
@@ -164,8 +171,35 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 	return &result, err
 }
 
-// 记得看看跨服有没有游服还存在
 func (s *GameService) DeleteGames(ids []uint) (err error) {
+	var games []model.Game
+	if err = model.DB.Model(&model.Game{}).Where("id IN (?)", ids).Find(&games).Error; err != nil {
+		return fmt.Errorf("查询游戏服失败: %v", err)
+	}
+	for _, game := range games {
+		// 如果类型不是游服，则判断下面还有没有未合服的游服
+		if game.Type != consts.GameModeTypeIsGame {
+			var count int64
+			switch game.Type {
+			case consts.GameModelTypeIsCross:
+				if err = model.DB.Model(&model.Game{}).Where("cross_id = ?", game.ID).Count(&count).Error; err != nil {
+					return fmt.Errorf("查询跨服下游服失败: %v", err)
+				}
+				if count > 0 {
+					return fmt.Errorf("跨服下还有游服存在: %d", game.ID)
+				}
+			case consts.GameModelTypeIsGlobal:
+				if err = model.DB.Model(&model.Game{}).Where("global_id = ?", game.ID).Count(&count).Error; err != nil {
+					return fmt.Errorf("查询公共服下游服失败: %v", err)
+				}
+				if count > 0 {
+					return fmt.Errorf("公共服下还有游服存在: %d", game.ID)
+				}
+			default:
+				return fmt.Errorf("未知游服类型: %d", game.Type)
+			}
+		}
+	}
 	tx := model.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil || err != nil {

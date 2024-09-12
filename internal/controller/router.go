@@ -109,7 +109,7 @@ func NewRoute() *gin.Engine {
 			projectRoute.GET("", GetProjects)          // 查询项目
 			projectRoute.DELETE("", DeleteProjects)    // 删除项目
 			projectRoute.GET("hosts", GetProjectHosts) // 查询项目关联的服务器
-			// projectRoute.GET("games", GetGamesAss)   // 查询项目关联的游戏
+			projectRoute.GET("games", GetProjectGames) // 查询项目关联的游戏
 		}
 		// ----------服务器相关---------------
 		hostRoute := r.Group("hosts")

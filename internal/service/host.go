@@ -1,6 +1,7 @@
 package service
 
 import (
+	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
 	"errors"
@@ -168,6 +169,18 @@ func (s *HostService) GetHosts(params *api.GetHostsReq) (*api.GetHostsRes, error
 }
 
 func (s *HostService) DeleteHosts(ids []uint) (err error) {
+	// 判断服务器下是否还有未合服的服存在
+	var count int64
+	if err = model.DB.Model(&model.Host{}).
+		Joins("JOIN game ON game.host_id = host.id").
+		Where("game.deleted_at IS NULL AND host.id IN (?) AND game.status != ?", ids, consts.GameModelStatusIsMerged).
+		Count(&count).Error; err != nil {
+		return fmt.Errorf("查询服务器关联游戏失败: %v", err)
+	}
+	if count > 0 {
+		return errors.New("服务器下还有未合服的游戏服存在")
+	}
+
 	tx := model.DB.Begin()
 	defer func() {
 		if r := recover(); r != nil || err != nil {

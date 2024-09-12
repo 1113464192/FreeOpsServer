@@ -2,7 +2,7 @@ package api
 
 type UpdateProjectReq struct {
 	ID   uint   `form:"id" json:"id"`                        // 修改才需要传，没有传算新增
-	Name string `form:"name" json:"name" binding:"required"` // 项目名, 不允许修改
+	Name string `form:"name" json:"name" binding:"required"` // 项目名
 }
 
 type GetProjectReq struct {

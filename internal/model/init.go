@@ -28,6 +28,10 @@ var autoMigrateModelList = []interface{}{
 	&RoleButton{},
 	&Api{},
 	&JwtBlacklist{},
+	&Project{},
+	&RoleProject{},
+	&Host{},
+	&Game{},
 }
 
 func Database() {

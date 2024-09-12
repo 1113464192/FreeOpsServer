@@ -9,6 +9,10 @@ var SoftDeleteModelList = []interface{}{
 	&model.Menu{},
 	&model.Api{},
 	&model.JwtBlacklist{},
+	&model.UserRecord{},
+	&model.Host{},
+	&model.Project{},
+	&model.Game{},
 }
 
 // MysqlTableName
@@ -45,4 +49,12 @@ const (
 	UserModelStatusEnabled      = 1
 	UserModelUserGenderIsMale   = 1
 	UserModelUserGenderIsFemale = 2
+)
+
+// 游戏常量
+const (
+	GameModeTypeIsGame      = 1
+	GameModelTypeIsCross    = 2
+	GameModelTypeIsGlobal   = 3
+	GameModelStatusIsMerged = 3
 )

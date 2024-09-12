@@ -2,7 +2,7 @@ definitions:
   api.BindRoleRelationReq:
     properties:
       associationType:
-        description: '1: api 2: menu 3: button'
+        description: '1: api 2: menu 3: button 4: project'
         type: integer
       objectIds:
         items:
@@ -433,7 +433,7 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: 菜单ID
+      - description: 按钮ID
         in: body
         name: ids
         required: true
@@ -536,6 +536,340 @@ paths:
       summary: 新增/修改按钮信息
       tags:
       - 按钮相关
+  /games:
+    delete:
+      description: 删除指定游戏服
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 游戏服ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除游戏服
+      tags:
+      - 游戏服相关
+    get:
+      description: 查询所有/指定条件游戏服的信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: crossId
+        type: integer
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: globalId
+        type: integer
+      - in: query
+        name: hostName
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: projectName
+        type: string
+      - in: query
+        name: serverId
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      - in: query
+        name: status
+        type: integer
+      - in: query
+        name: type
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询游戏服信息
+      tags:
+      - 游戏服相关
+    post:
+      description: 新增不用传游戏服ID，修改才传游戏服ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: crossId
+        type: integer
+      - in: formData
+        name: globalId
+        type: integer
+      - in: formData
+        name: hostId
+        required: true
+        type: integer
+      - description: 修改才需要传，没有传算新增
+        in: formData
+        name: id
+        type: integer
+      - in: formData
+        name: lbListenerPort
+        required: true
+        type: integer
+      - in: formData
+        name: lbName
+        required: true
+        type: string
+      - in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: projectId
+        required: true
+        type: integer
+      - in: formData
+        name: serverId
+        required: true
+        type: integer
+      - in: formData
+        name: serverPort
+        required: true
+        type: integer
+      - in: formData
+        name: status
+        required: true
+        type: integer
+      - in: formData
+        name: type
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改游戏服信息
+      tags:
+      - 游戏服相关
+  /hosts:
+    delete:
+      description: 删除指定服务器
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 服务器ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除服务器
+      tags:
+      - 服务器相关
+    get:
+      description: 查询所有/指定条件服务器的信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: query
+        name: cloud
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - description: 修改才需要传，没有传算新增
+        in: query
+        name: id
+        type: integer
+      - in: query
+        name: ipv4
+        type: string
+      - in: query
+        name: ipv6
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: projectName
+        type: string
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      - in: query
+        name: system
+        type: string
+      - in: query
+        name: vip
+        type: string
+      - in: query
+        name: zone
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询服务器信息
+      tags:
+      - 服务器相关
+    post:
+      description: 新增不用传服务器ID，修改才传服务器ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: cloud
+        required: true
+        type: string
+      - in: formData
+        name: cores
+        required: true
+        type: integer
+      - in: formData
+        name: dataDisk
+        type: integer
+      - description: 修改才需要传，没有传算新增
+        in: formData
+        name: id
+        type: integer
+      - in: formData
+        name: ipv4
+        required: true
+        type: string
+      - in: formData
+        name: ipv6
+        type: string
+      - in: formData
+        name: mem
+        required: true
+        type: integer
+      - description: 服务器名, 不允许修改
+        in: formData
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: projectId
+        required: true
+        type: integer
+      - in: formData
+        name: system
+        required: true
+        type: string
+      - in: formData
+        name: vip
+        required: true
+        type: string
+      - in: formData
+        name: zone
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改服务器信息
+      tags:
+      - 服务器相关
   /menus:
     delete:
       description: 删除菜单信息
@@ -818,6 +1152,183 @@ paths:
       summary: 测试Gin能否正常访问
       tags:
       - 测试相关
+  /projects:
+    delete:
+      description: 删除指定项目
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 项目ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除项目
+      tags:
+      - 项目相关
+    get:
+      description: 查询所有/指定条件项目的信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - description: 修改才需要传，没有传算新增
+        in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查询项目信息
+      tags:
+      - 项目相关
+    post:
+      description: 新增不用传项目ID，修改才传项目ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 修改才需要传，没有传算新增
+        in: formData
+        name: id
+        type: integer
+      - description: 项目名
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增/修改项目信息
+      tags:
+      - 项目相关
+  /projects/games:
+    get:
+      description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取项目的游戏服列表
+      tags:
+      - 项目相关
+  /projects/hosts:
+    get:
+      description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - collectionFormat: csv
+        in: query
+        items:
+          type: integer
+        name: ids
+        required: true
+        type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取项目的服务器列表
+      tags:
+      - 项目相关
   /roles:
     get:
       description: 查询所有/指定条件角色的信息
@@ -1096,6 +1607,44 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 获取角色的关联菜单列表
+      tags:
+      - 角色相关
+  /roles/projects:
+    get:
+      description: 获取角色的关联项目列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 页码
+        in: query
+        name: current
+        type: integer
+      - in: query
+        name: id
+        type: integer
+      - description: 每页大小
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取角色的关联项目列表
       tags:
       - 角色相关
   /roles/users:
@@ -1439,9 +1988,6 @@ paths:
         minLength: 6
         name: newPassword
         required: true
-        type: string
-      - in: formData
-        name: oldPassword
         type: string
       produces:
       - application/json

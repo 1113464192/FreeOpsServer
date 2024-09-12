@@ -81,7 +81,7 @@ func CronTokenBlacklistClean() {
 }
 
 func CronModelSoftDeleteClean() {
-	dateThreshold := time.Now().AddDate(0, 0, global.Conf.Mysql.SoftDeleteRetainDays) // 获取30天前的日期
+	dateThreshold := time.Now().AddDate(0, 0, global.Conf.Mysql.SoftDeleteRetainDays) // 获取SoftDeleteRetainDays天前的日期
 	for _, m := range consts.SoftDeleteModelList {
 		// 防止报错
 		if !model.DB.Migrator().HasColumn(m, "deleted_at") {
