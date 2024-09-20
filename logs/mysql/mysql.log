@@ -1,0 +1,2243 @@
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.928ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[24.166ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[26.087ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'user' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.509ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[22.853ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.040ms] [34;1m[rows:-][0m SELECT * FROM `user` LIMIT 1
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[245.748ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'user' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:39 [32m
+[0m[33m[12.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:39 [32m
+[0m[33m[18.489ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:39 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[21.197ms] [34;1m[rows:6][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'user' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:40 [32m
+[0m[33m[10.508ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32m
+[0m[33m[24.098ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32m
+[0m[33m[25.043ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'user' AND constraint_name = 'uni_user_username'
+
+2024/09/13 14:30:40 [32m
+[0m[33m[11.534ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32m
+[0m[33m[29.247ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32m
+[0m[33m[25.231ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_username'
+
+2024/09/13 14:30:40 [32m
+[0m[33m[12.474ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32m
+[0m[33m[20.647ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[20.572ms] [34;1m[rows:6][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'user' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:40 [32m
+[0m[33m[8.515ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32m
+[0m[33m[23.648ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32m
+[0m[33m[234.141ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'user' AND constraint_name = 'uni_user_pri_key'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.550ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[16.284ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[18.675ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_updated_at'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.592ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[24.867ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.037ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_deleted_at'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[13.582ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[28.866ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[23.612ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_status'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[12.328ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[25.371ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[26.872ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_username'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.725ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[23.381ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[26.784ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:40 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[12.458ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[248.268ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.544ms] [34;1m[rows:-][0m SELECT * FROM `role` LIMIT 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[26.527ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[20.360ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[19.646ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role' AND index_name = 'idx_role_role_code'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[12.969ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.582ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.028ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role' AND index_name = 'idx_role_deleted_at'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.616ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[21.257ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.950ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'user_role' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.488ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[23.006ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[28.432ms] [34;1m[rows:-][0m SELECT * FROM `user_role` LIMIT 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[15.665ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'user_role' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.832ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[18.032ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[24.026ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user_role' AND index_name = 'idx_user_role_user_id'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.126ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[13.334ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.470ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user_role' AND index_name = 'idx_user_role_role_id'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.267ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[15.793ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[13.341ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'button' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.403ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[20.090ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[19.384ms] [34;1m[rows:-][0m SELECT * FROM `button` LIMIT 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[18.282ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'button' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.041ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[16.219ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[21.335ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'button' AND index_name = 'idx_button_button_code'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[12.750ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[27.530ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[23.519ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'menu' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[14.254ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[26.322ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[25.142ms] [34;1m[rows:-][0m SELECT * FROM `menu` LIMIT 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[22.502ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'menu' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:41 [32m
+[0m[33m[11.088ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32m
+[0m[33m[28.223ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[24.478ms] [34;1m[rows:5][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'menu' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:41 [32m
+[0m[33m[9.567ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32m
+[0m[33m[22.287ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32m
+[0m[33m[20.076ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'menu' AND constraint_name = 'uni_menu_menu_name'
+
+2024/09/13 14:30:41 [32m
+[0m[33m[11.349ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32m
+[0m[33m[19.862ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[19.642ms] [34;1m[rows:5][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'menu' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:41 [32m
+[0m[33m[13.957ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32m
+[0m[33m[27.997ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32m
+[0m[33m[18.672ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'menu' AND constraint_name = 'uni_menu_route_name'
+
+2024/09/13 14:30:41 [32m
+[0m[33m[9.105ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:41 [32m
+[0m[33m[14.617ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:41 [32m
+[0m[33m[17.329ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_route_name'
+
+2024/09/13 14:30:41 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.392ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.598ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.299ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_deleted_at'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.688ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[225.265ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[12.568ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_parent_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.766ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.135ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.201ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_route_name'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.366ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.870ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.599ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'menu_role' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.482ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.553ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.817ms] [34;1m[rows:-][0m SELECT * FROM `menu_role` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.971ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'menu_role' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.591ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.129ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.001ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu_role' AND index_name = 'idx_menu_role_menu_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.530ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.305ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.819ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu_role' AND index_name = 'idx_menu_role_role_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.670ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[16.193ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[16.113ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role_button' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.141ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[18.461ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.691ms] [34;1m[rows:-][0m SELECT * FROM `role_button` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.599ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role_button' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.643ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.439ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.313ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_button' AND index_name = 'idx_role_button_role_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.398ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.193ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.071ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_button' AND index_name = 'idx_role_button_button_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.828ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.210ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.329ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'api' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.723ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.050ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.168ms] [34;1m[rows:-][0m SELECT * FROM `api` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.412ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'api' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.549ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.408ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.495ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'api' AND index_name = 'idx_api_deleted_at'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.132ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.375ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.000ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.223ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.856ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.527ms] [34;1m[rows:-][0m SELECT * FROM `jwt_blacklist` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.699ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.011ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.911ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.150ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND index_name = 'idx_jwt_blacklist_deleted_at'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.679ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.063ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.768ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND index_name = 'idx_jwt_blacklist_jwt'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.300ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.575ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.511ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'project' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.747ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.195ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.099ms] [34;1m[rows:-][0m SELECT * FROM `project` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.994ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'project' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32m
+[0m[33m[3.191ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32m
+[0m[33m[7.532ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.143ms] [34;1m[rows:3][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'project' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:42 [32m
+[0m[33m[3.130ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32m
+[0m[33m[8.723ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32m
+[0m[33m[15.273ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'project' AND constraint_name = 'uni_project_name'
+
+2024/09/13 14:30:42 [32m
+[0m[33m[2.760ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32m
+[0m[33m[7.773ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32m
+[0m[33m[7.672ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_name'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.144ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.890ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.776ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_deleted_at'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.800ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.355ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.261ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_name'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.136ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.659ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.127ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role_project' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.714ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.156ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.216ms] [34;1m[rows:-][0m SELECT * FROM `role_project` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.429ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role_project' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.619ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.016ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.699ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_project' AND index_name = 'idx_role_project_role_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.408ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.902ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.985ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_project' AND index_name = 'idx_role_project_project_id'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.137ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.385ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.223ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'host' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.385ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.290ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.826ms] [34;1m[rows:-][0m SELECT * FROM `host` LIMIT 1
+
+2024/09/13 14:30:42 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[14.357ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'host' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:42 [32m
+[0m[33m[7.551ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[21.782ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.573ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.493ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[9.886ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.576ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_ipv4'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.841ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[6.940ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv4'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.280ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.022ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.077ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[10.096ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[12.630ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_ipv6'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[6.490ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[14.543ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.456ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv6'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[2.678ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.811ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.177ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:43 [32m
+[0m[33m[2.554ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.077ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.431ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_vip'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.710ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.022ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_vip'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.062ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.235ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.311ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_name'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.551ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.621ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.078ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv4'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.192ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.783ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.717ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv6'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.556ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.817ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.804ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_vip'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.527ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.095ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.008ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_project_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.644ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.635ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[14.958ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_deleted_at'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.490ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[18.804ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[17.194ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'game' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.540ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.909ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[11.340ms] [34;1m[rows:-][0m SELECT * FROM `game` LIMIT 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.750ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'game' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.713ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.982ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.076ms] [34;1m[rows:9][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'game' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:43 [32m
+[0m[33m[4.100ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.220ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.138ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'game' AND constraint_name = 'uni_game_name'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.389ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[10.129ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.024ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_name'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.960ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[8.362ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.109ms] [34;1m[rows:9][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'game' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/13 14:30:43 [32m
+[0m[33m[2.868ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.000ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[6.919ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'game' AND constraint_name = 'uni_game_server_id'
+
+2024/09/13 14:30:43 [32m
+[0m[33m[3.046ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32m
+[0m[33m[7.504ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32m
+[0m[33m[6.263ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_server_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.158ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.459ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.446ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_status'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.226ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.176ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.782ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_project_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.674ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.745ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.450ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_host_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.374ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.193ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.542ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_cross_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.372ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.952ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.175ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_global_id'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.442ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.553ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.850ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_deleted_at'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.018ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.301ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.007ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_name'
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.187ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.417ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:30:43 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[9.319ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_server_id'
+
+2024/09/13 14:35:44 [32mC:/FreeOps/server/internal/service/menu.go:405
+[0m[33m[19.078ms] [34;1m[rows:6][0m SELECT * FROM `menu` WHERE is_constant_route = 1 AND `menu`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/user.go:28
+[0m[33m[11.553ms] [34;1m[rows:1][0m SELECT * FROM `user` WHERE username = 'admin' AND `user`.`deleted_at` IS NULL ORDER BY `user`.`id` LIMIT 1
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/pkg/util/auth.go:37
+[0m[33m[13.716ms] [34;1m[rows:1][0m SELECT `role`.`id`,`role`.`created_at`,`role`.`updated_at`,`role`.`deleted_at`,`role`.`role_name`,`role`.`role_code`,`role`.`role_desc` FROM `role` JOIN user_role on user_role.role_id = role.id WHERE user_role.user_id = 1 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[15.209ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2Mjk1NzUwfQ.-KzGT20aDeLYKuGGvl6DNTea-Z4PhV54z9DytzOJnxU' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[13.702ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[6.123ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[8.714ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[7.657ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'casbin_rule' AND table_type = 'BASE TABLE'
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[3.165ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[7.785ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[7.215ms] [34;1m[rows:-][0m SELECT * FROM `casbin_rule` LIMIT 1
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[6.873ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'casbin_rule' ORDER BY ORDINAL_POSITION
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[2.609ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[7.507ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[7.677ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'casbin_rule' AND index_name = 'idx_casbin_rule'
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[3.514ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[3.487ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/user.go:232
+[0m[33m[7.479ms] [34;1m[rows:4][0m SELECT `button_code` FROM `button` JOIN role_button ON role_button.button_id = button.id WHERE role_button.role_id IN (1)
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[9.018ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2Mjk1NzUwfQ.-KzGT20aDeLYKuGGvl6DNTea-Z4PhV54z9DytzOJnxU' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[8.530ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[4.688ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:417
+[0m[33m[10.622ms] [34;1m[rows:6][0m SELECT * FROM `menu` WHERE is_constant_route = 1 AND `menu`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:421
+[0m[33m[10.052ms] [34;1m[rows:12][0m SELECT * FROM `menu` WHERE is_constant_route = 0 AND `menu`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[9.796ms] [34;1m[rows:2][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 1 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[9.303ms] [34;1m[rows:2][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 2 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[8.931ms] [34;1m[rows:2][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 3 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[14.454ms] [34;1m[rows:2][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 4 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[9.693ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 9 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[8.987ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 10 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[7.999ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 11 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:50 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[6.912ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 12 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:51 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[7.390ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 13 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:51 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[7.084ms] [34;1m[rows:2][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 17 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:51 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[8.603ms] [34;1m[rows:0][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 19 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:51 [32mC:/FreeOps/server/internal/service/menu.go:548
+[0m[33m[8.217ms] [34;1m[rows:1][0m SELECT `role_code` FROM `role` JOIN menu_role ON menu_role.role_id = role.id WHERE menu_role.menu_id = 20 AND `role`.`deleted_at` IS NULL
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[9.675ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2Mjk1NzUwfQ.-KzGT20aDeLYKuGGvl6DNTea-Z4PhV54z9DytzOJnxU' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[7.020ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/13 14:35:57 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[3.051ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/menu.go:397
+[0m[33m[7.771ms] [34;1m[rows:15][0m SELECT `route_name` FROM `menu` WHERE menu_type = 2 AND `menu`.`deleted_at` IS NULL
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[38.806ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2Mjk1NzUwfQ.-KzGT20aDeLYKuGGvl6DNTea-Z4PhV54z9DytzOJnxU' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[16.638ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/13 14:35:57 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[6.494ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/api.go:149
+[0m[33m[6.032ms] [34;1m[rows:1][0m SELECT count(*) FROM `api` WHERE `api`.`deleted_at` IS NULL
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/api.go:153
+[0m[33m[13.225ms] [34;1m[rows:37][0m SELECT * FROM `api` WHERE `api`.`deleted_at` IS NULL LIMIT 50
+
+2024/09/13 14:35:57 [32mC:/FreeOps/server/internal/service/api.go:181
+[0m[33m[6.489ms] [34;1m[rows:6][0m SELECT DISTINCT api_group FROM `api` WHERE `api`.`deleted_at` IS NULL
+
+2024/09/13 14:36:08 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[12.885ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2Mjk1NzUwfQ.-KzGT20aDeLYKuGGvl6DNTea-Z4PhV54z9DytzOJnxU' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/13 14:36:08 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[12.757ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/13 14:36:08 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[5.495ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/13 14:36:08 [32mC:/FreeOps/server/internal/service/user.go:199
+[0m[33m[5.496ms] [34;1m[rows:1][0m SELECT count(*) FROM `user` WHERE `user`.`deleted_at` IS NULL
+
+2024/09/13 14:36:08 [32mC:/FreeOps/server/internal/service/user.go:202
+[0m[33m[12.717ms] [34;1m[rows:2][0m SELECT * FROM `user` WHERE `user`.`deleted_at` IS NULL LIMIT 10
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.264ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.456ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.826ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'user' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.437ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.609ms] [34;1m[rows:-][0m SELECT * FROM `user` LIMIT 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.605ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'user' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:12 [32m
+[0m[33m[3.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32m
+[0m[33m[6.457ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.184ms] [34;1m[rows:6][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'user' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:12 [32m
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32m
+[0m[33m[9.036ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32m
+[0m[33m[8.276ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'user' AND constraint_name = 'uni_user_username'
+
+2024/09/20 11:52:12 [32m
+[0m[33m[3.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32m
+[0m[33m[7.078ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32m
+[0m[33m[8.048ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_username'
+
+2024/09/20 11:52:12 [32m
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32m
+[0m[33m[6.659ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.399ms] [34;1m[rows:6][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'user' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:12 [32m
+[0m[33m[1.911ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32m
+[0m[33m[5.438ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32m
+[0m[33m[5.912ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'user' AND constraint_name = 'uni_user_pri_key'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.143ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.482ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.459ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_updated_at'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.107ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.977ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.719ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_deleted_at'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.955ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.270ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.244ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_status'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.440ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.344ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user' AND index_name = 'idx_user_username'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.587ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.414ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[8.452ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.410ms] [34;1m[rows:-][0m SELECT * FROM `role` LIMIT 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.381ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.816ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.815ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role' AND index_name = 'idx_role_deleted_at'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.999ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.431ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role' AND index_name = 'idx_role_role_code'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.424ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.543ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'user_role' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.858ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.496ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.958ms] [34;1m[rows:-][0m SELECT * FROM `user_role` LIMIT 1
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.383ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'user_role' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:12 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.458ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.420ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user_role' AND index_name = 'idx_user_role_user_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.515ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.505ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'user_role' AND index_name = 'idx_user_role_role_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.328ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.294ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'button' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.172ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.271ms] [34;1m[rows:-][0m SELECT * FROM `button` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.146ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'button' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.527ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[10.389ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.191ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'button' AND index_name = 'idx_button_button_code'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.886ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.412ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'menu' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.924ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.605ms] [34;1m[rows:-][0m SELECT * FROM `menu` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.418ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'menu' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.537ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.134ms] [34;1m[rows:5][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'menu' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.622ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.367ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'menu' AND constraint_name = 'uni_menu_menu_name'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.552ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.806ms] [34;1m[rows:5][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'menu' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.250ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.268ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'menu' AND constraint_name = 'uni_menu_route_name'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.292ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[10.400ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_route_name'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.222ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.766ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_deleted_at'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.455ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.615ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_parent_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.450ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.966ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu' AND index_name = 'idx_menu_route_name'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.312ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.341ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'menu_role' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.788ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.420ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.284ms] [34;1m[rows:-][0m SELECT * FROM `menu_role` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.367ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'menu_role' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.803ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.812ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu_role' AND index_name = 'idx_menu_role_menu_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.551ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.745ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'menu_role' AND index_name = 'idx_menu_role_role_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.441ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.369ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role_button' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.369ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.477ms] [34;1m[rows:-][0m SELECT * FROM `role_button` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.429ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role_button' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.426ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.478ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_button' AND index_name = 'idx_role_button_role_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.264ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.213ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_button' AND index_name = 'idx_role_button_button_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.614ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.345ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'api' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.610ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.314ms] [34;1m[rows:-][0m SELECT * FROM `api` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.890ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'api' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.694ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.436ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'api' AND index_name = 'idx_api_deleted_at'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.376ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.346ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.504ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.586ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.380ms] [34;1m[rows:-][0m SELECT * FROM `jwt_blacklist` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.372ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.153ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.461ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND index_name = 'idx_jwt_blacklist_deleted_at'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.163ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.296ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'jwt_blacklist' AND index_name = 'idx_jwt_blacklist_jwt'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.752ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.900ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'project' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.039ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.477ms] [34;1m[rows:-][0m SELECT * FROM `project` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.503ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'project' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.678ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.311ms] [34;1m[rows:3][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'project' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.735ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.721ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'project' AND constraint_name = 'uni_project_name'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.493ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[8.808ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.655ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_name'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.412ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.437ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_name'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.143ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.351ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'project' AND index_name = 'idx_project_deleted_at'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.375ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.613ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.457ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'role_project' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[4.239ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.707ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.428ms] [34;1m[rows:-][0m SELECT * FROM `role_project` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.641ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'role_project' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.658ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.782ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_project' AND index_name = 'idx_role_project_role_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.082ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.603ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'role_project' AND index_name = 'idx_role_project_project_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.581ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.316ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'host' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.496ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.849ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.882ms] [34;1m[rows:-][0m SELECT * FROM `host` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.322ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'host' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32m
+[0m[33m[3.497ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.588ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.607ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.499ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.585ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.871ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_ipv4'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.540ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.733ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv4'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[3.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.545ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.756ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.549ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.326ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_ipv6'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.550ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.630ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.386ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv6'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.532ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.288ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.304ms] [34;1m[rows:7][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'host' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.258ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[5.418ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'host' AND constraint_name = 'uni_host_vip'
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.547ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[6.021ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32m
+[0m[33m[7.625ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_vip'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.547ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.045ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.385ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_deleted_at'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.522ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.705ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.503ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_name'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.550ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.258ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.413ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv4'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.553ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.561ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.477ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_ipv6'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.524ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.358ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_vip'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.069ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.661ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.503ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'host' AND index_name = 'idx_host_project_id'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.498ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.612ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.332ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'game' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.579ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.446ms] [34;1m[rows:-][0m SELECT * FROM `game` LIMIT 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.355ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'game' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.525ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:13 [32m
+[0m[33m[11.686ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:13 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.718ms] [34;1m[rows:9][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'game' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:13 [32m
+[0m[33m[2.503ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.914ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.528ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'game' AND constraint_name = 'uni_game_name'
+
+2024/09/20 11:52:14 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32m
+[0m[33m[6.017ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.391ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_name'
+
+2024/09/20 11:52:14 [32m
+[0m[33m[3.522ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32m
+[0m[33m[6.250ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.816ms] [34;1m[rows:9][0m 
+SELECT
+	TABLE_NAME,
+	COLUMN_NAME,
+	INDEX_NAME,
+	NON_UNIQUE 
+FROM
+	information_schema.STATISTICS 
+WHERE
+	TABLE_SCHEMA = 'ops' 
+	AND TABLE_NAME = 'game' 
+ORDER BY
+	INDEX_NAME,
+	SEQ_IN_INDEX
+
+2024/09/20 11:52:14 [32m
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.570ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.446ms] [34;1m[rows:-][0m SELECT count(*) FROM INFORMATION_SCHEMA.table_constraints WHERE constraint_schema = 'ops' AND table_name = 'game' AND constraint_name = 'uni_game_server_id'
+
+2024/09/20 11:52:14 [32m
+[0m[33m[2.530ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.677ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32m
+[0m[33m[5.582ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_server_id'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.502ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.225ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.162ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_status'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[3.384ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.214ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.908ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_project_id'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.526ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.461ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.882ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_host_id'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.709ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.018ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_cross_id'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.885ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.460ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_common_id'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.501ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[6.539ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.583ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_deleted_at'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.814ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[5.460ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_name'
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[2.500ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.978ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:52:14 [32mC:/FreeOps/server/internal/model/init.go:95
+[0m[33m[7.119ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'game' AND index_name = 'idx_game_server_id'
+
+2024/09/20 11:54:18 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[7.592ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6bnVsbCwiaXNzIjoib3BzTWFuYWdlciIsImV4cCI6MTcyNjcxNzE0Nn0.id38NQ4hVvdvvmNuAo0t4jHvhECB0UgIuw4ZTY9POV0' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:54:31 [32mC:/FreeOps/server/internal/service/user.go:28
+[0m[33m[6.100ms] [34;1m[rows:1][0m SELECT * FROM `user` WHERE username = 'admin' AND `user`.`deleted_at` IS NULL ORDER BY `user`.`id` LIMIT 1
+
+2024/09/20 11:54:31 [32mC:/FreeOps/server/pkg/util/auth.go:37
+[0m[33m[7.951ms] [34;1m[rows:1][0m SELECT `role`.`id`,`role`.`created_at`,`role`.`updated_at`,`role`.`deleted_at`,`role`.`role_name`,`role`.`role_code`,`role`.`role_desc` FROM `role` JOIN user_role on user_role.role_id = role.id WHERE user_role.user_id = 1 AND `role`.`deleted_at` IS NULL
+
+2024/09/20 11:56:48 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[21.444ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2ODkwODcxfQ.GM8cFw9UUPAT9T2ujSG5pWJ0O_-Cqlqh-7MzTwbPy3k' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:56:48 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[9.762ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[3.215ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[9.379ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[8.417ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.tables WHERE table_schema = 'ops' AND table_name = 'casbin_rule' AND table_type = 'BASE TABLE'
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[2.506ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[7.314ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[6.107ms] [34;1m[rows:-][0m SELECT * FROM `casbin_rule` LIMIT 1
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:419
+[0m[33m[9.677ms] [34;1m[rows:-][0m SELECT column_name, column_default, is_nullable = 'YES', data_type, character_maximum_length, column_type, column_key, extra, column_comment, numeric_precision, numeric_scale , datetime_precision FROM information_schema.columns WHERE table_schema = 'ops' AND table_name = 'casbin_rule' ORDER BY ORDINAL_POSITION
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[3.508ms] [34;1m[rows:-][0m SELECT DATABASE()
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[8.959ms] [34;1m[rows:1][0m SELECT SCHEMA_NAME from Information_schema.SCHEMATA where SCHEMA_NAME LIKE 'ops%' ORDER BY SCHEMA_NAME='ops' DESC,SCHEMA_NAME limit 1
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:425
+[0m[33m[12.544ms] [34;1m[rows:-][0m SELECT count(*) FROM information_schema.statistics WHERE table_schema = 'ops' AND table_name = 'casbin_rule' AND index_name = 'idx_casbin_rule'
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[4.346ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:56:48 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[4.307ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:56:48 [32mC:/FreeOps/server/internal/service/project.go:134
+[0m[33m[7.743ms] [34;1m[rows:0][0m SELECT `id` FROM `host` WHERE project_id IN (1) AND `host`.`deleted_at` IS NULL
+
+2024/09/20 11:56:59 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[13.962ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2ODkwODcxfQ.GM8cFw9UUPAT9T2ujSG5pWJ0O_-Cqlqh-7MzTwbPy3k' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:56:59 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[32.553ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/20 11:56:59 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[13.186ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:56:59 [32mC:/FreeOps/server/internal/service/project.go:134
+[0m[33m[18.943ms] [34;1m[rows:1][0m SELECT `id` FROM `host` WHERE project_id IN (2) AND `host`.`deleted_at` IS NULL
+
+2024/09/20 11:57:20 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[24.152ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2ODkwODcxfQ.GM8cFw9UUPAT9T2ujSG5pWJ0O_-Cqlqh-7MzTwbPy3k' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:57:20 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[14.308ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/20 11:57:20 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[3.817ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:57:20 [32mC:/FreeOps/server/internal/service/project.go:134
+[0m[33m[9.129ms] [34;1m[rows:1][0m SELECT `id` FROM `host` WHERE project_id IN (2) AND `host`.`deleted_at` IS NULL
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[16.513ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2ODkwODcxfQ.GM8cFw9UUPAT9T2ujSG5pWJ0O_-Cqlqh-7MzTwbPy3k' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[13.642ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/20 11:57:32 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[4.013ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/service/project.go:148
+[0m[33m[6.539ms] [34;1m[rows:1][0m SELECT count(*) FROM `host` WHERE project_id = 2 AND `host`.`deleted_at` IS NULL
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/service/project.go:151
+[0m[33m[7.306ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (project_id = 2 AND type = 1) AND `game`.`deleted_at` IS NULL
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/service/project.go:154
+[0m[33m[5.714ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (project_id = 2 AND type = 2) AND `game`.`deleted_at` IS NULL
+
+2024/09/20 11:57:32 [32mC:/FreeOps/server/internal/service/project.go:157
+[0m[33m[5.547ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (project_id = 2 AND type = 3) AND `game`.`deleted_at` IS NULL
+
+2024/09/20 11:58:14 [32mC:/FreeOps/server/internal/service/jwt.go:27
+[0m[33m[30.883ms] [34;1m[rows:0][0m SELECT * FROM `jwt_blacklist` WHERE jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyIjp7IklEIjoxLCJDcmVhdGVkQXQiOiIyMDI0LTA3LTA5VDEwOjU4OjU0KzA4OjAwIiwiVXBkYXRlZEF0IjoiMjAyNC0wOS0xMFQxMzo0MTowOSswODowMCIsIkRlbGV0ZWRBdCI6bnVsbCwic3RhdHVzIjoxLCJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiIkMmEkMTIkRzN1UnVsTWJFTEU5Z2VJYnNCMHRET1FQLldyYVZIRDk0TTN1WVd3R0dnWnI0dVo3N0VJWlciLCJ1c2VyR2VuZGVyIjoiMSIsIm5pY2tuYW1lIjoi566h55CG5ZGYIiwidXNlclBob25lIjoiIiwidXNlckVtYWlsIjoiMTIzNDU2Nzg5MEBnbWFpbC5jb20iLCJwcmlLZXkiOm51bGwsInBhc3NwaHJhc2UiOm51bGx9LCJSb2xlcyI6W3siSUQiOjEsIkNyZWF0ZWRBdCI6IjIwMjQtMDctMDlUMTE6MDE6MDYrMDg6MDAiLCJVcGRhdGVkQXQiOiIyMDI0LTA3LTA5VDExOjAxOjA2KzA4OjAwIiwiRGVsZXRlZEF0IjpudWxsLCJyb2xlTmFtZSI6IueuoeeQhuWRmCIsInJvbGVDb2RlIjoiQURNSU4iLCJyb2xlRGVzYyI6IueuoeeQhuWRmOadg-mZkCjmnIDpq5jmnYPpmZApIn1dLCJpc3MiOiJvcHNNYW5hZ2VyIiwiZXhwIjoxNzI2ODkwODcxfQ.GM8cFw9UUPAT9T2ujSG5pWJ0O_-Cqlqh-7MzTwbPy3k' AND `jwt_blacklist`.`deleted_at` IS NULL ORDER BY `jwt_blacklist`.`id` LIMIT 1
+
+2024/09/20 11:58:14 [32mC:/FreeOps/server/internal/middleware/jwt_auth.go:101
+[0m[33m[21.499ms] [34;1m[rows:1][0m SELECT `updated_at` FROM `user` WHERE id = 1 AND `user`.`deleted_at` IS NULL
+
+2024/09/20 11:58:14 [32mC:/Users/Administrator/go/pkg/mod/github.com/casbin/gorm-adapter/v3@v3.25.0/adapter.go:488
+[0m[33m[14.028ms] [34;1m[rows:25][0m SELECT * FROM `casbin_rule` ORDER BY ID
+
+2024/09/20 11:58:14 [32mC:/FreeOps/server/internal/service/host.go:198
+[0m[33m[44.050ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (host_id = 1 AND type = 1) AND `game`.`deleted_at` IS NULL
+
+2024/09/20 11:58:14 [32mC:/FreeOps/server/internal/service/host.go:201
+[0m[33m[32.901ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (host_id = 1 AND type = 2) AND `game`.`deleted_at` IS NULL
+
+2024/09/20 11:58:14 [32mC:/FreeOps/server/internal/service/host.go:204
+[0m[33m[25.821ms] [34;1m[rows:1][0m SELECT count(*) FROM `game` WHERE (host_id = 1 AND type = 3) AND `game`.`deleted_at` IS NULL

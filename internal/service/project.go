@@ -1,6 +1,7 @@
 package service
 
 import (
+	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
 	"errors"
@@ -141,6 +142,22 @@ func (s *ProjectService) GetProjectGames(params api.IdsReq) (gameIds []uint, err
 		return nil, fmt.Errorf("查询项目游戏服IDs失败: %v", err)
 	}
 	return gameIds, err
+}
+
+func (s *ProjectService) GetProjectAssetsTotal(id uint) (res api.GetProjectAssetsTotalRes, err error) {
+	if err = model.DB.Model(model.Host{}).Where("project_id = ?", id).Count(&res.HostTotal).Error; err != nil {
+		return res, fmt.Errorf("查询服务器总数失败: %v", err)
+	}
+	if err = model.DB.Model(model.Game{}).Where("project_id = ? AND type = ?", id, consts.GameModeTypeIsGame).Count(&res.GameTotal).Error; err != nil {
+		return res, fmt.Errorf("查询游服总数失败: %v", err)
+	}
+	if err = model.DB.Model(model.Game{}).Where("project_id = ? AND type = ?", id, consts.GameModelTypeIsCross).Count(&res.CrossTotal).Error; err != nil {
+		return res, fmt.Errorf("查询跨服总数失败: %v", err)
+	}
+	if err = model.DB.Model(model.Game{}).Where("project_id = ? AND type = ?", id, consts.GameModelTypeIsCommon).Count(&res.CommonTotal).Error; err != nil {
+		return res, fmt.Errorf("查询公共服总数失败: %v", err)
+	}
+	return res, err
 }
 
 func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error) {

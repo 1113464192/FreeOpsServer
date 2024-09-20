@@ -105,18 +105,20 @@ func NewRoute() *gin.Engine {
 		// ------------项目相关--------------
 		projectRoute := r.Group("projects")
 		{
-			projectRoute.POST("", UpdateProject)       // 新增/修改项目
-			projectRoute.GET("", GetProjects)          // 查询项目
-			projectRoute.DELETE("", DeleteProjects)    // 删除项目
-			projectRoute.GET("hosts", GetProjectHosts) // 查询项目关联的服务器
-			projectRoute.GET("games", GetProjectGames) // 查询项目关联的游戏
+			projectRoute.POST("", UpdateProject)                    // 新增/修改项目
+			projectRoute.GET("", GetProjects)                       // 查询项目
+			projectRoute.DELETE("", DeleteProjects)                 // 删除项目
+			projectRoute.GET("hosts", GetProjectHosts)              // 查询项目关联的服务器
+			projectRoute.GET("games", GetProjectGames)              // 查询项目关联的游戏
+			projectRoute.GET("assets-total", GetProjectAssetsTotal) // 查询项目各资产总数
 		}
 		// ----------服务器相关---------------
 		hostRoute := r.Group("hosts")
 		{
-			hostRoute.POST("", UpdateHost)    // 新增/修改服务器
-			hostRoute.GET("", GetHosts)       // 查询服务器
-			hostRoute.DELETE("", DeleteHosts) // 删除服务器
+			hostRoute.POST("", UpdateHost)              // 新增/修改服务器
+			hostRoute.GET("", GetHosts)                 // 查询服务器
+			hostRoute.DELETE("", DeleteHosts)           // 删除服务器
+			hostRoute.GET("game-info", GetHostGameInfo) // 获取服务器的游戏信息
 		}
 		// ---------游戏服务相关------------
 		gameRoute := r.Group("games")

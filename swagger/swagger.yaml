@@ -578,14 +578,14 @@ paths:
         required: true
         type: string
       - in: query
+        name: commonId
+        type: integer
+      - in: query
         name: crossId
         type: integer
       - description: 页码
         in: query
         name: current
-        type: integer
-      - in: query
-        name: globalId
         type: integer
       - in: query
         name: hostName
@@ -639,10 +639,10 @@ paths:
         required: true
         type: string
       - in: formData
-        name: crossId
+        name: commonId
         type: integer
       - in: formData
-        name: globalId
+        name: crossId
         type: integer
       - in: formData
         name: hostId
@@ -868,6 +868,38 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增/修改服务器信息
+      tags:
+      - 服务器相关
+  /hosts/game-info:
+    get:
+      description: 获取服务器各业务信息总数
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传服务器ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取服务器各业务信息总数
       tags:
       - 服务器相关
   /menus:
@@ -1259,6 +1291,38 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增/修改项目信息
+      tags:
+      - 项目相关
+  /projects/assets-total:
+    get:
+      description: 查询项目各资产总数
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传项目ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取项目各资产总数
       tags:
       - 项目相关
   /projects/games:

@@ -50,8 +50,8 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		if params.CrossId != 0 {
 			*game.CrossId = params.CrossId
 		}
-		if params.GlobalId != 0 {
-			*game.GlobalId = params.GlobalId
+		if params.CommonId != 0 {
+			*game.CommonId = params.CommonId
 		}
 
 		if err = model.DB.Save(&game).Error; err != nil {
@@ -79,8 +79,8 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		if params.CrossId != 0 {
 			*game.CrossId = params.CrossId
 		}
-		if params.GlobalId != 0 {
-			*game.GlobalId = params.GlobalId
+		if params.CommonId != 0 {
+			*game.CommonId = params.CommonId
 		}
 		if err = model.DB.Create(&game).Error; err != nil {
 			return fmt.Errorf("创建游戏服失败: %v", err)
@@ -120,8 +120,8 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 		getDB = getDB.Where("cross_id = ?", params.CrossId)
 	}
 
-	if params.GlobalId != 0 {
-		getDB = getDB.Where("global_id = ?", params.GlobalId)
+	if params.CommonId != 0 {
+		getDB = getDB.Where("common_id = ?", params.CommonId)
 	}
 
 	if params.HostName != "" {
@@ -188,8 +188,8 @@ func (s *GameService) DeleteGames(ids []uint) (err error) {
 				if count > 0 {
 					return fmt.Errorf("跨服下还有游服存在: %d", game.ID)
 				}
-			case consts.GameModelTypeIsGlobal:
-				if err = model.DB.Model(&model.Game{}).Where("global_id = ?", game.ID).Count(&count).Error; err != nil {
+			case consts.GameModelTypeIsCommon:
+				if err = model.DB.Model(&model.Game{}).Where("common_id = ?", game.ID).Count(&count).Error; err != nil {
 					return fmt.Errorf("查询公共服下游服失败: %v", err)
 				}
 				if count > 0 {
@@ -230,8 +230,8 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 			if game.CrossId != nil {
 				res.CrossId = *game.CrossId
 			}
-			if game.GlobalId != nil {
-				res.GlobalId = *game.GlobalId
+			if game.CommonId != nil {
+				res.CommonId = *game.CommonId
 			}
 			if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 				return nil, fmt.Errorf("查询项目名称失败: %v", err)
@@ -256,8 +256,8 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 		if game.CrossId != nil {
 			res.CrossId = *game.CrossId
 		}
-		if game.GlobalId != nil {
-			res.GlobalId = *game.GlobalId
+		if game.CommonId != nil {
+			res.CommonId = *game.CommonId
 		}
 		if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)

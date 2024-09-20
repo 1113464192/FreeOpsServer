@@ -15,9 +15,21 @@ type GetProjectsReq struct {
 	PageInfo
 }
 
+type GetProjectRes struct {
+	GetProjectReq
+	GetProjectAssetsTotalRes
+}
+
 type GetProjectsRes struct {
-	Records  []GetProjectReq `json:"records" form:"records"`
+	Records  []GetProjectRes `json:"records" form:"records"`
 	Page     int             `json:"current" form:"current"` // 页码
 	PageSize int             `json:"size" form:"size"`       // 每页大小
 	Total    int64           `json:"total"`
+}
+
+type GetProjectAssetsTotalRes struct {
+	HostTotal   int64 `json:"hostTotal" form:"hostTotal"`     // 服务器总数
+	GameTotal   int64 `json:"gameTotal" form:"gameTotal"`     // 游服总数
+	CrossTotal  int64 `json:"crossTotal" form:"crossTotal"`   // 跨服总数
+	CommonTotal int64 `json:"commonTotal" form:"commonTotal"` // 公共服总数
 }

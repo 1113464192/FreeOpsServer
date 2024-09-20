@@ -12,7 +12,7 @@ type UpdateGameReq struct {
 	ProjectId      uint   `form:"projectId" json:"projectId" binding:"required"`
 	HostId         uint   `form:"hostId" json:"hostId" binding:"required"`
 	CrossId        uint   `form:"crossId" json:"crossId"`
-	GlobalId       uint   `form:"globalId" json:"globalId"`
+	CommonId       uint   `form:"commonId" json:"commonId"`
 }
 
 type GetGameReq struct {
@@ -24,7 +24,7 @@ type GetGameReq struct {
 	ProjectName string `form:"projectName" json:"projectName"`
 	HostName    string `form:"hostName" json:"hostName"`
 	CrossId     uint   `form:"crossId" json:"crossId"`
-	GlobalId    uint   `form:"globalId" json:"globalId"`
+	CommonId    uint   `form:"commonId" json:"commonId"`
 }
 
 type GetGamesReq struct {
@@ -44,7 +44,7 @@ type GetGameRes struct {
 	ProjectName    string `form:"projectName" json:"projectName"`
 	HostName       string `form:"hostName" json:"hostName"`
 	CrossId        uint   `form:"crossId" json:"crossId"`
-	GlobalId       uint   `form:"globalId" json:"globalId"`
+	CommonId       uint   `form:"commonId" json:"commonId"`
 }
 
 type GetGamesRes struct {

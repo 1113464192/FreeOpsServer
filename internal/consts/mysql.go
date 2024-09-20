@@ -55,6 +55,6 @@ const (
 const (
 	GameModeTypeIsGame      = 1
 	GameModelTypeIsCross    = 2
-	GameModelTypeIsGlobal   = 3
+	GameModelTypeIsCommon   = 3
 	GameModelStatusIsMerged = 3
 )

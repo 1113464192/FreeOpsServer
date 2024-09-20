@@ -618,6 +618,11 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "name": "commonId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
                         "name": "crossId",
                         "in": "query"
                     },
@@ -625,11 +630,6 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "页码",
                         "name": "current",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "globalId",
                         "in": "query"
                     },
                     {
@@ -714,12 +714,12 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "name": "crossId",
+                        "name": "commonId",
                         "in": "formData"
                     },
                     {
                         "type": "integer",
-                        "name": "globalId",
+                        "name": "crossId",
                         "in": "formData"
                     },
                     {
@@ -1086,6 +1086,54 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/api.IdsReq"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/hosts/game-info": {
+            "get": {
+                "description": "获取服务器各业务信息总数",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "服务器相关"
+                ],
+                "summary": "获取服务器各业务信息总数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 登录返回的用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "传服务器ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -1677,6 +1725,54 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/api.IdsReq"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/assets-total": {
+            "get": {
+                "description": "查询项目各资产总数",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目相关"
+                ],
+                "summary": "获取项目各资产总数",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 登录返回的用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "传项目ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

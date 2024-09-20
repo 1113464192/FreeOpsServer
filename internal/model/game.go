@@ -14,5 +14,5 @@ type Game struct {
 	ProjectId      uint   `gorm:"comment: 项目ID;index"`
 	HostId         uint   `gorm:"comment: 服务器ID;index"`
 	CrossId        *uint  `gorm:"comment: 关联跨服ID;index"`
-	GlobalId       *uint  `gorm:"comment: 关联公共服ID;index"`
+	CommonId       *uint  `gorm:"comment: 关联公共服ID;index"`
 }

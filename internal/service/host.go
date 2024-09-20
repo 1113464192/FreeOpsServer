@@ -194,6 +194,19 @@ func (s *HostService) DeleteHosts(ids []uint) (err error) {
 	return nil
 }
 
+func (s *HostService) GetHostGameInfo(id uint) (res api.GetHostGameInfoRes, err error) {
+	if err = model.DB.Model(model.Game{}).Where("host_id = ? AND type = ?", id, consts.GameModeTypeIsGame).Count(&res.GameTotal).Error; err != nil {
+		return res, fmt.Errorf("查询游服总数失败: %v", err)
+	}
+	if err = model.DB.Model(model.Game{}).Where("host_id = ? AND type = ?", id, consts.GameModelTypeIsCross).Count(&res.CrossTotal).Error; err != nil {
+		return res, fmt.Errorf("查询跨服总数失败: %v", err)
+	}
+	if err = model.DB.Model(model.Game{}).Where("host_id = ? AND type = ?", id, consts.GameModelTypeIsCommon).Count(&res.CommonTotal).Error; err != nil {
+		return res, fmt.Errorf("查询公共服总数失败: %v", err)
+	}
+	return res, err
+}
+
 func (s *HostService) GetResults(hostObj any) (*[]api.GetHostRes, error) {
 	var result []api.GetHostRes
 	var err error
