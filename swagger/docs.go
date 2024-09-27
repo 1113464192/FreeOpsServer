@@ -598,6 +598,216 @@ const docTemplate = `{
                 }
             }
         },
+        "/clouds/create/host": {
+            "post": {
+                "description": "购买服务器",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "云平台相关"
+                ],
+                "summary": "购买服务器",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "传对应参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateCloudHostReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/clouds/create/project": {
+            "post": {
+                "description": "新增云项目信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "云平台相关"
+                ],
+                "summary": "新增云项目信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "传对应参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CloudProjectReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/clouds/query/project": {
+            "get": {
+                "description": "获取云项目ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "云平台相关"
+                ],
+                "summary": "获取云项目ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "云平台",
+                        "name": "cloudPlatform",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "项目名",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/clouds/update/project": {
+            "post": {
+                "description": "修改云项目信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "云平台相关"
+                ],
+                "summary": "修改云项目信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "云平台",
+                        "name": "cloudPlatform",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "项目名",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/games": {
             "get": {
                 "description": "查询所有/指定条件游戏服的信息",
@@ -982,6 +1192,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "description": "数据盘,单位: G",
                         "name": "dataDisk",
                         "in": "formData"
                     },
@@ -1004,6 +1215,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "description": "内存,单位: G",
                         "name": "mem",
                         "in": "formData",
                         "required": true
@@ -1604,6 +1816,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "name": "cloudPlatform",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "页码",
                         "name": "current",
@@ -1666,6 +1883,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "云平台",
+                        "name": "cloudPlatform",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "integer",
                         "description": "修改才需要传，没有传算新增",
                         "name": "id",
@@ -1725,6 +1949,47 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/api.IdsReq"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/all-summary": {
+            "get": {
+                "description": "查询项目列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "项目相关"
+                ],
+                "summary": "获取项目列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 登录返回的用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -3018,7 +3283,7 @@ const docTemplate = `{
         },
         "/users/ssh-key": {
             "put": {
-                "description": "文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa",
+                "description": "文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa\t\t走jumpserver则无需使用",
                 "produces": [
                     "application/json"
                 ],
@@ -3115,6 +3380,45 @@ const docTemplate = `{
                     }
                 },
                 "userId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "api.CloudProjectReq": {
+            "type": "object",
+            "required": [
+                "cloudPlatform",
+                "name"
+            ],
+            "properties": {
+                "cloudPlatform": {
+                    "description": "云平台",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "项目名",
+                    "type": "string"
+                }
+            }
+        },
+        "api.CreateCloudHostReq": {
+            "type": "object",
+            "required": [
+                "cloudPlatform",
+                "hostCount",
+                "projectId"
+            ],
+            "properties": {
+                "cloudPlatform": {
+                    "description": "云平台",
+                    "type": "string"
+                },
+                "hostCount": {
+                    "description": "需购买服务器数量",
+                    "type": "integer"
+                },
+                "projectId": {
+                    "description": "项目ID",
                     "type": "integer"
                 }
             }

@@ -10,8 +10,8 @@ type UpdateHostReq struct {
 	Cloud     string `form:"cloud" json:"cloud" binding:"required"`
 	System    string `form:"system" json:"system" binding:"required"`
 	Cores     uint16 `form:"cores" json:"cores" binding:"required"`
-	DataDisk  uint32 `form:"dataDisk" json:"dataDisk"`
-	Mem       uint64 `form:"mem" json:"mem" binding:"required"`
+	DataDisk  uint32 `form:"dataDisk" json:"dataDisk"`          // 数据盘,单位: G
+	Mem       uint64 `form:"mem" json:"mem" binding:"required"` // 内存,单位: G
 	ProjectId uint   `form:"projectId" json:"projectId" binding:"required"`
 }
 
@@ -45,6 +45,8 @@ type GetHostRes struct {
 	DataDisk    uint32 `form:"dataDisk" json:"dataDisk"`
 	Mem         uint64 `form:"mem" json:"mem"`
 	ProjectName string `form:"projectName" json:"projectName"`
+	ProjectId   uint   `form:"projectId" json:"projectId"`
+	GetHostGameInfoRes
 }
 
 type GetHostsRes struct {

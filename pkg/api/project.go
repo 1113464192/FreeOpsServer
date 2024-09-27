@@ -1,13 +1,15 @@
 package api
 
 type UpdateProjectReq struct {
-	ID   uint   `form:"id" json:"id"`                        // 修改才需要传，没有传算新增
-	Name string `form:"name" json:"name" binding:"required"` // 项目名
+	ID            uint   `form:"id" json:"id"`                                          // 修改才需要传，没有传算新增
+	Name          string `form:"name" json:"name" binding:"required"`                   // 项目名
+	CloudPlatform string `form:"cloudPlatform" json:"cloudPlatform" binding:"required"` // 云平台
 }
 
 type GetProjectReq struct {
-	ID   uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
-	Name string `form:"name" json:"name"`
+	ID            uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
+	Name          string `form:"name" json:"name"`
+	CloudPlatform string `form:"cloudPlatform" json:"cloudPlatform"`
 }
 
 type GetProjectsReq struct {

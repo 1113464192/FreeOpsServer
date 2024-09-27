@@ -70,6 +70,7 @@ func UserLogin(c *gin.Context) {
 // @Router /auth/refreshToken [post]
 func RefreshToken(c *gin.Context) {
 	refreshToken := c.PostForm("refreshToken")
+	fmt.Printf("刷新token检查1：%s \n", refreshToken)
 	res, code, err := service.UserServiceApp().RefreshToken(refreshToken)
 	var msg string
 	var data any
@@ -81,6 +82,7 @@ func RefreshToken(c *gin.Context) {
 		data = map[string]error{
 			"错误信息": err,
 		}
+		logger.Log().Error("user", "刷新Token失败", err)
 	}
 	logger.Log().Info("user", "刷新Token成功")
 	c.JSON(200, api.Response{
@@ -422,7 +424,7 @@ func GetUserRecordLogs(c *gin.Context) {
 // UpdateSSHKey
 // @Tags 用户相关
 // @title 提交自身私钥
-// @description 文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa
+// @description 文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa		走jumpserver则无需使用
 // @Summary 提交自身私钥
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"

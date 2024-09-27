@@ -29,43 +29,65 @@ func (s *ProjectService) UpdateProject(params *api.UpdateProjectReq) (err error)
 			return fmt.Errorf("project ID不存在: %d, 或有错误信息: %v", params.ID, err)
 		}
 
-		if err = model.DB.Model(&project).Where("name = ? AND id != ?", params.Name, params.ID).Count(&count).Error; err != nil {
+		if err = model.DB.Model(&project).Where("name = ? AND cloud_platform = ? AND id != ?", params.Name, params.CloudPlatform, params.ID).Count(&count).Error; err != nil {
 			return fmt.Errorf("查询项目失败: %v", err)
 		} else if count > 0 {
-			return fmt.Errorf("项目名已被使用: %s", params.Name)
+			return fmt.Errorf("项目已被使用: %s", params.Name)
 		}
 
 		if err := model.DB.Where("id = ?", params.ID).First(&project).Error; err != nil {
 			return fmt.Errorf("项目查询失败: %v", err)
 		}
 		project.Name = params.Name
+		project.CloudPlatform = params.CloudPlatform
 
 		if err = model.DB.Save(&project).Error; err != nil {
 			return fmt.Errorf("数据保存失败: %v", err)
 		}
 		return err
 	} else {
-		err = model.DB.Model(&project).Where("name = ?", params.Name).Count(&count).Error
+		err = model.DB.Model(&project).Where("name = ? AND cloud_platform = ?", params.Name, params.CloudPlatform).Count(&count).Error
 		if err != nil {
 			return fmt.Errorf("查询项目失败: %v", err)
 		} else if count > 0 {
-			return fmt.Errorf("项目名(%s)已存在", params.Name)
+			return fmt.Errorf("项目(%s %s)已存在", params.Name, params.CloudPlatform)
 		}
 
 		project = model.Project{
-			Name: params.Name,
+			Name:          params.Name,
+			CloudPlatform: params.CloudPlatform,
 		}
-		if err = model.DB.Create(&project).Error; err != nil {
+		tx := model.DB.Begin()
+		if err = tx.Create(&project).Error; err != nil {
+			tx.Rollback()
 			return fmt.Errorf("创建项目失败: %v", err)
 		}
+		var adminRoleId uint
+		if err = tx.Model(&model.Role{}).Where("role_code = ?", consts.RoleModelAdminCode).Select("id").Scan(&adminRoleId).Error; err != nil {
+			tx.Rollback()
+			return fmt.Errorf("查询管理员角色ID失败: %v", err)
+		}
+		if err = tx.Create(&model.RoleProject{
+			ProjectId: project.ID,
+			RoleId:    adminRoleId,
+		}).Error; err != nil {
+			tx.Rollback()
+			return fmt.Errorf("创建项目角色关联失败: %v", err)
+		}
+		tx.Commit()
 		return err
 	}
 }
 
 func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjectsRes, error) {
-	var projects []model.Project
-	var err error
-	var count int64
+	var (
+		projects []model.Project
+		err      error
+		count    int64
+		records  []api.GetProjectRes
+		res      *[]api.GetProjectReq
+		result   api.GetProjectsRes
+	)
 
 	getDB := model.DB.Model(&model.Project{})
 	if params.ID != 0 {
@@ -75,6 +97,11 @@ func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjec
 	if params.Name != "" {
 		sqlName := "%" + strings.ToUpper(params.Name) + "%"
 		getDB = getDB.Where("UPPER(name) LIKE ?", sqlName)
+	}
+
+	if params.CloudPlatform != "" {
+		sqlName := "%" + strings.ToUpper(params.CloudPlatform) + "%"
+		getDB = getDB.Where("UPPER(cloud_platform) LIKE ?", sqlName)
 	}
 
 	if err = getDB.Count(&count).Error; err != nil {
@@ -90,19 +117,38 @@ func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjec
 			return nil, fmt.Errorf("查询项目失败: %v", err)
 		}
 	}
-	var res *[]api.GetProjectReq
-	var result api.GetProjectsRes
-	res, err = s.GetResults(&projects)
-	if err != nil {
+	if res, err = s.GetResults(&projects); err != nil {
 		return nil, err
 	}
+	for _, value := range *res {
+		var totalRes api.GetProjectAssetsTotalRes
+		if totalRes, err = s.GetProjectAssetsTotal(value.ID); err != nil {
+			return nil, err
+		}
+		records = append(records, api.GetProjectRes{
+			GetProjectReq: api.GetProjectReq{
+				ID:            value.ID,
+				Name:          value.Name,
+				CloudPlatform: value.CloudPlatform,
+			},
+			GetProjectAssetsTotalRes: totalRes,
+		})
+	}
 	result = api.GetProjectsRes{
-		Records:  *res,
+		Records:  records,
 		Page:     params.Page,
 		PageSize: params.PageSize,
 		Total:    count,
 	}
 	return &result, err
+}
+
+func (s *ProjectService) GetProjectList() (*[]api.GetProjectReq, error) {
+	var projects []model.Project
+	if err := model.DB.Find(&projects).Error; err != nil {
+		return nil, fmt.Errorf("查询项目失败: %v", err)
+	}
+	return s.GetResults(&projects)
 }
 
 func (s *ProjectService) DeleteProjects(ids []uint) (err error) {
@@ -166,8 +212,9 @@ func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error
 	if projects, ok := projectObj.(*[]model.Project); ok {
 		for _, project := range *projects {
 			res := api.GetProjectReq{
-				ID:   project.ID,
-				Name: project.Name,
+				ID:            project.ID,
+				Name:          project.Name,
+				CloudPlatform: project.CloudPlatform,
 			}
 			result = append(result, res)
 		}
@@ -175,8 +222,9 @@ func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error
 	}
 	if project, ok := projectObj.(*model.Project); ok {
 		res := api.GetProjectReq{
-			ID:   project.ID,
-			Name: project.Name,
+			ID:            project.ID,
+			Name:          project.Name,
+			CloudPlatform: project.CloudPlatform,
 		}
 		result = append(result, res)
 		return &result, err

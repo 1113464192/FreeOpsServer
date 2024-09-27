@@ -52,6 +52,8 @@ func (s *HostService) UpdateHost(params *api.UpdateHostReq) (err error) {
 		host.Mem = params.Mem
 		host.ProjectId = params.ProjectId
 
+		// 判断host.Cloud和对应项目的cloud是否一致
+
 		if err = model.DB.Save(&host).Error; err != nil {
 			return fmt.Errorf("数据保存失败: %v", err)
 		}
@@ -159,8 +161,30 @@ func (s *HostService) GetHosts(params *api.GetHostsReq) (*api.GetHostsRes, error
 	if err != nil {
 		return nil, err
 	}
+	var records []api.GetHostRes
+	for _, value := range *res {
+		var totalRes api.GetHostGameInfoRes
+		if totalRes, err = s.GetHostGameInfo(value.ID); err != nil {
+			return nil, err
+		}
+		records = append(records, api.GetHostRes{
+			ID:                 value.ID,
+			Name:               value.Name,
+			Ipv4:               value.Ipv4,
+			Ipv6:               value.Ipv6,
+			Vip:                value.Vip,
+			Zone:               value.Zone,
+			Cloud:              value.Cloud,
+			System:             value.System,
+			Cores:              value.Cores,
+			DataDisk:           value.DataDisk,
+			Mem:                value.Mem,
+			ProjectName:        value.ProjectName,
+			GetHostGameInfoRes: totalRes,
+		})
+	}
 	result = api.GetHostsRes{
-		Records:  *res,
+		Records:  records,
 		Page:     params.Page,
 		PageSize: params.PageSize,
 		Total:    count,
@@ -213,16 +237,17 @@ func (s *HostService) GetResults(hostObj any) (*[]api.GetHostRes, error) {
 	if hosts, ok := hostObj.(*[]model.Host); ok {
 		for _, host := range *hosts {
 			res := api.GetHostRes{
-				ID:       host.ID,
-				Name:     host.Name,
-				Ipv4:     host.Ipv4,
-				Vip:      host.Vip,
-				Zone:     host.Zone,
-				Cloud:    host.Cloud,
-				System:   host.System,
-				Cores:    host.Cores,
-				DataDisk: host.DataDisk,
-				Mem:      host.Mem,
+				ID:        host.ID,
+				Name:      host.Name,
+				Ipv4:      host.Ipv4,
+				Vip:       host.Vip,
+				Zone:      host.Zone,
+				Cloud:     host.Cloud,
+				System:    host.System,
+				Cores:     host.Cores,
+				DataDisk:  host.DataDisk,
+				Mem:       host.Mem,
+				ProjectId: host.ProjectId,
 			}
 			if host.Ipv6 != nil {
 				res.Ipv6 = *host.Ipv6
@@ -236,16 +261,17 @@ func (s *HostService) GetResults(hostObj any) (*[]api.GetHostRes, error) {
 	}
 	if host, ok := hostObj.(*model.Host); ok {
 		res := api.GetHostRes{
-			ID:       host.ID,
-			Name:     host.Name,
-			Ipv4:     host.Ipv4,
-			Vip:      host.Vip,
-			Zone:     host.Zone,
-			Cloud:    host.Cloud,
-			System:   host.System,
-			Cores:    host.Cores,
-			DataDisk: host.DataDisk,
-			Mem:      host.Mem,
+			ID:        host.ID,
+			Name:      host.Name,
+			Ipv4:      host.Ipv4,
+			Vip:       host.Vip,
+			Zone:      host.Zone,
+			Cloud:     host.Cloud,
+			System:    host.System,
+			Cores:     host.Cores,
+			DataDisk:  host.DataDisk,
+			Mem:       host.Mem,
+			ProjectId: host.ProjectId,
 		}
 		if host.Ipv6 != nil {
 			res.Ipv6 = *host.Ipv6

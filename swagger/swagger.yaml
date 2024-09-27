@@ -28,6 +28,34 @@ definitions:
     - roleIds
     - userId
     type: object
+  api.CloudProjectReq:
+    properties:
+      cloudPlatform:
+        description: 云平台
+        type: string
+      name:
+        description: 项目名
+        type: string
+    required:
+    - cloudPlatform
+    - name
+    type: object
+  api.CreateCloudHostReq:
+    properties:
+      cloudPlatform:
+        description: 云平台
+        type: string
+      hostCount:
+        description: 需购买服务器数量
+        type: integer
+      projectId:
+        description: 项目ID
+        type: integer
+    required:
+    - cloudPlatform
+    - hostCount
+    - projectId
+    type: object
   api.IdsReq:
     properties:
       ids:
@@ -536,6 +564,146 @@ paths:
       summary: 新增/修改按钮信息
       tags:
       - 按钮相关
+  /clouds/create/host:
+    post:
+      description: 购买服务器
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传对应参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateCloudHostReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 购买服务器
+      tags:
+      - 云平台相关
+  /clouds/create/project:
+    post:
+      description: 新增云项目信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 传对应参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.CloudProjectReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 新增云项目信息
+      tags:
+      - 云平台相关
+  /clouds/query/project:
+    get:
+      description: 获取云项目ID
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 云平台
+        in: query
+        name: cloudPlatform
+        required: true
+        type: string
+      - description: 项目名
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取云项目ID
+      tags:
+      - 云平台相关
+  /clouds/update/project:
+    post:
+      description: 修改云项目信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 云平台
+        in: formData
+        name: cloudPlatform
+        required: true
+        type: string
+      - description: 项目名
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 修改云项目信息
+      tags:
+      - 云平台相关
   /games:
     delete:
       description: 删除指定游戏服
@@ -813,7 +981,8 @@ paths:
         name: cores
         required: true
         type: integer
-      - in: formData
+      - description: '数据盘,单位: G'
+        in: formData
         name: dataDisk
         type: integer
       - description: 修改才需要传，没有传算新增
@@ -827,7 +996,8 @@ paths:
       - in: formData
         name: ipv6
         type: string
-      - in: formData
+      - description: '内存,单位: G'
+        in: formData
         name: mem
         required: true
         type: integer
@@ -1225,6 +1395,9 @@ paths:
         name: Authorization
         required: true
         type: string
+      - in: query
+        name: cloudPlatform
+        type: string
       - description: 页码
         in: query
         name: current
@@ -1266,6 +1439,11 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: 云平台
+        in: formData
+        name: cloudPlatform
+        required: true
+        type: string
       - description: 修改才需要传，没有传算新增
         in: formData
         name: id
@@ -1291,6 +1469,33 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增/修改项目信息
+      tags:
+      - 项目相关
+  /projects/all-summary:
+    get:
+      description: 查询项目列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取项目列表
       tags:
       - 项目相关
   /projects/assets-total:
@@ -2132,7 +2337,7 @@ paths:
       - 用户相关
   /users/ssh-key:
     put:
-      description: '文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa'
+      description: "文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa\t\t走jumpserver则无需使用"
       parameters:
       - description: 格式为：Bearer 用户令牌
         in: header

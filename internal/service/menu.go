@@ -211,6 +211,11 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		} else {
 			menu.Href = &params.Href
 		}
+		if params.MenuType == consts.MenuModelMenuTypeIsMenu && params.Component == "" && params.ParentId != 0 {
+			menu.Component = fmt.Sprintf("view.%s", params.RouteName)
+		} else if params.MenuType == consts.MenuModelMenuTypeIsMenu && params.Component != "" && params.ParentId == 0 {
+			menu.Component = fmt.Sprintf("%s$view.%s", params.Component, params.RouteName)
+		}
 		tx := model.DB.Begin()
 
 		if err = tx.Create(&menu).Error; err != nil {

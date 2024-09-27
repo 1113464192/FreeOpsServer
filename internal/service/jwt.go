@@ -3,6 +3,7 @@ package service
 import (
 	"FreeOps/internal/model"
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -19,8 +20,10 @@ func JwtServiceApp() *JwtService {
 }
 
 func (s *JwtService) JwtAddBlacklist(jwtList *model.JwtBlacklist) (err error) {
-	err = model.DB.Create(jwtList).Error
-	return
+	if err = model.DB.Create(jwtList).Error; err != nil {
+		return fmt.Errorf("添加jwt到黑名单失败: %v", err)
+	}
+	return err
 }
 
 func (s *JwtService) IsBlacklist(jwt string) bool {

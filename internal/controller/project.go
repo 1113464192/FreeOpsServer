@@ -76,6 +76,34 @@ func GetProjects(c *gin.Context) {
 	})
 }
 
+// GetProjectList
+// @Tags 项目相关
+// @title 获取项目列表
+// @description 查询项目列表
+// @Summary 获取项目列表
+// @Produce   application/json
+// @Param Authorization header string true "格式为：Bearer 登录返回的用户令牌"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /projects/all-summary [get]
+func GetProjectList(c *gin.Context) {
+	var err error
+	res, err := service.ProjectServiceApp().GetProjectList()
+	if err != nil {
+		logger.Log().Error("project", "获取项目列表失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取项目列表失败", err))
+		return
+	}
+
+	logger.Log().Info("project", "获取项目列表成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}
+
 // DeleteProjects
 // @Tags 项目相关
 // @title 删除项目

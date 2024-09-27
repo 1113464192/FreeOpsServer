@@ -39,11 +39,15 @@ func (s *RoleService) UpdateRole(params *api.UpdateRoleReq) (err error) {
 			return err
 		}
 		if mBool {
+			var userIds []uint
 			if err = tx.Model(&model.User{}).
 				Joins("JOIN user_role ON user_role.user_id = user.id").
-				Where("user_role.role_id = ?", role.ID).
-				Update("updated_at", time.Now()).Error; err != nil {
-				return fmt.Errorf("更新用户时间失败: %v", err)
+				Where("user_role.role_id = ?", params.ID).
+				Pluck("id", &userIds).Error; err != nil {
+				return fmt.Errorf("查询用户失败: %v", err)
+			}
+			if err = tx.Model(&model.User{}).Where("id IN (?)", userIds).Update("updated_at", time.Now()).Error; err != nil {
+				return fmt.Errorf("修改用户更新时间失败: %v", err)
 			}
 		}
 
@@ -52,7 +56,7 @@ func (s *RoleService) UpdateRole(params *api.UpdateRoleReq) (err error) {
 		}
 
 		// 判断role_name是否和现有角色重复
-		err = tx.Model(&role).Where("role_name = ? AND id != ? OR role_code = ? AND id != ?", params.RoleName, params.ID, params.RoleCode, params.ID).Count(&count).Error
+		err = tx.Model(&model.Role{}).Where("role_name = ? AND id != ? OR role_code = ? AND id != ?", params.RoleName, params.ID, params.RoleCode, params.ID).Count(&count).Error
 		if err != nil {
 			return fmt.Errorf("查询角色失败: %v", err)
 		} else if count > 0 {
@@ -72,7 +76,7 @@ func (s *RoleService) UpdateRole(params *api.UpdateRoleReq) (err error) {
 		tx.Commit()
 		return err
 	} else {
-		err = model.DB.Model(&role).Where("role_name = ? OR role_code = ?", params.RoleName, params.RoleCode).Count(&count).Error
+		err = model.DB.Model(&model.Role{}).Where("role_name = ? OR role_code = ?", params.RoleName, params.RoleCode).Count(&count).Error
 		// 总数大于0或者有错误就返回
 		if err != nil {
 			return fmt.Errorf("查询角色失败: %v", err)
