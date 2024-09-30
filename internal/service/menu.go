@@ -19,7 +19,7 @@ func MenuServiceApp() *MenuService {
 	return &insMenu
 }
 
-func (s *MenuService) validateComponentName(component, routeName string) bool {
+func (s *MenuService) validateComponentName(component string) bool {
 	// 分割 Component 字符串
 	parts := strings.Split(component, "$")
 	// 如果parts切片长度不等于1或者2就返回false
@@ -38,7 +38,7 @@ func (s *MenuService) validateComponentName(component, routeName string) bool {
 			return false
 		}
 		if partSlice[0] == "view" {
-			return partSlice[1] == routeName
+			return true
 		}
 	}
 	return false
@@ -61,7 +61,7 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 
 	// 判断菜单页面的component命名是否符合前端规范
 	if params.Component != "" && params.MenuType == consts.MenuModelMenuTypeIsMenu {
-		if !s.validateComponentName(params.Component, params.RouteName) {
+		if !s.validateComponentName(params.Component) {
 			return fmt.Errorf("component命名不符合规范: %s", params.Component)
 		}
 	}
@@ -211,7 +211,7 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		} else {
 			menu.Href = &params.Href
 		}
-		if params.MenuType == consts.MenuModelMenuTypeIsMenu && params.Component == "" && params.ParentId != 0 {
+		if params.MenuType == consts.MenuModelMenuTypeIsMenu && params.Component == "" && params.ParentId != 0 && !strings.Contains(params.RoutePath, consts.ManualComponentMenuPath) {
 			menu.Component = fmt.Sprintf("view.%s", params.RouteName)
 		} else if params.MenuType == consts.MenuModelMenuTypeIsMenu && params.Component != "" && params.ParentId == 0 {
 			menu.Component = fmt.Sprintf("%s$view.%s", params.Component, params.RouteName)

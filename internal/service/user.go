@@ -54,12 +54,10 @@ func (s *UserService) RefreshToken(refreshToken string) (res *api.AuthLoginRes, 
 		return res, consts.SERVICE_LOGOUT_CODE, errors.New("refreshToken失效")
 
 	}
-	fmt.Printf("刷新token检查2：%s \n", refreshToken)
 	claims, err := util.ParseToken(refreshToken)
 	if err != nil {
 		return res, consts.SERVICE_LOGOUT_CODE, err
 	}
-	fmt.Printf("刷新token检查3：%s \n", refreshToken)
 
 	var user model.User
 	if err = model.DB.Model(&model.User{}).Where("id = ?", claims.User.ID).First(&user).Error; err != nil {
@@ -70,7 +68,6 @@ func (s *UserService) RefreshToken(refreshToken string) (res *api.AuthLoginRes, 
 	if err = JwtServiceApp().JwtAddBlacklist(jwtBlack); err != nil {
 		return res, consts.SERVICE_MODAL_LOGOUT_CODE, err
 	}
-	fmt.Printf("刷新token检查4：%s \n", refreshToken)
 
 	token, refreshToken, err := util.GenToken(user)
 	if err != nil {
@@ -80,7 +77,6 @@ func (s *UserService) RefreshToken(refreshToken string) (res *api.AuthLoginRes, 
 		Token:        token,
 		RefreshToken: refreshToken,
 	}
-	fmt.Printf("刷新token检查5：%s \n", refreshToken)
 	return res, consts.SERVICE_SUCCESS_CODE, nil
 }
 

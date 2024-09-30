@@ -42,6 +42,7 @@ const (
 	MenuModeIconTypeIsIconify    = 1
 	MenuModeIconTypeIsLocal      = 2
 	MenuModelPropsIsTrue         = "true"
+	ManualComponentMenuPath      = "/document/"
 )
 
 // 用户常量
@@ -57,4 +58,6 @@ const (
 	GameModelTypeIsCross    = 2
 	GameModelTypeIsCommon   = 3
 	GameModelStatusIsMerged = 3
+	ActionTypeIsCreate      = 1
+	ActionTypeIsUpdate      = 2
 )

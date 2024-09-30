@@ -548,16 +548,18 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/buttons/menus": {
             "delete": {
-                "description": "删除指定按钮",
+                "description": "删除指定菜单的按钮",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "按钮相关"
                 ],
-                "summary": "删除按钮",
+                "summary": "删除菜单按钮",
                 "parameters": [
                     {
                         "type": "string",
@@ -567,7 +569,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "按钮ID",
+                        "description": "菜单ID",
                         "name": "ids",
                         "in": "body",
                         "required": true,
@@ -854,17 +856,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
                         "name": "projectName",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "serverId",
                         "in": "query"
                     },
                     {
@@ -924,6 +916,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
+                        "description": "1: 创建 2: 更新",
+                        "name": "actionType",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
                         "name": "commonId",
                         "in": "formData"
                     },
@@ -940,37 +939,23 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "修改才需要传，没有传算新增",
                         "name": "id",
-                        "in": "formData"
+                        "in": "formData",
+                        "required": true
                     },
                     {
                         "type": "integer",
                         "name": "lbListenerPort",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "string",
                         "name": "lbName",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "name": "name",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "integer",
                         "name": "projectId",
-                        "in": "formData",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "name": "serverId",
                         "in": "formData",
                         "required": true
                     },

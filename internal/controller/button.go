@@ -2,6 +2,7 @@ package controller
 
 import (
 	"FreeOps/internal/consts"
+	"FreeOps/internal/model"
 	"FreeOps/internal/service"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
@@ -75,29 +76,32 @@ func GetButtons(c *gin.Context) {
 	})
 }
 
-// DeleteButtons
+// DeleteMenuButtons
 // @Tags 按钮相关
-// @title 删除按钮
-// @description 删除指定按钮
-// @Summary 删除按钮
+// @title 删除菜单的按钮
+// @description 删除指定菜单的按钮
+// @Summary 删除菜单按钮
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param ids body api.IdsReq true "按钮ID"
+// @Param ids body api.IdsReq true "菜单ID"
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /buttons [delete]
-func DeleteButtons(c *gin.Context) {
+// @Router /buttons/menus [delete]
+func DeleteMenuButtons(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	if err := service.ButtonServiceApp().DeleteButtons(param.Ids); err != nil {
+	tx := model.DB.Begin()
+	if err := service.ButtonServiceApp().DeleteMenuButtons(param.Ids, tx); err != nil {
+		tx.Rollback()
 		logger.Log().Error("button", "删除按钮失败", err)
 		c.JSON(500, util.ServerErrorResponse("删除按钮失败", err))
 		return
 	}
+	tx.Commit()
 
 	logger.Log().Info("button", "删除按钮成功", fmt.Sprintf("ID: %v", param.Ids))
 	c.JSON(200, api.Response{

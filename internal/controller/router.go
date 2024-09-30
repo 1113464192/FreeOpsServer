@@ -74,9 +74,9 @@ func NewRoute() *gin.Engine {
 		// ------------Button相关------------
 		buttonRoute := r.Group("buttons")
 		{
-			buttonRoute.POST("", UpdateButton)    // 新增/修改按钮
-			buttonRoute.GET("", GetButtons)       // 获取按钮列表
-			buttonRoute.DELETE("", DeleteButtons) // 删除按钮
+			buttonRoute.POST("", UpdateButton)             // 新增/修改按钮
+			buttonRoute.GET("", GetButtons)                // 获取按钮列表
+			buttonRoute.DELETE("menus", DeleteMenuButtons) // 删除按钮
 		}
 
 		// ------------菜单相关--------------

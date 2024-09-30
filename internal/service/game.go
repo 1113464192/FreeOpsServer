@@ -23,35 +23,80 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		game  model.Game
 		count int64
 	)
-	if params.ID != 0 {
-		if err = model.DB.Model(&model.Game{}).Where("id = ?", params.ID).Count(&count).Error; count != 1 || err != nil {
-			return fmt.Errorf("game ID不存在: %d, 或有错误信息: %v", params.ID, err)
+	if params.ActionType == consts.ActionTypeIsCreate {
+		// 只需要检查以下，避免不同机器创建了相同的。lb、sPort无需检查，因为必然是脚本创建成功了才会请求本接口。
+		if err = model.DB.Model(&model.Game{}).Where("id = ? AND project_id = ? AND type = ?", params.Id, params.ProjectId, params.Type).Count(&count).Error; count > 0 || err != nil {
+			return fmt.Errorf("game 已存在,id: %d projectId: %d type: %d , 或有错误信息: %v", params.Id, params.ProjectId, params.Type, err)
 		}
-
-		if err = model.DB.Model(&game).Where("(name = ? AND id != ?) OR (lb_listener_port = ? AND lb_name = ? AND id != ?)",
-			params.Name, params.ID, params.LbListenerPort, params.LbName, params.ID).Count(&count).Error; err != nil {
-			return fmt.Errorf("查询游戏服失败: %v", err)
-		} else if count > 0 {
-			return fmt.Errorf("游戏服名已被使用: %s", params.Name)
+		game = model.Game{
+			Id:         params.Id,
+			Type:       params.Type,
+			Status:     params.Status,
+			ServerPort: params.ServerPort,
+			ProjectId:  params.ProjectId,
+			HostId:     params.HostId,
 		}
-
-		if err := model.DB.Where("id = ?", params.ID).First(&game).Error; err != nil {
-			return fmt.Errorf("游戏服查询失败: %v", err)
+		if params.CrossId != 0 {
+			if game.CrossId == nil {
+				game.CrossId = new(uint)
+			}
+			*game.CrossId = params.CrossId
 		}
-		game.Name = params.Name
-		game.ServerId = params.ServerId
+		if params.CommonId != 0 {
+			if game.CommonId == nil {
+				game.CommonId = new(uint)
+			}
+			*game.CommonId = params.CommonId
+		}
+		if params.LbName != "" {
+			if game.LbName == nil {
+				game.LbName = new(string)
+			}
+			*game.LbName = params.LbName
+		}
+		if params.LbListenerPort != 0 {
+			if game.LbListenerPort == nil {
+				game.LbListenerPort = new(uint)
+			}
+			*game.LbListenerPort = params.LbListenerPort
+		}
+		if err = model.DB.Create(&game).Error; err != nil {
+			return fmt.Errorf("创建游戏服记录失败: %v", err)
+		}
+		return err
+	} else if params.ActionType == consts.ActionTypeIsUpdate {
+		if err = model.DB.Model(&model.Game{}).Where("id = ? AND project_id = ? AND type = ?", params.Id, params.ProjectId, params.Type).Count(&count).Error; count != 1 || err != nil {
+			return fmt.Errorf("game 记录数!=1,id: %d projectId: %d type: %d , 或有错误信息: %v", params.Id, params.ProjectId, params.Type, err)
+		}
+		game.Id = params.Id
 		game.Type = params.Type
 		game.Status = params.Status
-		game.LbName = params.LbName
-		game.LbListenerPort = params.LbListenerPort
 		game.ServerPort = params.ServerPort
 		game.ProjectId = params.ProjectId
 		game.HostId = params.HostId
 		if params.CrossId != 0 {
+			if game.CrossId == nil {
+				game.CrossId = new(uint)
+			}
 			*game.CrossId = params.CrossId
 		}
 		if params.CommonId != 0 {
+			if game.CommonId == nil {
+				game.CommonId = new(uint)
+			}
 			*game.CommonId = params.CommonId
+		}
+		if params.LbName != "" {
+			if game.LbName == nil {
+				game.LbName = new(string)
+			}
+			*game.LbName = params.LbName
+		}
+		if params.LbListenerPort != 0 {
+			if game.LbListenerPort == nil {
+				game.LbListenerPort = new(uint)
+			}
+			*game.LbListenerPort = params.LbListenerPort
 		}
 
 		if err = model.DB.Save(&game).Error; err != nil {
@@ -59,33 +104,7 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		}
 		return err
 	} else {
-		err = model.DB.Model(&game).Where("name = ? OR (lb_listener_port = ? AND lb_name = ?)", params.Name, params.LbListenerPort, params.LbName).Count(&count).Error
-		if err != nil {
-			return fmt.Errorf("查询游戏服失败: %v", err)
-		} else if count > 0 {
-			return fmt.Errorf("游戏服名(%s)已存在", params.Name)
-		}
-		game = model.Game{
-			Name:           params.Name,
-			ServerId:       params.ServerId,
-			Type:           params.Type,
-			Status:         params.Status,
-			LbName:         params.LbName,
-			LbListenerPort: params.LbListenerPort,
-			ServerPort:     params.ServerPort,
-			ProjectId:      params.ProjectId,
-			HostId:         params.HostId,
-		}
-		if params.CrossId != 0 {
-			*game.CrossId = params.CrossId
-		}
-		if params.CommonId != 0 {
-			*game.CommonId = params.CommonId
-		}
-		if err = model.DB.Create(&game).Error; err != nil {
-			return fmt.Errorf("创建游戏服失败: %v", err)
-		}
-		return err
+		return fmt.Errorf("未知操作类型: %d", params.ActionType)
 	}
 }
 
@@ -95,17 +114,8 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 	var count int64
 
 	getDB := model.DB.Model(&model.Game{})
-	if params.ID != 0 {
-		getDB = getDB.Where("id = ?", params.ID)
-	}
-
-	if params.ServerId != 0 {
-		getDB = getDB.Where("server_id = ?", params.ServerId)
-	}
-
-	if params.Name != "" {
-		sqlName := "%" + strings.ToUpper(params.Name) + "%"
-		getDB = getDB.Where("UPPER(name) LIKE ?", sqlName)
+	if params.Id != 0 {
+		getDB = getDB.Where("id = ?", params.Id)
 	}
 
 	if params.Type != 0 {
@@ -126,21 +136,20 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 
 	if params.HostName != "" {
 		sqlHostName := "%" + strings.ToUpper(params.HostName) + "%"
-		var hostId uint
+		var hostId []uint
 		if err = model.DB.Model(model.Host{}).Where("UPPER(name) LIKE ?", sqlHostName).Pluck("id", &hostId).Error; err != nil {
 			return nil, fmt.Errorf("查询服务器ID失败: %v", err)
 		}
-		getDB = getDB.Where("host_id = ?", hostId)
-
+		getDB = getDB.Where("host_id IN (?)", hostId)
 	}
 
 	if params.ProjectName != "" {
 		sqlProjectName := "%" + strings.ToUpper(params.ProjectName) + "%"
-		var projectId uint
+		var projectId []uint
 		if err = model.DB.Model(model.Project{}).Where("UPPER(name) LIKE ?", sqlProjectName).Pluck("id", &projectId).Error; err != nil {
 			return nil, fmt.Errorf("查询项目ID失败: %v", err)
 		}
-		getDB = getDB.Where("project_id = ?", projectId)
+		getDB = getDB.Where("project_id IN (?)", projectId)
 	}
 
 	if err = getDB.Count(&count).Error; err != nil {
@@ -182,18 +191,18 @@ func (s *GameService) DeleteGames(ids []uint) (err error) {
 			var count int64
 			switch game.Type {
 			case consts.GameModelTypeIsCross:
-				if err = model.DB.Model(&model.Game{}).Where("cross_id = ?", game.ID).Count(&count).Error; err != nil {
+				if err = model.DB.Model(&model.Game{}).Where("cross_id = ?", game.Id).Count(&count).Error; err != nil {
 					return fmt.Errorf("查询跨服下游服失败: %v", err)
 				}
 				if count > 0 {
-					return fmt.Errorf("跨服下还有游服存在: %d", game.ID)
+					return fmt.Errorf("跨服下还有游服存在: %d", game.Id)
 				}
 			case consts.GameModelTypeIsCommon:
-				if err = model.DB.Model(&model.Game{}).Where("common_id = ?", game.ID).Count(&count).Error; err != nil {
+				if err = model.DB.Model(&model.Game{}).Where("common_id = ?", game.Id).Count(&count).Error; err != nil {
 					return fmt.Errorf("查询公共服下游服失败: %v", err)
 				}
 				if count > 0 {
-					return fmt.Errorf("公共服下还有游服存在: %d", game.ID)
+					return fmt.Errorf("公共服下还有游服存在: %d", game.Id)
 				}
 			default:
 				return fmt.Errorf("未知游服类型: %d", game.Type)
@@ -219,19 +228,24 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 	if games, ok := gameObj.(*[]model.Game); ok {
 		for _, game := range *games {
 			res := api.GetGameRes{
-				ID:             game.ID,
-				Name:           game.Name,
-				Type:           game.Type,
-				Status:         game.Status,
-				LbName:         game.LbName,
-				LbListenerPort: game.LbListenerPort,
-				ServerPort:     game.ServerPort,
+				Id:         game.Id,
+				Type:       game.Type,
+				Status:     game.Status,
+				ServerPort: game.ServerPort,
+				ProjectId:  game.ProjectId,
+				HostId:     game.HostId,
 			}
 			if game.CrossId != nil {
 				res.CrossId = *game.CrossId
 			}
 			if game.CommonId != nil {
 				res.CommonId = *game.CommonId
+			}
+			if game.LbName != nil {
+				res.LbName = *game.LbName
+			}
+			if game.LbListenerPort != nil {
+				res.LbListenerPort = *game.LbListenerPort
 			}
 			if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 				return nil, fmt.Errorf("查询项目名称失败: %v", err)
@@ -245,19 +259,24 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 	}
 	if game, ok := gameObj.(*model.Game); ok {
 		res := api.GetGameRes{
-			ID:             game.ID,
-			Name:           game.Name,
-			Type:           game.Type,
-			Status:         game.Status,
-			LbName:         game.LbName,
-			LbListenerPort: game.LbListenerPort,
-			ServerPort:     game.ServerPort,
+			Id:         game.Id,
+			Type:       game.Type,
+			Status:     game.Status,
+			ServerPort: game.ServerPort,
+			ProjectId:  game.ProjectId,
+			HostId:     game.HostId,
 		}
 		if game.CrossId != nil {
 			res.CrossId = *game.CrossId
 		}
 		if game.CommonId != nil {
 			res.CommonId = *game.CommonId
+		}
+		if game.LbName != nil {
+			res.LbName = *game.LbName
+		}
+		if game.LbListenerPort != nil {
+			res.LbListenerPort = *game.LbListenerPort
 		}
 		if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)

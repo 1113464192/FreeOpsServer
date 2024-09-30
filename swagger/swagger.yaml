@@ -453,38 +453,6 @@ paths:
       tags:
       - 公共相关
   /buttons:
-    delete:
-      description: 删除指定按钮
-      parameters:
-      - description: 格式为：Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 按钮ID
-        in: body
-        name: ids
-        required: true
-        schema:
-          $ref: '#/definitions/api.IdsReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"data":{},"meta":{msg":"Success"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "403":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "500":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-      summary: 删除按钮
-      tags:
-      - 按钮相关
     get:
       description: 查询所有/指定条件按钮的信息
       parameters:
@@ -562,6 +530,39 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增/修改按钮信息
+      tags:
+      - 按钮相关
+  /buttons/menus:
+    delete:
+      description: 删除指定菜单的按钮
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 菜单ID
+        in: body
+        name: ids
+        required: true
+        schema:
+          $ref: '#/definitions/api.IdsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 删除菜单按钮
       tags:
       - 按钮相关
   /clouds/create/host:
@@ -762,14 +763,8 @@ paths:
         name: id
         type: integer
       - in: query
-        name: name
-        type: string
-      - in: query
         name: projectName
         type: string
-      - in: query
-        name: serverId
-        type: integer
       - description: 每页大小
         in: query
         name: size
@@ -806,6 +801,11 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: '1: 创建 2: 更新'
+        in: formData
+        name: actionType
+        required: true
+        type: integer
       - in: formData
         name: commonId
         type: integer
@@ -816,28 +816,18 @@ paths:
         name: hostId
         required: true
         type: integer
-      - description: 修改才需要传，没有传算新增
-        in: formData
+      - in: formData
         name: id
+        required: true
         type: integer
       - in: formData
         name: lbListenerPort
-        required: true
         type: integer
       - in: formData
         name: lbName
-        required: true
-        type: string
-      - in: formData
-        name: name
-        required: true
         type: string
       - in: formData
         name: projectId
-        required: true
-        type: integer
-      - in: formData
-        name: serverId
         required: true
         type: integer
       - in: formData

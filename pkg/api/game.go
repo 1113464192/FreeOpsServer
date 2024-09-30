@@ -1,24 +1,21 @@
 package api
 
 type UpdateGameReq struct {
-	ID             uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
-	Name           string `form:"name" json:"name" binding:"required"`
-	ServerId       uint   `form:"serverId" json:"serverId" binding:"required"`
+	Id             uint   `form:"id" json:"id" binding:"required"`
 	Type           uint8  `form:"type" json:"type" binding:"required"`
 	Status         uint8  `form:"status" json:"status" binding:"required"`
-	LbName         string `form:"lbName" json:"lbName" binding:"required"`
-	LbListenerPort uint   `form:"lbListenerPort" json:"lbListenerPort" binding:"required"`
+	LbName         string `form:"lbName" json:"lbName"`
+	LbListenerPort uint   `form:"lbListenerPort" json:"lbListenerPort"`
 	ServerPort     uint   `form:"serverPort" json:"serverPort" binding:"required"`
 	ProjectId      uint   `form:"projectId" json:"projectId" binding:"required"`
 	HostId         uint   `form:"hostId" json:"hostId" binding:"required"`
 	CrossId        uint   `form:"crossId" json:"crossId"`
 	CommonId       uint   `form:"commonId" json:"commonId"`
+	ActionType     uint8  `form:"actionType" json:"actionType" binding:"required"` // 1: 创建 2: 更新
 }
 
 type GetGameReq struct {
-	ID          uint   `form:"id" json:"id"`
-	Name        string `form:"name" json:"name"`
-	ServerId    uint   `form:"serverId" json:"serverId"`
+	Id          uint   `form:"id" json:"id"`
 	Type        uint8  `form:"type" json:"type"`
 	Status      uint8  `form:"status" json:"status"`
 	ProjectName string `form:"projectName" json:"projectName"`
@@ -33,9 +30,7 @@ type GetGamesReq struct {
 }
 
 type GetGameRes struct {
-	ID             uint   `form:"id" json:"id"`
-	Name           string `form:"name" json:"name"`
-	ServerId       uint   `form:"serverId" json:"serverId"`
+	Id             uint   `form:"id" json:"id"`
 	Type           uint8  `form:"type" json:"type"`
 	Status         uint8  `form:"status" json:"status"`
 	LbName         string `form:"lbName" json:"lbName"`
@@ -43,6 +38,8 @@ type GetGameRes struct {
 	ServerPort     uint   `form:"serverPort" json:"serverPort"`
 	ProjectName    string `form:"projectName" json:"projectName"`
 	HostName       string `form:"hostName" json:"hostName"`
+	ProjectId      uint   `form:"projectId" json:"projectId"`
+	HostId         uint   `form:"hostId" json:"hostId"`
 	CrossId        uint   `form:"crossId" json:"crossId"`
 	CommonId       uint   `form:"commonId" json:"commonId"`
 }

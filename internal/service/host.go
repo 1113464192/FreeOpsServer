@@ -135,11 +135,11 @@ func (s *HostService) GetHosts(params *api.GetHostsReq) (*api.GetHostsRes, error
 
 	if params.ProjectName != "" {
 		sqlProjectName := "%" + strings.ToUpper(params.ProjectName) + "%"
-		var projectId uint
+		var projectId []uint
 		if err = model.DB.Model(model.Project{}).Where("UPPER(name) LIKE ?", sqlProjectName).Pluck("id", &projectId).Error; err != nil {
 			return nil, fmt.Errorf("查询项目ID失败: %v", err)
 		}
-		getDB = getDB.Where("project_id = ?", projectId)
+		getDB = getDB.Where("project_id IN ?", projectId)
 	}
 
 	if err = getDB.Count(&count).Error; err != nil {
@@ -180,6 +180,7 @@ func (s *HostService) GetHosts(params *api.GetHostsReq) (*api.GetHostsRes, error
 			DataDisk:           value.DataDisk,
 			Mem:                value.Mem,
 			ProjectName:        value.ProjectName,
+			ProjectId:          value.ProjectId,
 			GetHostGameInfoRes: totalRes,
 		})
 	}

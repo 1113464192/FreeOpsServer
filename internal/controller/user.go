@@ -70,7 +70,6 @@ func UserLogin(c *gin.Context) {
 // @Router /auth/refreshToken [post]
 func RefreshToken(c *gin.Context) {
 	refreshToken := c.PostForm("refreshToken")
-	fmt.Printf("刷新token检查1：%s \n", refreshToken)
 	res, code, err := service.UserServiceApp().RefreshToken(refreshToken)
 	var msg string
 	var data any

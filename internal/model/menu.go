@@ -7,7 +7,7 @@ type Menu struct {
 	Status          uint    `json:"status" gorm:"default:1;comment:状态: 1(enabled),2(disabled);type:tinyint"`
 	ParentId        uint    `json:"parentId" gorm:"comment:父菜单;index"`
 	MenuType        uint    `json:"menuType" gorm:"comment:菜单类型: 1(directory),2(menu);type:tinyint"`
-	MenuName        string  `json:"menuName" gorm:"type:varchar(30);unique;comment:菜单名称"`
+	MenuName        string  `json:"menuName" gorm:"type:varchar(30);uniqueIndex;comment:菜单名称"`
 	RouteName       string  `json:"routeName" gorm:"type:varchar(30);uniqueIndex;comment:路由名称"`
 	RoutePath       string  `json:"routePath" gorm:"type:varchar(255);comment:路由地址"`
 	Component       string  `json:"component" gorm:"type:varchar(100);comment:组件"`
