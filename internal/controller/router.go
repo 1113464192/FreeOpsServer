@@ -119,18 +119,20 @@ func NewRoute() *gin.Engine {
 			hostRoute.POST("", UpdateHost)              // 新增/修改服务器
 			hostRoute.GET("", GetHosts)                 // 查询服务器
 			hostRoute.DELETE("", DeleteHosts)           // 删除服务器
+			hostRoute.GET("summary", GetHostList)       // 获取项目列表
 			hostRoute.GET("game-info", GetHostGameInfo) // 获取服务器的游戏信息
 		}
 		// ---------游戏服务相关------------
 		gameRoute := r.Group("games")
 		{
-			gameRoute.POST("", UpdateGame)    // 新增/修改游戏
-			gameRoute.GET("", GetGames)       // 查询游戏
-			gameRoute.DELETE("", DeleteGames) // 删除游戏
+			gameRoute.POST("", UpdateGame)              // 新增/修改游戏
+			gameRoute.GET("", GetGames)                 // 查询游戏
+			gameRoute.DELETE("", DeleteGames)           // 删除游戏
+			gameRoute.PATCH("status", UpdateGameStatus) // 更新游戏状态
 		}
 		// ---------云平台相关------------
 		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)
-		// 不建议平台写死，否则改动过于频繁，不能及时配合运维自动化脚本实时改动
+		// 不建议平台写死，否则改动过于频繁，不能及时配合各项目运维自动化脚本实时改动
 		cloudRoute := r.Group("clouds")
 		{
 			// 创建

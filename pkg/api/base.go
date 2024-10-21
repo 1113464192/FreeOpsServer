@@ -33,3 +33,8 @@ type CustomErrorReq struct {
 	Code string `json:"code" form:"code" binding:"required"`
 	Msg  string `json:"msg" form:"msg" binding:"required"`
 }
+
+type GetIdAndNameRes struct {
+	ID   uint   `json:"id" form:"id"`
+	Name string `json:"name" form:"name"`
+}

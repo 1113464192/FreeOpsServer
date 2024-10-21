@@ -107,6 +107,40 @@ func DeleteHosts(c *gin.Context) {
 	})
 }
 
+// GetHostList
+// @Tags 服务器相关
+// @title 获取服务器列表
+// @description 查询服务器列表
+// @Summary 获取服务器列表
+// @Produce   application/json
+// @Param Authorization header string true "格式为：Bearer 登录返回的用户令牌"
+// @Param id query uint true "项目ID"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /hosts/summary [get]
+func GetHostList(c *gin.Context) {
+	pidStr := c.Query("id")
+	pid, err := strconv.ParseUint(pidStr, 10, 64)
+	if err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	var res []api.GetHostListRes
+	if res, err = service.HostServiceApp().GetHostList(uint(pid)); err != nil {
+		logger.Log().Error("host", "获取服务器列表失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取服务器列表失败", err))
+		return
+	}
+
+	logger.Log().Info("host", "获取服务器列表成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}
+
 // GetHostGameInfo
 // @Tags 服务器相关
 // @title 获取服务器各业务信息总数

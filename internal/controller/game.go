@@ -105,3 +105,35 @@ func DeleteGames(c *gin.Context) {
 		Msg:  "Success",
 	})
 }
+
+// UpdateGameStatus
+// @Tags 游戏服相关
+// @title 修改游戏服状态
+// @description 修改游戏服状态
+// @Summary 修改游戏服状态
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data formData api.UpdateGameStatusReq true "传修改游戏服状态所需参数"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /games/status [patch]
+func UpdateGameStatus(c *gin.Context) {
+	var (
+		statusReq api.UpdateGameStatusReq
+		err       error
+	)
+	if err = c.ShouldBind(&statusReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if err = service.GameServiceApp().UpdateGameStatus(&statusReq); err != nil {
+		logger.Log().Error("game", "修改游戏服状态失败", err)
+		c.JSON(500, util.ServerErrorResponse("修改游戏服状态失败", err))
+		return
+	}
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+	})
+}

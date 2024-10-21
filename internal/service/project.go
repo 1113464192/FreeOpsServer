@@ -19,7 +19,6 @@ func ProjectServiceApp() *ProjectService {
 
 // 修改/添加项目
 func (s *ProjectService) UpdateProject(params *api.UpdateProjectReq) (err error) {
-
 	var (
 		project model.Project
 		count   int64
@@ -39,6 +38,14 @@ func (s *ProjectService) UpdateProject(params *api.UpdateProjectReq) (err error)
 			return fmt.Errorf("项目查询失败: %v", err)
 		}
 		project.Name = params.Name
+		project.BackendVersion = params.BackendVersion
+		project.FrontendVersion = params.FrontendVersion
+		project.GameRange = params.GameRange
+		project.CrossRange = params.CrossRange
+		project.CommonRange = params.CommonRange
+		project.OneGameMem = params.OneGameMem
+		project.OneCrossMem = params.OneCrossMem
+		project.OneCommonMem = params.OneCommonMem
 		project.CloudPlatform = params.CloudPlatform
 
 		if err = model.DB.Save(&project).Error; err != nil {
@@ -54,8 +61,16 @@ func (s *ProjectService) UpdateProject(params *api.UpdateProjectReq) (err error)
 		}
 
 		project = model.Project{
-			Name:          params.Name,
-			CloudPlatform: params.CloudPlatform,
+			Name:            params.Name,
+			BackendVersion:  params.BackendVersion,
+			FrontendVersion: params.FrontendVersion,
+			GameRange:       params.GameRange,
+			CrossRange:      params.CrossRange,
+			CommonRange:     params.CommonRange,
+			OneGameMem:      params.OneGameMem,
+			OneCrossMem:     params.OneCrossMem,
+			OneCommonMem:    params.OneCommonMem,
+			CloudPlatform:   params.CloudPlatform,
 		}
 		tx := model.DB.Begin()
 		if err = tx.Create(&project).Error; err != nil {
@@ -127,9 +142,17 @@ func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjec
 		}
 		records = append(records, api.GetProjectRes{
 			GetProjectReq: api.GetProjectReq{
-				ID:            value.ID,
-				Name:          value.Name,
-				CloudPlatform: value.CloudPlatform,
+				ID:              value.ID,
+				Name:            value.Name,
+				BackendVersion:  value.BackendVersion,
+				FrontendVersion: value.FrontendVersion,
+				GameRange:       value.GameRange,
+				CrossRange:      value.CrossRange,
+				CommonRange:     value.CommonRange,
+				OneGameMem:      value.OneGameMem,
+				OneCrossMem:     value.OneCrossMem,
+				OneCommonMem:    value.OneCommonMem,
+				CloudPlatform:   value.CloudPlatform,
 			},
 			GetProjectAssetsTotalRes: totalRes,
 		})
@@ -143,12 +166,22 @@ func (s *ProjectService) GetProjects(params *api.GetProjectsReq) (*api.GetProjec
 	return &result, err
 }
 
-func (s *ProjectService) GetProjectList() (*[]api.GetProjectReq, error) {
-	var projects []model.Project
-	if err := model.DB.Find(&projects).Error; err != nil {
+func (s *ProjectService) GetProjectList() ([]api.GetIdAndNameRes, error) {
+	var (
+		projects []model.Project
+		result   []api.GetIdAndNameRes
+	)
+	if err := model.DB.Select("id", "name").Find(&projects).Error; err != nil {
 		return nil, fmt.Errorf("查询项目失败: %v", err)
 	}
-	return s.GetResults(&projects)
+	for _, project := range projects {
+		res := api.GetIdAndNameRes{
+			ID:   project.ID,
+			Name: project.Name,
+		}
+		result = append(result, res)
+	}
+	return result, nil
 }
 
 func (s *ProjectService) DeleteProjects(ids []uint) (err error) {
@@ -212,9 +245,17 @@ func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error
 	if projects, ok := projectObj.(*[]model.Project); ok {
 		for _, project := range *projects {
 			res := api.GetProjectReq{
-				ID:            project.ID,
-				Name:          project.Name,
-				CloudPlatform: project.CloudPlatform,
+				ID:              project.ID,
+				Name:            project.Name,
+				BackendVersion:  project.BackendVersion,
+				FrontendVersion: project.FrontendVersion,
+				GameRange:       project.GameRange,
+				CrossRange:      project.CrossRange,
+				CommonRange:     project.CommonRange,
+				OneGameMem:      project.OneGameMem,
+				OneCrossMem:     project.OneCrossMem,
+				OneCommonMem:    project.OneCommonMem,
+				CloudPlatform:   project.CloudPlatform,
 			}
 			result = append(result, res)
 		}
@@ -222,9 +263,17 @@ func (s *ProjectService) GetResults(projectObj any) (*[]api.GetProjectReq, error
 	}
 	if project, ok := projectObj.(*model.Project); ok {
 		res := api.GetProjectReq{
-			ID:            project.ID,
-			Name:          project.Name,
-			CloudPlatform: project.CloudPlatform,
+			ID:              project.ID,
+			Name:            project.Name,
+			BackendVersion:  project.BackendVersion,
+			FrontendVersion: project.FrontendVersion,
+			GameRange:       project.GameRange,
+			CrossRange:      project.CrossRange,
+			CommonRange:     project.CommonRange,
+			OneGameMem:      project.OneGameMem,
+			OneCrossMem:     project.OneCrossMem,
+			OneCommonMem:    project.OneCommonMem,
+			CloudPlatform:   project.CloudPlatform,
 		}
 		result = append(result, res)
 		return &result, err

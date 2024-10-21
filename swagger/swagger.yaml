@@ -763,6 +763,9 @@ paths:
         name: id
         type: integer
       - in: query
+        name: ipv4
+        type: string
+      - in: query
         name: projectName
         type: string
       - description: 每页大小
@@ -858,6 +861,41 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 新增/修改游戏服信息
+      tags:
+      - 游戏服相关
+  /games/status:
+    patch:
+      description: 修改游戏服状态
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - in: formData
+        name: id
+        required: true
+        type: integer
+      - in: formData
+        name: status
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 修改游戏服状态
       tags:
       - 游戏服相关
   /hosts:
@@ -1060,6 +1098,38 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 获取服务器各业务信息总数
+      tags:
+      - 服务器相关
+  /hosts/summary:
+    get:
+      description: 查询服务器列表
+      parameters:
+      - description: 格式为：Bearer 登录返回的用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 项目ID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 获取服务器列表
       tags:
       - 服务器相关
   /menus:
@@ -1392,8 +1462,7 @@ paths:
         in: query
         name: current
         type: integer
-      - description: 修改才需要传，没有传算新增
-        in: query
+      - in: query
         name: id
         type: integer
       - in: query
@@ -1429,9 +1498,33 @@ paths:
         name: Authorization
         required: true
         type: string
+      - description: 后端版本
+        in: formData
+        name: backendVersion
+        required: true
+        type: string
       - description: 云平台
         in: formData
         name: cloudPlatform
+        required: true
+        type: string
+      - description: 公共服ID范围
+        in: formData
+        name: commonRange
+        type: string
+      - description: 跨服ID范围
+        in: formData
+        name: crossRange
+        required: true
+        type: string
+      - description: 前端版本
+        in: formData
+        name: frontendVersion
+        required: true
+        type: string
+      - description: 游服ID范围
+        in: formData
+        name: gameRange
         required: true
         type: string
       - description: 修改才需要传，没有传算新增
@@ -1443,6 +1536,20 @@ paths:
         name: name
         required: true
         type: string
+      - description: 单个公共服进程加数据库最大占用内存(G)
+        in: formData
+        name: oneCommonMem
+        type: number
+      - description: 单个跨服进程加数据库最大占用内存(G)
+        in: formData
+        name: oneCrossMem
+        required: true
+        type: number
+      - description: 单个游服进程加数据库最大占用内存(G)
+        in: formData
+        name: oneGameMem
+        required: true
+        type: number
       produces:
       - application/json
       responses:

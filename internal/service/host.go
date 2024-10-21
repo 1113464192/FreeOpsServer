@@ -219,6 +219,28 @@ func (s *HostService) DeleteHosts(ids []uint) (err error) {
 	return nil
 }
 
+func (s *HostService) GetHostList(projectId uint) ([]api.GetHostListRes, error) {
+	var (
+		hosts  []model.Host
+		result []api.GetHostListRes
+	)
+	if err := model.DB.Where("project_id = ?", projectId).Select("id", "name", "ipv4", "ipv6").Find(&hosts).Error; err != nil {
+		return nil, fmt.Errorf("查询服务器失败: %v", err)
+	}
+	for _, host := range hosts {
+		res := api.GetHostListRes{
+			ID:   host.ID,
+			Name: host.Name,
+			Ipv4: host.Ipv4,
+		}
+		if host.Ipv6 != nil {
+			res.Ipv6 = *host.Ipv6
+		}
+		result = append(result, res)
+	}
+	return result, nil
+}
+
 func (s *HostService) GetHostGameInfo(id uint) (res api.GetHostGameInfoRes, err error) {
 	if err = model.DB.Model(model.Game{}).Where("host_id = ? AND type = ?", id, consts.GameModeTypeIsGame).Count(&res.GameTotal).Error; err != nil {
 		return res, fmt.Errorf("查询游服总数失败: %v", err)

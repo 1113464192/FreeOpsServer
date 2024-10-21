@@ -856,6 +856,11 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "name": "ipv4",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "name": "projectName",
                         "in": "query"
                     },
@@ -1041,6 +1046,59 @@ const docTemplate = `{
                     },
                     "500": {
                         "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/status": {
+            "patch": {
+                "description": "修改游戏服状态",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "游戏服相关"
+                ],
+                "summary": "修改游戏服状态",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "status",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
                         "schema": {
                             "$ref": "#/definitions/api.Response"
                         }
@@ -1328,6 +1386,54 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "传服务器ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/hosts/summary": {
+            "get": {
+                "description": "查询服务器列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "服务器相关"
+                ],
+                "summary": "获取服务器列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 登录返回的用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "项目ID",
                         "name": "id",
                         "in": "query",
                         "required": true
@@ -1813,7 +1919,6 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "修改才需要传，没有传算新增",
                         "name": "id",
                         "in": "query"
                     },
@@ -1869,8 +1974,42 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "后端版本",
+                        "name": "backendVersion",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "云平台",
                         "name": "cloudPlatform",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "公共服ID范围",
+                        "name": "commonRange",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "跨服ID范围",
+                        "name": "crossRange",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "前端版本",
+                        "name": "frontendVersion",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "游服ID范围",
+                        "name": "gameRange",
                         "in": "formData",
                         "required": true
                     },
@@ -1884,6 +2023,26 @@ const docTemplate = `{
                         "type": "string",
                         "description": "项目名",
                         "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "单个公共服进程加数据库最大占用内存(G)",
+                        "name": "oneCommonMem",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "number",
+                        "description": "单个跨服进程加数据库最大占用内存(G)",
+                        "name": "oneCrossMem",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "单个游服进程加数据库最大占用内存(G)",
+                        "name": "oneGameMem",
                         "in": "formData",
                         "required": true
                     }

@@ -23,6 +23,10 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 		game  model.Game
 		count int64
 	)
+	// 判断projectId是否和hostId匹配
+	if err = model.DB.Model(&model.Host{}).Where("id = ? AND project_id = ?", params.HostId, params.ProjectId).Count(&count).Error; count != 1 || err != nil {
+		return fmt.Errorf("host ID不存在: %d, 或不在项目ID: %d 下, 或有错误信息: %v", params.HostId, params.ProjectId, err)
+	}
 	if params.ActionType == consts.ActionTypeIsCreate {
 		// 只需要检查以下，避免不同机器创建了相同的。lb、sPort无需检查，因为必然是脚本创建成功了才会请求本接口。
 		if err = model.DB.Model(&model.Game{}).Where("id = ? AND project_id = ? AND type = ?", params.Id, params.ProjectId, params.Type).Count(&count).Error; count > 0 || err != nil {
@@ -108,6 +112,18 @@ func (s *GameService) UpdateGame(params *api.UpdateGameReq) (err error) {
 	}
 }
 
+func (s *GameService) UpdateGameStatus(params *api.UpdateGameStatusReq) (err error) {
+	var game model.Game
+	if err = model.DB.Model(&model.Game{}).Where("id = ?", params.Id).First(&game).Error; err != nil {
+		return fmt.Errorf("查询游戏服失败: %v", err)
+	}
+	game.Status = params.Status
+	if err = model.DB.Save(&game).Error; err != nil {
+		return fmt.Errorf("更新游戏服状态失败: %v", err)
+	}
+	return nil
+}
+
 func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error) {
 	var games []model.Game
 	var err error
@@ -141,6 +157,16 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 			return nil, fmt.Errorf("查询服务器ID失败: %v", err)
 		}
 		getDB = getDB.Where("host_id IN (?)", hostId)
+	}
+
+	if params.Ipv4 != "" {
+		sqlIpv4 := "%" + strings.ToUpper(params.Ipv4) + "%"
+		var hostId []uint
+		if err = model.DB.Model(model.Host{}).Where("UPPER(ipv4) LIKE ?", sqlIpv4).Pluck("id", &hostId).Error; err != nil {
+			return nil, fmt.Errorf("查询服务器ID失败: %v", err)
+		}
+		getDB = getDB.Where("host_id IN (?)", hostId)
+
 	}
 
 	if params.ProjectName != "" {
@@ -223,8 +249,14 @@ func (s *GameService) DeleteGames(ids []uint) (err error) {
 }
 
 func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
+	type tmpDataStruct struct {
+		Name string
+		Ipv4 string
+	}
+
 	var result []api.GetGameRes
 	var err error
+	var tmpData tmpDataStruct
 	if games, ok := gameObj.(*[]model.Game); ok {
 		for _, game := range *games {
 			res := api.GetGameRes{
@@ -250,9 +282,11 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 			if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 				return nil, fmt.Errorf("查询项目名称失败: %v", err)
 			}
-			if err = model.DB.Model(model.Host{}).Where("id = ?", game.HostId).Pluck("name", &res.HostName).Error; err != nil {
-				return nil, fmt.Errorf("查询服务器名称失败: %v", err)
+			if err = model.DB.Model(model.Host{}).Where("id = ?", game.HostId).Select("name", "ipv4").Scan(&tmpData).Error; err != nil {
+				return nil, fmt.Errorf("查询服务器名称IP失败: %v", err)
 			}
+			res.Ipv4 = tmpData.Ipv4
+			res.HostName = tmpData.Name
 			result = append(result, res)
 		}
 		return &result, err
@@ -281,9 +315,11 @@ func (s *GameService) GetResults(gameObj any) (*[]api.GetGameRes, error) {
 		if err = model.DB.Model(model.Project{}).Where("id = ?", game.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)
 		}
-		if err = model.DB.Model(model.Host{}).Where("id = ?", game.HostId).Pluck("name", &res.HostName).Error; err != nil {
-			return nil, fmt.Errorf("查询服务器名称失败: %v", err)
+		if err = model.DB.Model(model.Host{}).Where("id = ?", game.HostId).Select("name", "ipv4").Scan(&tmpData).Error; err != nil {
+			return nil, fmt.Errorf("查询服务器名称IP失败: %v", err)
 		}
+		res.Ipv4 = tmpData.Ipv4
+		res.HostName = tmpData.Name
 		result = append(result, res)
 		return &result, err
 	}

@@ -61,3 +61,10 @@ type GetHostGameInfoRes struct {
 	CrossTotal  int64 `json:"crossTotal" form:"crossTotal"`   // 跨服总数
 	CommonTotal int64 `json:"commonTotal" form:"commonTotal"` // 公共服总数
 }
+
+type GetHostListRes struct {
+	ID   uint   `json:"id" form:"id"`
+	Name string `json:"name" form:"name"`
+	Ipv4 string `json:"ipv4" form:"ipv4"`
+	Ipv6 string `json:"ipv6,omitempty" form:"ipv6"`
+}
