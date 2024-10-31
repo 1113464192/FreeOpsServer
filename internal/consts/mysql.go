@@ -13,18 +13,25 @@ var SoftDeleteModelList = []interface{}{
 	&model.Host{},
 	&model.Project{},
 	&model.Game{},
+	&model.OpsTemplate{},
+	&model.OpsTask{},
+	&model.OpsTaskLogs{},
 }
 
 // MysqlTableName
 const (
-	MysqlTableNameUser       = "user"
-	MysqlTableNameRole       = "role"
-	MysqlTableNameMenu       = "menu"
-	MysqlTableNameApi        = "api"
-	MysqlTableNameButton     = "button"
-	MysqlTableNameProject    = "project"
-	MysqlTableNameJwt        = "jwt_blacklist"
-	MysqlTableNameUserRecord = "act_record"
+	MysqlTableNameUser        = "user"
+	MysqlTableNameRole        = "role"
+	MysqlTableNameMenu        = "menu"
+	MysqlTableNameApi         = "api"
+	MysqlTableNameButton      = "button"
+	MysqlTableNameProject     = "project"
+	MysqlTableNameJwt         = "jwt_blacklist"
+	MysqlTableNameUserRecord  = "act_record"
+	MysqlTableNameOpsTemplate = "ops_template"
+	MysqlTableNameOpsParam    = "ops_param"
+	MysqlTableNameOpsTask     = "ops_task"
+
 	// GORM默认Bool类型的True是1，False是0
 	MysqlGormBoolIsTrue  = 1
 	MysqlGormBoolIsFalse = 0

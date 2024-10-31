@@ -512,7 +512,7 @@ func BindUserRoles(c *gin.Context) {
 		return
 	}
 
-	logger.Log().Info("user", "绑定用户角色成功", fmt.Sprintf("用户ID: %d————角色IDs: %s", params.UserId, params.RoleIds))
+	logger.Log().Info("user", "绑定用户角色成功", fmt.Sprintf("用户ID: %d————角色IDs: %d", params.UserId, params.RoleIds))
 	c.JSON(200, api.Response{
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "修改权限成功，刷新Token",

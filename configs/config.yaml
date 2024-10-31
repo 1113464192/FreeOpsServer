@@ -21,6 +21,9 @@ sshConfig:
   # 仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
   # ssh建立Client超时时间，默认1m
   sshClientTimeout: 1m
+  # 运维管理SSH密钥路径
+  opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
+  opsKeyPassphrase : ""
 
 clientSide:
   isSSL: "true" # 是否启用SSL
@@ -75,17 +78,3 @@ securityVars:
   clientReqMd5Key: "arhgfdbgfghfgdsfsfgfds"
   # 允许的CIDR
   allowedCIDR: "0.0.0.0/0"
-
-# 腾讯云AKSK
-cloud:
-  allowConsecutiveCreateTimes: 3
-  tencentCloud:
-    ak: testak
-    sk: testsk
-  aliyunCloud:
-    ak: testak
-    sk: testsk
-  volcengineCloud:
-    ak: testak
-    sk: testsk
-

@@ -119,7 +119,7 @@ func NewRoute() *gin.Engine {
 			hostRoute.POST("", UpdateHost)              // 新增/修改服务器
 			hostRoute.GET("", GetHosts)                 // 查询服务器
 			hostRoute.DELETE("", DeleteHosts)           // 删除服务器
-			hostRoute.GET("summary", GetHostList)       // 获取项目列表
+			hostRoute.GET("summary", GetHostList)       // 获取服务器列表
 			hostRoute.GET("game-info", GetHostGameInfo) // 获取服务器的游戏信息
 		}
 		// ---------游戏服务相关------------
@@ -129,6 +129,24 @@ func NewRoute() *gin.Engine {
 			gameRoute.GET("", GetGames)                 // 查询游戏
 			gameRoute.DELETE("", DeleteGames)           // 删除游戏
 			gameRoute.PATCH("status", UpdateGameStatus) // 更新游戏状态
+		}
+		// --------运维操作服务相关----------
+		opsRoute := r.Group("ops")
+		{
+			opsRoute.POST("template", UpdateOpsTemplate)             // 创建/修改 模板
+			opsRoute.GET("template", GetOpsTemplate)                 // 查看模板
+			opsRoute.POST("param-template", UpdateOpsParamsTemplate) // 创建/修改 获取参数模板 (从运营文案信息获取参数的正则模板)
+			opsRoute.GET("param-template", GetOpsParamsTemplate)     // 查看参数
+			opsRoute.PUT("bind-template-params", BindTemplateParams) // 绑定模板参数
+			opsRoute.GET("template-params", GetTemplateParams)       // 查看模板关联的参数
+			// 还需要拼接执行模板顺序的任务接口、执行任务接口、获取任务运行状态接口、任务日志接口
+			opsRoute.POST("task", UpdateOpsTask)                   // 创建/修改 任务(拼接执行模板顺序的任务)
+			opsRoute.PUT("bind-task-templates", BindTaskTemplates) // 绑定任务和模板
+			opsRoute.GET("task-templates", GetTaskTemplates)       // 查看任务关联的模板
+			opsRoute.POST("submit-task", RunOpsTask)               // 执行任务
+			opsRoute.PUT("approve-task", ApproveOpsTask)           // 用户审批工单
+			opsRoute.GET("task", GetOpsTask)                       // 查看任务
+			opsRoute.GET("task-logs", GetOpsTaskLogs)              // 查看任务日志
 		}
 		// ---------云平台相关------------
 		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)

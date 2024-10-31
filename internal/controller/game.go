@@ -132,6 +132,8 @@ func UpdateGameStatus(c *gin.Context) {
 		c.JSON(500, util.ServerErrorResponse("修改游戏服状态失败", err))
 		return
 	}
+
+	logger.Log().Info("game", "修改游戏服状态成功", fmt.Sprintf("ID: %d", statusReq.Id))
 	c.JSON(200, api.Response{
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",
