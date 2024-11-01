@@ -49,7 +49,7 @@ func UpdateOpsTemplate(c *gin.Context) {
 // GetOpsTemplate
 // @Tags 运维操作相关
 // @title 查询操作模板信息
-// @description 要获取content直接传ID, 不获取content批量获取name等基础数据不用传ID
+// @description 要获取content直接传ID, 不获取content等, 只批量获取name等基础数据不用传ID
 // @Summary 查询操作模板信息
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
@@ -213,5 +213,74 @@ func GetTemplateParams(c *gin.Context) {
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",
 		Data: res,
+	})
+}
+
+// UpdateOpsTask
+// @Tags 运维操作相关
+// @title 新增/修改 运维操作任务信息
+// @description 新增不用传ID，修改才传ID
+// @Summary 新增/修改 运维操作任务信息
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data formData api.UpdateOpsTaskReq true "传新增或者修改操作模板的所需参数"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/task [post]
+func UpdateOpsTask(c *gin.Context) {
+	var (
+		taskReq api.UpdateOpsTaskReq
+		err     error
+	)
+	if err = c.ShouldBind(&taskReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if err = service.OpsServiceApp().UpdateOpsTask(taskReq); err != nil {
+		logger.Log().Error("ops", "创建/修改运维操作模板失败", err)
+		c.JSON(500, util.ServerErrorResponse("创建/修改运维操作任务信息失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "创建/修改运维操作任务信息成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+	})
+}
+
+// GetOpsTask
+// @Tags 运维操作相关
+// @title 查询运维操作任务信息
+// @description 要获取具体信息直接传ID, 不获取content等，只批量获取name等基础数据不用传ID
+// @Summary 查询操作模板信息
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data Query api.GetOpsTaskReq true "传新增或者修改操作模板的所需参数"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/task [get]
+func GetOpsTask(c *gin.Context) {
+	var (
+		taskReq api.GetOpsTaskReq
+		err     error
+	)
+	if err = c.ShouldBind(&taskReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	result, err := service.OpsServiceApp().GetOpsTask(taskReq)
+	if err != nil {
+		logger.Log().Error("ops", "查询运维操作任务信息失败", err)
+		c.JSON(500, util.ServerErrorResponse("查询运维操作任务信息失败", err))
+		return
+	}
+	logger.Log().Info("ops", "查询运维操作任务信息成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: result,
 	})
 }

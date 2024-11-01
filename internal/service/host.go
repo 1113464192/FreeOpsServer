@@ -44,6 +44,7 @@ func (s *HostService) UpdateHost(params *api.UpdateHostReq) (err error) {
 			*host.Ipv6 = params.Ipv6
 		}
 		host.Vip = params.Vip
+		host.SSHPort = params.SSHPort
 		host.Zone = params.Zone
 		host.Cloud = params.Cloud
 		host.System = params.System
@@ -69,6 +70,7 @@ func (s *HostService) UpdateHost(params *api.UpdateHostReq) (err error) {
 			Name:      params.Name,
 			Ipv4:      params.Ipv4,
 			Vip:       params.Vip,
+			SSHPort:   params.SSHPort,
 			Zone:      params.Zone,
 			Cloud:     params.Cloud,
 			System:    params.System,
@@ -173,6 +175,7 @@ func (s *HostService) GetHosts(params *api.GetHostsReq) (*api.GetHostsRes, error
 			Ipv4:               value.Ipv4,
 			Ipv6:               value.Ipv6,
 			Vip:                value.Vip,
+			SSHPort:            value.SSHPort,
 			Zone:               value.Zone,
 			Cloud:              value.Cloud,
 			System:             value.System,
@@ -264,6 +267,7 @@ func (s *HostService) GetResults(hostObj any) (*[]api.GetHostRes, error) {
 				Name:      host.Name,
 				Ipv4:      host.Ipv4,
 				Vip:       host.Vip,
+				SSHPort:   host.SSHPort,
 				Zone:      host.Zone,
 				Cloud:     host.Cloud,
 				System:    host.System,
@@ -288,6 +292,7 @@ func (s *HostService) GetResults(hostObj any) (*[]api.GetHostRes, error) {
 			Name:      host.Name,
 			Ipv4:      host.Ipv4,
 			Vip:       host.Vip,
+			SSHPort:   host.SSHPort,
 			Zone:      host.Zone,
 			Cloud:     host.Cloud,
 			System:    host.System,

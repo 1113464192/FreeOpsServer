@@ -69,6 +69,9 @@ func declareGlobal() (err error) {
 	dir := filepath.Dir(filename)
 	global.RootPath, err = findRootDir(dir)
 	global.RootPath = strings.Replace(global.RootPath, "\\", "/", -1)
+
+	// ssh密钥
+	global.OpsSSHKey, err = os.ReadFile(global.Conf.SshConfig.OpsKeyPath)
 	return err
 }
 

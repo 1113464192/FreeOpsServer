@@ -23,6 +23,7 @@ sshConfig:
   sshClientTimeout: 1m
   # 运维管理SSH密钥路径
   opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
+  # 没有设置passphrase则留空字符串
   opsKeyPassphrase : ""
 
 clientSide:

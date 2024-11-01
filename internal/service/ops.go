@@ -5,6 +5,8 @@ import (
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/util"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -39,7 +41,7 @@ func (s *OpsService) UpdateOpsTemplate(params *api.UpdateOpsTemplateReq) (err er
 		return err
 	} else {
 		if err = model.DB.Model(&model.OpsTemplate{}).Where("project_id = ? AND name = ?", params.ProjectId, params.Name).Count(&count).Error; count > 0 || err != nil {
-			return fmt.Errorf("template 已存在,id: %d projectId: %d name: %s , 或有错误信息: %v", params.ID, params.ProjectId, params.Name, err)
+			return fmt.Errorf("template 已存在, projectId: %d name: %s , 或有错误信息: %v", params.ProjectId, params.Name, err)
 		}
 		template = model.OpsTemplate{
 			Name:      params.Name,
@@ -255,4 +257,171 @@ func (s *OpsService) GetTemplateParams(TemplateID uint) (res []model.OpsParam, e
 		return nil, fmt.Errorf("查询运维操作模板对应的参数模板失败: %v", err)
 	}
 	return res, nil
+}
+
+// 修改/添加 运维操作任务信息
+func (s *OpsService) UpdateOpsTask(params api.UpdateOpsTaskReq) (err error) {
+	var (
+		task  model.OpsTask
+		count int64
+	)
+	// 确保是json构造
+	if _, err = json.Marshal(params.TemplateIds); err != nil {
+		return fmt.Errorf("templateIds 不是json格式: %v", err)
+	}
+
+	if params.ID != 0 {
+		if err = model.DB.Model(&model.OpsTask{}).Where("id != ? AND project_id = ? AND name = ?", params.ID, params.ProjectId, params.Name).Count(&count).Error; count > 0 || err != nil {
+			return fmt.Errorf("同项目下除自身外仍有相同的名称的 TaskName,id: %d projectId: %d name: %s , 或有错误信息: %v", params.ID, params.ProjectId, params.Name, err)
+		}
+		if err = model.DB.Model(&model.OpsTask{}).Where("id == ?", params.ID).First(&task).Error; err != nil {
+			return fmt.Errorf("查询运维操作任务信息失败: %v", err)
+		}
+		if params.Auditors != "" {
+			if _, err = json.Marshal(params.Auditors); err != nil {
+				return fmt.Errorf("auditors 不是json格式: %v", err)
+			}
+			*task.Auditors = params.Auditors
+		}
+
+		task.Name = params.Name
+		task.TemplateIds = params.TemplateIds
+		task.HostId = params.HostId
+		task.IsIntranet = params.IsIntranet
+		task.ProjectId = params.ProjectId
+		if err = model.DB.Save(&task).Error; err != nil {
+			return fmt.Errorf("数据保存失败: %v", err)
+		}
+		return err
+	} else {
+		if err = model.DB.Model(&model.OpsTemplate{}).Where("project_id = ? AND name = ?", params.ProjectId, params.Name).Count(&count).Error; count > 0 || err != nil {
+			return fmt.Errorf("task 已存在, projectId: %d name: %s , 或有错误信息: %v", params.ProjectId, params.Name, err)
+		}
+
+		task = model.OpsTask{
+			Name:        params.Name,
+			TemplateIds: params.TemplateIds,
+			HostId:      params.HostId,
+			IsIntranet:  params.IsIntranet,
+			ProjectId:   params.ProjectId,
+		}
+		if params.Auditors != "" {
+			if _, err = json.Marshal(params.Auditors); err != nil {
+				return fmt.Errorf("auditors 不是json格式: %v", err)
+			}
+			*task.Auditors = params.Auditors
+		}
+
+		if err = model.DB.Create(&task).Error; err != nil {
+			return fmt.Errorf("创建运维操作任务信息失败: %v", err)
+		}
+		return err
+	}
+}
+
+// 查询运维操作任务信息，不需要content则不传ID
+func (s *OpsService) GetOpsTask(params api.GetOpsTaskReq) (*api.GetOpsTasksRes, error) {
+	var (
+		err   error
+		count int64
+	)
+
+	if params.ID != 0 {
+		var task model.OpsTask
+		if err = model.DB.Model(&model.OpsTemplate{}).Where("id = ?", params.ID).First(&task).Error; err != nil {
+			return nil, fmt.Errorf("查询运维操作任务信息失败: %v", err)
+		}
+
+		res, err := s.getOpsTaskResult(&task)
+		if res == nil {
+			return nil, errors.New("运维操作任务信息转换结果失败, res为nil")
+		}
+		if err != nil {
+			return nil, fmt.Errorf("运维操作任务信息转换结果失败: err: %v", err)
+		}
+		result := api.GetOpsTasksRes{
+			Records:  *res,
+			Page:     1,
+			PageSize: 1,
+			Total:    1,
+		}
+		return &result, err
+	}
+
+	getDB := model.DB.Model(&model.OpsTask{})
+	if params.Name != "" {
+		sqlName := "%" + strings.ToUpper(params.Name) + "%"
+		getDB = getDB.Where("UPPER(name) LIKE ?", sqlName)
+	}
+
+	if params.ProjectId != 0 {
+		getDB = getDB.Where("project_id = ?", params.ProjectId)
+	}
+
+	if err = getDB.Count(&count).Error; err != nil {
+		return nil, fmt.Errorf("查询运维操作任务信息总数失败: %v", err)
+	}
+
+	var tasks []model.OpsTask
+	if params.Page != 0 && params.PageSize != 0 {
+		if err = getDB.Omit("template_ids", "auditors").Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&tasks).Error; err != nil {
+			return nil, fmt.Errorf("查询运维操作任务信息失败: %v", err)
+		}
+	} else {
+		if err = getDB.Omit("template_ids", "auditors").Find(&tasks).Error; err != nil {
+			return nil, fmt.Errorf("查询运维操作任务信息失败: %v", err)
+		}
+	}
+	res, err := s.getOpsTaskResult(&tasks)
+	if res == nil {
+		return nil, errors.New("运维操作任务信息转换结果失败, res为nil")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("运维操作任务信息转换结果失败: err: %v", err)
+	}
+	result := api.GetOpsTasksRes{
+		Records:  *res,
+		Page:     params.Page,
+		PageSize: params.PageSize,
+		Total:    count,
+	}
+
+	return &result, err
+}
+
+func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) {
+	var result []api.GetOpsTaskRes
+	var err error
+	// 批量查询不需要temIds和auditors
+	if tasks, ok := opsObj.(*[]model.OpsTask); ok {
+		for _, task := range *tasks {
+			res := api.GetOpsTaskRes{
+				ID:        task.ID,
+				Name:      task.Name,
+				HostId:    task.HostId,
+				ProjectId: task.ProjectId,
+			}
+			result = append(result, res)
+		}
+		return &result, err
+	}
+	if task, ok := opsObj.(*model.OpsTask); ok {
+		res := api.GetOpsTaskRes{
+			ID:        task.ID,
+			Name:      task.Name,
+			HostId:    task.HostId,
+			ProjectId: task.ProjectId,
+		}
+		if err = json.Unmarshal([]byte(task.TemplateIds), &res.TemplateIds); err != nil {
+			return nil, fmt.Errorf("task中的TemplateIds 不符合 []uint 格式: %v", err)
+		}
+		if task.Auditors != nil {
+			if err = json.Unmarshal([]byte(*task.Auditors), &res.Auditors); err != nil {
+				return nil, fmt.Errorf("task中的Auditors 不符合 []uint 格式: %v", err)
+			}
+		}
+
+		result = append(result, res)
+	}
+	return &result, errors.New("转换运维操作任务信息结果失败")
 }

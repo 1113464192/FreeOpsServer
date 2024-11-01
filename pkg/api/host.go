@@ -6,6 +6,7 @@ type UpdateHostReq struct {
 	Ipv4      string `form:"ipv4" json:"ipv4" binding:"required"`
 	Ipv6      string `form:"ipv6" json:"ipv6"`
 	Vip       string `form:"vip" json:"vip" binding:"required"`
+	SSHPort   uint16 `form:"sshPort" json:"sshPort" binding:"required"`
 	Zone      string `form:"zone" json:"zone" binding:"required"`
 	Cloud     string `form:"cloud" json:"cloud" binding:"required"`
 	System    string `form:"system" json:"system" binding:"required"`
@@ -38,6 +39,7 @@ type GetHostRes struct {
 	Ipv4        string `form:"ipv4" json:"ipv4"`
 	Ipv6        string `form:"ipv6" json:"ipv6"`
 	Vip         string `form:"vip" json:"vip"`
+	SSHPort     uint16 `form:"sshPort" json:"sshPort"`
 	Zone        string `form:"zone" json:"zone"`
 	Cloud       string `form:"cloud" json:"cloud"`
 	System      string `form:"system" json:"system"`

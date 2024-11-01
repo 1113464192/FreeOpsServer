@@ -12,6 +12,7 @@ var (
 	MaxWebSSH     uint64
 	WebSSHCounter uint64
 	mu            sync.Mutex
+	OpsSSHKey     []byte
 )
 
 func IncreaseWebSSHConn() error {
