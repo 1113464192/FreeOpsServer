@@ -7,6 +7,7 @@ import (
 	"FreeOps/pkg/util"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
 	"time"
@@ -331,13 +332,26 @@ func (s *RoleService) GetRoleUsers(params api.IdPageReq) ([]uint, error) {
 	return res, err
 }
 
-func (s *RoleService) GetRoleProjects(params api.IdPageReq) ([]uint, error) {
+func (s *RoleService) GetSelfRoleIDs(c *gin.Context) (roleIds []uint, err error) {
+	var roles *[]model.Role
+	// 获取角色对应的项目ID
+	if roles, err = util.GetClaimsRole(c); err != nil {
+		return nil, err
+	}
+	// 取出所有roles的id
+	for _, role := range *roles {
+		roleIds = append(roleIds, role.ID)
+	}
+	return roleIds, err
+}
+
+func (s *RoleService) GetRoleProjects(ids []uint) ([]uint, error) {
 	var projects []model.Project
 	var err error
 
 	if err = model.DB.Model(&model.Project{}).
 		Joins("JOIN role_project ON role_project.project_id = project.id").
-		Where("role_project.role_id = ?", params.Id).
+		Where("role_project.role_id IN ?", ids).
 		Select("DISTINCT id").
 		Find(&projects).Error; err != nil {
 		return nil, fmt.Errorf("查询角色项目失败: %v", err)

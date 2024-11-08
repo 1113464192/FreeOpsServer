@@ -15,7 +15,7 @@ var SoftDeleteModelList = []interface{}{
 	&model.Game{},
 	&model.OpsTemplate{},
 	&model.OpsTask{},
-	&model.OpsTaskLogs{},
+	&model.OpsTaskLog{},
 }
 
 // MysqlTableName
@@ -31,6 +31,7 @@ const (
 	MysqlTableNameOpsTemplate = "ops_template"
 	MysqlTableNameOpsParam    = "ops_param"
 	MysqlTableNameOpsTask     = "ops_task"
+	MysqlTableNameOpsTaskLog  = "ops_task_logs"
 
 	// GORM默认Bool类型的True是1，False是0
 	MysqlGormBoolIsTrue  = 1
@@ -67,4 +68,13 @@ const (
 	GameModelStatusIsMerged = 3
 	ActionTypeIsCreate      = 1
 	ActionTypeIsUpdate      = 2
+)
+
+// 运维任务常量
+const (
+	OpsTaskStatusIsWaiting = iota
+	OpsTaskStatusIsRunning
+	OpsTaskStatusIsSuccess
+	OpsTaskStatusIsFailed
+	OpsTaskStatusIsRejected
 )

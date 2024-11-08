@@ -37,7 +37,7 @@ func CasbinHandler() gin.HandlerFunc {
 		var isAdmin bool
 		// 超级用户判断
 		for _, role := range *roles {
-			if role.RoleCode == "ADMIN" {
+			if role.RoleCode == consts.RoleModelAdminCode {
 				sub = role.RoleCode
 				e := casbinService.Casbin()
 				if success, _ := e.Enforce(sub, obj, act); success {

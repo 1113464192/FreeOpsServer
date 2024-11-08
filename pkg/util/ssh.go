@@ -8,6 +8,7 @@ import (
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 	"net"
+	"strconv"
 	"time"
 )
 
@@ -35,8 +36,10 @@ func AuthWithAgent(sockPath string) (ssh.AuthMethod, net.Conn, *agent.ExtendedAg
 	return ssh.PublicKeysCallback(sshAgent.Signers), socks, &sshAgent, nil
 }
 
-// func SSHNewClient(config *api.SSHExecReq) (client *ssh.Client, err error) {
-func SSHNewClient(hostIp string, username string, sshPort string, password string, priKey []byte, passphrase []byte, sockPath string) (client *ssh.Client, netConn net.Conn, sshAgentPointer *agent.ExtendedAgent, err error) {
+// 不添加密码连接，安全性太低
+func SSHNewClient(hostIp string, username string, sshPort uint16, priKey []byte, passphrase []byte, sockPath string) (client *ssh.Client, netConn net.Conn, sshAgentPointer *agent.ExtendedAgent, err error) {
+	// 将sshPort变成string
+	sshPortStr := strconv.FormatUint(uint64(sshPort), 10)
 	duration, err := time.ParseDuration(global.Conf.SshConfig.SshClientTimeout)
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("超时时间获取失败: %v", err)
@@ -54,12 +57,7 @@ func SSHNewClient(hostIp string, username string, sshPort string, password strin
 			clientConfig.Auth = append(clientConfig.Auth, auth)
 		}
 	}
-	// 2. 密码方式 放在key之后,这样密钥失败之后可以使用Password方式
-	if password != "" {
-		clientConfig.Auth = append(clientConfig.Auth, ssh.Password(password))
-	}
-
-	// 3. agent 模式放在最后,意味着websocket连接，需要使用 openssh agent forwarding
+	// 2. agent 模式放在key之后,意味着websocket连接，需要使用 openssh agent forwarding
 	if sockPath != "" {
 		if auth, netConn, sshAgentPointer, err = AuthWithAgent(sockPath); err != nil {
 			return nil, nil, nil, fmt.Errorf("agent模式生成ssh.AuthMethod失败: %v", err)
@@ -70,7 +68,7 @@ func SSHNewClient(hostIp string, username string, sshPort string, password strin
 	if clientConfig.Auth == nil {
 		return nil, nil, nil, errors.New("未能生成clientConfig.Auth")
 	}
-	client, err = ssh.Dial("tcp", net.JoinHostPort(hostIp, sshPort), clientConfig)
+	client, err = ssh.Dial("tcp", net.JoinHostPort(hostIp, sshPortStr), clientConfig)
 	if err != nil {
 		return nil, nil, nil, fmt.Errorf("生成ssh.Client失败: %v", err)
 	}

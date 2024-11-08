@@ -9,7 +9,10 @@ import (
 	"FreeOps/pkg/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 // UpdateOpsTemplate
@@ -254,7 +257,7 @@ func UpdateOpsTask(c *gin.Context) {
 // @Tags 运维操作相关
 // @title 查询运维操作任务信息
 // @description 要获取具体信息直接传ID, 不获取content等，只批量获取name等基础数据不用传ID
-// @Summary 查询操作模板信息
+// @Summary 查询运维操作任务信息
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
 // @Param data Query api.GetOpsTaskReq true "传新增或者修改操作模板的所需参数"
@@ -283,4 +286,259 @@ func GetOpsTask(c *gin.Context) {
 		Msg:  "Success",
 		Data: result,
 	})
+}
+
+// RunOpsTaskCheckScript
+// @Tags 运维操作相关
+// @title 执行一个阻塞的任务并返回结果
+// @description 目前主要是为了执行运维的检查脚本，返回给运营审批时阅览
+// @Summary 执行一个阻塞的任务并返回结果
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data body api.RunSingleOpsTaskReq true ""
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/run-single-task [post]
+func RunOpsTaskCheckScript(c *gin.Context) {
+	var (
+		taskReq api.RunOpsTaskCheckScriptReq
+		err     error
+		result  *[]api.SSHResultRes
+	)
+	if err = c.ShouldBind(&taskReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if result, err = service.OpsServiceApp().RunOpsTaskCheckScript(taskReq); err != nil {
+		logger.Log().Error("ops", "执行单个运维任务失败", err)
+		c.JSON(500, util.ServerErrorResponse("执行单个运维任务失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "执行单个运维任务成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: result,
+	})
+}
+
+// SubmitOpsTask
+// @Tags 运维操作相关
+// @title 提交运维操作任务
+// @description 提交运维操作任务
+// @Summary 提交运维操作任务
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data body api.SubmitOpsTaskReq true ""
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/submit-task [post]
+func SubmitOpsTask(c *gin.Context) {
+	var (
+		taskReq api.SubmitOpsTaskReq
+		err     error
+	)
+	if err = c.ShouldBind(&taskReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	user, err := util.GetClaimsUser(c)
+	if err != nil {
+		c.JSON(200, api.Response{
+			Code: consts.SERVICE_MODAL_LOGOUT_CODE,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	if err = service.OpsServiceApp().SubmitOpsTask(taskReq, user.ID); err != nil {
+		logger.Log().Error("ops", "提交运维操作任务失败", err)
+		c.JSON(500, util.ServerErrorResponse("提交运维操作任务失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "提交运维操作任务成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+	})
+}
+
+// ApproveOpsTask
+// @Tags 运维操作相关
+// @title 用户审批任务
+// @description 用户审批任务
+// @Summary 用户审批任务
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param tid formData api.ApproveOpsTaskReq true ""
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/approve-task [put]
+func ApproveOpsTask(c *gin.Context) {
+	var (
+		params api.ApproveOpsTaskReq
+		err    error
+	)
+	if err = c.ShouldBind(&params); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	user, err := util.GetClaimsUser(c)
+	if err != nil {
+		c.JSON(200, api.Response{
+			Code: consts.SERVICE_MODAL_LOGOUT_CODE,
+			Msg:  err.Error(),
+		})
+		return
+	}
+
+	if err = service.OpsServiceApp().ApproveOpsTask(params, user.ID); err != nil {
+		logger.Log().Error("ops", "用户审批任务失败", err)
+		c.JSON(500, util.ServerErrorResponse("用户审批任务失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "用户审批任务成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+	})
+}
+
+// GetTaskPendingApprovers
+// @Tags 运维操作相关
+// @title 获取等待中的任务与尚未审批的用户
+// @description 获取等待中的任务与对应尚未审批的用户
+// @Summary 获取等待中的任务与对应尚未审批的用户
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/task-pending-approvers [get]
+func GetTaskPendingApprovers(c *gin.Context) {
+	res, err := service.OpsServiceApp().GetTaskPendingApprovers()
+	if err != nil {
+		logger.Log().Error("ops", "获取等待中的任务与尚未审批的用户失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取等待中的任务与尚未审批的用户失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "获取等待中的任务与尚未审批的用户成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}
+
+// GetOpsTaskLog
+// @Tags 运维操作相关
+// @title 查询运维操作任务日志
+// @description 要获取具体信息直接传ID, 不获取commands等，只批量获取name等基础数据不用传ID
+// @Summary 查询运维操作任务日志
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data Query api.GetOpsTaskLogReq true "传新增或者修改操作模板的所需参数"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/task-log [get]
+func GetOpsTaskLog(c *gin.Context) {
+	var (
+		taskReq        api.GetOpsTaskLogReq
+		roleIds        []uint
+		bindProjectIds []uint
+		err            error
+	)
+	if err = c.ShouldBind(&taskReq); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	// 获取角色对应的项目ID
+	if roleIds, err = service.RoleServiceApp().GetSelfRoleIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("获取角色IDs失败", err))
+		logger.Log().Error("ops", "获取角色IDs失败", err)
+		return
+	}
+	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
+		logger.Log().Error("ops", "获取角色对应的项目ID失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取角色对应的项目ID失败", err))
+		return
+	}
+
+	result, err := service.OpsServiceApp().GetOpsTaskLog(taskReq, bindProjectIds)
+	if err != nil {
+		logger.Log().Error("ops", "查询运维操作任务日志失败", err)
+		c.JSON(500, util.ServerErrorResponse("查询运维操作任务日志失败", err))
+		return
+	}
+	logger.Log().Info("ops", "查询运维操作任务日志成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: result,
+	})
+}
+
+// GetOpsTaskRunningWS
+// @Tags 运维操作相关
+// @title 实时同步执行中的任务状态
+// @description websocket实时同步权限内的项目执行中的任务状态
+// @Summary 实时同步执行中的任务状态
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 401 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /ops/task-running-ws [get]
+func GetOpsTaskRunningWS(c *gin.Context) {
+	var (
+		roleIds        []uint
+		bindProjectIds []uint
+	)
+	upgrader := websocket.Upgrader{
+		HandshakeTimeout: 2 * time.Second,                            //握手超时时间
+		ReadBufferSize:   1024,                                       //读缓冲大小
+		WriteBufferSize:  1024,                                       //写缓冲大小
+		CheckOrigin:      func(r *http.Request) bool { return true }, // 可以规定跨域域名
+		// 这个函数在升级 HTTP 连接到 WebSocket 连接时(握手)发生错误时被调用。例如可以在这个函数中向 HTTP 响应中写入一个错误消息
+		Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
+			// 写入状态码
+			w.WriteHeader(status)
+			// 写入错误信息
+			w.Write([]byte("WebSocket upgrade failed: " + reason.Error()))
+		},
+	}
+
+	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		c.JSON(500, util.ServerErrorResponse("websocket连接创建失败", err))
+		logger.Log().Error("ops", "websocket连接创建失败", err)
+		return
+	}
+	// 获取角色对应的项目ID
+	if roleIds, err = service.RoleServiceApp().GetSelfRoleIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("获取角色IDs失败", err))
+		logger.Log().Error("ops", "获取角色IDs失败", err)
+		return
+	}
+	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
+		logger.Log().Error("ops", "获取角色对应的项目ID失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取角色对应的项目ID失败", err))
+		return
+	}
+	if err = service.OpsServiceApp().GetOpsTaskRunningWS(conn, c, bindProjectIds); err != nil {
+		logger.Log().Error("ops", "实时同步执行中的任务状态失败", err)
+		c.JSON(500, util.ServerErrorResponse("实时同步执行中的任务状态失败", err))
+		return
+	}
+	// 结束websocket时应该返回
+	defer conn.Close()
 }

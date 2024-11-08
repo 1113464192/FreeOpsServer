@@ -131,6 +131,7 @@ func NewRoute() *gin.Engine {
 			gameRoute.PATCH("status", UpdateGameStatus) // 更新游戏状态
 		}
 		// --------运维操作服务相关----------
+		// 便于运维自定义脚本路径参数模板、设定运营参数自动填入模板变量、设定任务涵盖模板执行顺序、设定每个任务的检查脚本路径
 		opsRoute := r.Group("ops")
 		{
 			opsRoute.POST("template", UpdateOpsTemplate)             // 创建/修改 模板
@@ -140,17 +141,18 @@ func NewRoute() *gin.Engine {
 			opsRoute.PUT("bind-template-params", BindTemplateParams) // 绑定模板参数
 			opsRoute.GET("template-params", GetTemplateParams)       // 查看模板关联的参数
 			// 还需要拼接执行模板顺序的任务接口、执行任务接口、获取任务运行状态接口、任务日志接口
-			opsRoute.POST("task", UpdateOpsTask)              // 创建/修改 任务(拼接执行模板顺序的任务)
-			opsRoute.GET("task", GetOpsTask)                  // 查看任务
-			opsRoute.POST("submit-task", RunOpsTask)          // 执行任务
-			opsRoute.PUT("approve-task", ApproveOpsTask)      // 用户审批工单
-			opsRoute.GET("task-unauditors", GetTasUnauditors) // 查询工单还未审批的审核员
-			opsRoute.GET("task", GetOpsTask)                  // 查看任务
-			opsRoute.GET("task-logs", GetOpsTaskLogs)         // 查看任务日志
+			opsRoute.POST("task", UpdateOpsTask)                            // 创建/修改 任务(拼接执行模板顺序的任务)
+			opsRoute.GET("task", GetOpsTask)                                // 查看任务
+			opsRoute.POST("run-task-check-script", RunOpsTaskCheckScript)   // 执行任务
+			opsRoute.POST("submit-task", SubmitOpsTask)                     // 提交任务
+			opsRoute.PUT("approve-task", ApproveOpsTask)                    // 用户审批任务
+			opsRoute.GET("task-pending-approvers", GetTaskPendingApprovers) // 查询任务还未审批的审核员
+			opsRoute.GET("task-log", GetOpsTaskLog)                         // 查看任务日志
+			opsRoute.GET("task-running-ws", GetOpsTaskRunningWS)            // 查看任务运行中的任务
 		}
 		// ---------云平台相关------------
-		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)
-		// 不建议平台写死，否则改动过于频繁，不能及时配合各项目运维自动化脚本实时改动
+		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)，云平台相关运维脚本路径和参数写死在service层
+		// 不建议平台写死代码，否则改动过于频繁，不能及时配合各项目运维自动化脚本实时改动
 		cloudRoute := r.Group("clouds")
 		{
 			// 创建

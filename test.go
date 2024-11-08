@@ -2,27 +2,33 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"reflect"
 )
 
 func main() {
-	str := "layout.base$view.home"
-	parts := strings.Split(str, "$")
-	fmt.Println(parts) // 输出: [layout base$view.home]
+	var x int = 42
+	var y *int = &x
 
-	//	判断是否有layout的部分在view部分前面，因为要求layout一定是在view后面的，可能有多个$，如果有view部分段在layout的前面，就报错
-	if len(parts) < 2 {
-		fmt.Println("layout and view must be separated by $")
-		return
+	// TypeOf
+	t := reflect.TypeOf(y)
+	zzzz := reflect.ValueOf(x)
+	fmt.Println("Type:", t) // *int
 
-	}
+	// Kind
+	k := t.Kind()
+	fmt.Println("Kind:", k) // ptr
+	fmt.Println("111:", t.Elem())
+	fmt.Println("111:", zzzz.Elem()) // int
 
-	var viewPart string
-	for _, part := range parts {
-		if strings.Contains(part, "view") {
-			viewPart = part
-			break
-		}
-	}
-	fmt.Println(viewPart) // 输出: base$view.home
+	// Elem
+	e := t.Elem()
+	fmt.Println("Elem:", e) // int
+
+	// 通过反射获取指针指向的值
+	v := reflect.ValueOf(y).Elem()
+	fmt.Println("Value:", v) // 42
+
+	// 修改指针指向的值
+	v.SetInt(100)
+	fmt.Println("New Value:", x) // 100
 }

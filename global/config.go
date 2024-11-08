@@ -27,6 +27,7 @@ type Logger struct {
 
 type SshConfig struct {
 	SshClientTimeout string
+	OpsSSHUsername   string
 	OpsKeyPath       string
 	OpsKeyPassphrase string
 }

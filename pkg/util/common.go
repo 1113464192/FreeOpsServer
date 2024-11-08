@@ -11,6 +11,8 @@ import (
 	"os"
 	"reflect"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 func IsDir(path string) bool {
@@ -21,7 +23,7 @@ func IsDir(path string) bool {
 	return dirStat.IsDir()
 }
 
-// 切片是否包含指定值
+// interface切片是否包含指定值
 func IsSliceContain(slice interface{}, value interface{}) bool {
 	sliceValue := reflect.ValueOf(slice)
 	if sliceValue.Kind() != reflect.Slice {
@@ -34,6 +36,16 @@ func IsSliceContain(slice interface{}, value interface{}) bool {
 		}
 	}
 
+	return false
+}
+
+// uint切片是否包含指定的值
+func IsUintSliceContain(slice []uint, value uint) bool {
+	for _, v := range slice {
+		if v == value {
+			return true
+		}
+	}
 	return false
 }
 
@@ -61,6 +73,35 @@ func UniqueUint(uintSlice []uint) (result []uint) {
 	return result
 }
 
+// uint切片转string
+func UintSliceToString(uintSlice []uint) (result string) {
+	// 如[]uint{1, 2, 3} -> "1, 2, 3"
+	for i, v := range uintSlice {
+		if i == 0 {
+			result += string(v)
+		} else {
+			result += ", " + string(v)
+		}
+	}
+	return result
+}
+
+// string切片转uint
+func StringToUintSlice(str string) (result []uint, err error) {
+	// 如"1, 2, 3" -> []uint{1, 2, 3}
+	strSlice := strings.Split(str, ",")
+	for _, s := range strSlice {
+		s = strings.TrimSpace(s)
+		num, convErr := strconv.ParseUint(s, 10, 32)
+		if convErr != nil {
+			return nil, convErr
+		}
+		result = append(result, uint(num))
+	}
+	return result, nil
+}
+
+// 绑定参数错误的返回
 func BindErrorResponse(err error) api.Response {
 	var errMessage string
 	if _, ok := err.(*json.UnmarshalTypeError); ok {
@@ -78,6 +119,7 @@ func BindErrorResponse(err error) api.Response {
 	}
 }
 
+// 后端服务错误的返回
 func ServerErrorResponse(msg string, err error) api.Response {
 	return api.Response{
 		Code: consts.SERVICE_ERROR_CODE,
@@ -114,6 +156,7 @@ func RandStringRunes(n int) string {
 	return string(b)
 }
 
+// 删除uint切片中的指定元素
 func DeleteUintSlice(s []uint, i uint) []uint {
 	j := 0
 	for _, v := range s {
@@ -125,6 +168,7 @@ func DeleteUintSlice(s []uint, i uint) []uint {
 	return s[:j]
 }
 
+// 通过指针删除uint切片中的指定元素
 func DeleteUintSliceByPtr(s *[]uint, id uint) {
 	j := 0
 	for _, v := range *s {

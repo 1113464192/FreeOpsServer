@@ -21,6 +21,8 @@ sshConfig:
   # 仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
   # ssh建立Client超时时间，默认1m
   sshClientTimeout: 1m
+  # 运维连接的ssh用户
+  opsSSHUsername: "root"
   # 运维管理SSH密钥路径
   opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
   # 没有设置passphrase则留空字符串
