@@ -56,12 +56,20 @@ func UpdateHost(c *gin.Context) {
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Router /hosts [get]
 func GetHosts(c *gin.Context) {
-	var params api.GetHostsReq
-	if err := c.ShouldBind(&params); err != nil {
+	var (
+		params         api.GetHostsReq
+		bindProjectIds []uint
+	)
+	err := c.ShouldBind(&params)
+	if err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	res, err := service.HostServiceApp().GetHosts(&params)
+	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("查询用户项目ID失败", err))
+		return
+	}
+	res, err := service.HostServiceApp().GetHosts(&params, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("host", "查询服务器信息失败", err)
 		c.JSON(500, util.ServerErrorResponse("查询服务器信息失败", err))
@@ -164,12 +172,12 @@ func GetHostGameInfo(c *gin.Context) {
 	}
 	res, err := service.HostServiceApp().GetHostGameInfo(uint(id))
 	if err != nil {
-		logger.Log().Error("project", "获取服务器各资产总数失败", err)
+		logger.Log().Error("host", "获取服务器各资产总数失败", err)
 		c.JSON(500, util.ServerErrorResponse("获取服务器各资产总数失败", err))
 		return
 	}
 
-	logger.Log().Info("project", "获取服务器各资产总数成功", fmt.Sprintf("服务器ID: %d", id))
+	logger.Log().Info("host", "获取服务器各资产总数成功", fmt.Sprintf("服务器ID: %d", id))
 	c.JSON(200, api.Response{
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",

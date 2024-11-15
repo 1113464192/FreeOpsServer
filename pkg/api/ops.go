@@ -48,15 +48,15 @@ type GetOpsParamsTemplatesRes struct {
 
 type BindTemplateParamsReq struct {
 	TemplateID uint   `form:"templateId" json:"templateId" binding:"required"`
-	ParamIDs   []uint `form:"paramIds" json:"paramIds" binding:"required"`
+	ParamIDs   []uint `form:"paramIds" json:"paramIds"`
 }
 
 type UpdateOpsTaskReq struct {
 	ID              uint   `form:"id" json:"id"`
 	Name            string `form:"name" json:"name"  binding:"required"`
 	CheckTemplateId uint   `form:"checkTemplateId" json:"checkTemplateId"` // 默认被执行的运维检测脚本的模板，返回的打印信息是用于给运营审批查看的，不传则跳过检查
-	TemplateIds     string `form:"templateIds" json:"templateIds" binding:"required"`
-	Auditors        string `form:"auditors" json:"auditors"`
+	TemplateIds     []uint `form:"templateIds" json:"templateIds" binding:"required"`
+	Auditors        []uint `form:"auditors" json:"auditors"`
 	HostId          uint   `form:"hostId" json:"hostId"  binding:"required"`
 	IsIntranet      bool   `form:"isIntranet" json:"isIntranet"`
 	IsConcurrent    bool   `form:"isConcurrent" json:"isConcurrent"`
@@ -73,8 +73,8 @@ type GetOpsTaskReq struct {
 type GetOpsTaskRes struct {
 	ID              uint   `form:"id" json:"id"`
 	Name            string `form:"name" json:"name"`
-	CheckTemplateId uint   `form:"checkTemplateId" json:"checkTemplateId"`
-	TemplateIds     []uint `form:"templateIds" json:"templateIds"`
+	CheckTemplateId uint   `form:"checkTemplateId" json:"checkTemplateId,omitempty"`
+	TemplateIds     []uint `form:"templateIds" json:"templateIds,omitempty"`
 	Auditors        []uint `form:"userIds" json:"userIds,omitempty"`
 	HostId          uint   `form:"hostId" json:"hostId"`
 	IsIntranet      bool   `form:"isIntranet" json:"isIntranet"`

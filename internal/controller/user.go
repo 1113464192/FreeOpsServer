@@ -561,3 +561,30 @@ func GetUserRoles(c *gin.Context) {
 		},
 	})
 }
+
+// GetUserProjectOptions
+// @Tags 用户相关
+// @title 自身权限的项目选项
+// @description 返回权限内可以选择的项目的选项
+// @Summary 自身权限的项目选型
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /users/project-options [get]
+func GetUserProjectOptions(c *gin.Context) {
+	res, err := service.UserServiceApp().GetUserProjectOptions(c)
+	if err != nil {
+		logger.Log().Error("user", "获取用户的项目选项失败", err)
+		c.JSON(500, util.ServerErrorResponse("获取用户的项目选项失败", err))
+		return
+	}
+
+	logger.Log().Info("user", "获取用户的项目选项成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}

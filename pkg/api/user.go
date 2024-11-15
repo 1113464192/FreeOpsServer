@@ -106,3 +106,8 @@ type BindUserRolesReq struct {
 	UserId  uint   `form:"userId" json:"userId" binding:"required"`
 	RoleIds []uint `form:"roleIds" json:"roleIds" binding:"required"`
 }
+
+type GetUserProjectOptionsRes struct {
+	Label string `json:"label"`
+	Value uint   `json:"value"`
+}

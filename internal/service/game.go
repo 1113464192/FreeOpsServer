@@ -4,6 +4,7 @@ import (
 	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
+	"FreeOps/pkg/util"
 	"errors"
 	"fmt"
 	"strings"
@@ -124,7 +125,7 @@ func (s *GameService) UpdateGameStatus(params *api.UpdateGameStatusReq) (err err
 	return nil
 }
 
-func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error) {
+func (s *GameService) GetGames(params *api.GetGamesReq, bindProjectIds []uint) (*api.GetGamesRes, error) {
 	var games []model.Game
 	var err error
 	var count int64
@@ -169,13 +170,13 @@ func (s *GameService) GetGames(params *api.GetGamesReq) (*api.GetGamesRes, error
 
 	}
 
-	if params.ProjectName != "" {
-		sqlProjectName := "%" + strings.ToUpper(params.ProjectName) + "%"
-		var projectId []uint
-		if err = model.DB.Model(model.Project{}).Where("UPPER(name) LIKE ?", sqlProjectName).Pluck("id", &projectId).Error; err != nil {
-			return nil, fmt.Errorf("查询项目ID失败: %v", err)
+	if params.ProjectId != 0 {
+		if !util.IsUintSliceContain(bindProjectIds, params.ProjectId) {
+			return nil, errors.New("用户无权限查看该项目的游戏信息")
 		}
-		getDB = getDB.Where("project_id IN (?)", projectId)
+		getDB = getDB.Where("project_id = ?", params.ProjectId)
+	} else {
+		getDB = getDB.Where("project_id IN (?)", bindProjectIds)
 	}
 
 	if err = getDB.Count(&count).Error; err != nil {

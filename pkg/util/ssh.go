@@ -4,7 +4,6 @@ import (
 	"FreeOps/global"
 	"errors"
 	"fmt"
-	"github.com/pkg/sftp"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/agent"
 	"net"
@@ -81,13 +80,4 @@ func SSHNewSession(client *ssh.Client) (session *ssh.Session, err error) {
 		return nil, fmt.Errorf("生成ssh.Session失败: %v", err)
 	}
 	return session, err
-}
-
-func CreateSFTPClient(client *ssh.Client) (sftpClient *sftp.Client, err error) {
-	sftpClient, err = sftp.NewClient(client)
-	if err != nil {
-		return nil, fmt.Errorf("生成sftp.Client失败: %v", err)
-	}
-
-	return sftpClient, err
 }

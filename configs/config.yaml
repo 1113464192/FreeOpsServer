@@ -24,7 +24,8 @@ sshConfig:
   # 运维连接的ssh用户
   opsSSHUsername: "root"
   # 运维管理SSH密钥路径
-  opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
+#  opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
+  opsKeyPath: "F:/key/id_rsa"
   # 没有设置passphrase则留空字符串
   opsKeyPassphrase : ""
 

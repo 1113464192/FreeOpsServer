@@ -5,9 +5,11 @@ import (
 	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
+	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"io"
 	"mime/multipart"
 	"strings"
@@ -382,6 +384,46 @@ func (s *UserService) BindUserRoles(uid uint, roleIds []uint) (err error) {
 
 	tx.Commit()
 	return nil
+}
+
+// 获取用户对应的项目ID
+func (s *UserService) GetUserProjectIDs(c *gin.Context) (bindProjectIds []uint, err error) {
+	var (
+		roleIds []uint
+	)
+	// 获取角色对应的项目ID
+	if roleIds, err = RoleServiceApp().GetSelfRoleIDs(c); err != nil {
+		logger.Log().Error("role", "获取用户的角色IDs失败", err)
+		return nil, fmt.Errorf("获取用户的角色IDs失败: %v", err)
+	}
+	if bindProjectIds, err = RoleServiceApp().GetRoleProjects(roleIds); err != nil {
+		logger.Log().Error("role", "获取角色对应的项目ID失败", err)
+		return nil, fmt.Errorf("获取角色对应的项目ID失败: %v", err)
+	}
+	return bindProjectIds, err
+}
+
+// 获取用户关联的角色
+func (s *UserService) GetUserProjectOptions(c *gin.Context) (*[]api.GetUserProjectOptionsRes, error) {
+	var (
+		res            []api.GetUserProjectOptionsRes
+		projects       []model.Project
+		bindProjectIds []uint
+		err            error
+	)
+	if bindProjectIds, err = s.GetUserProjectIDs(c); err != nil {
+		return nil, fmt.Errorf("获取用户项目ID失败: %v", err)
+	}
+	if err = model.DB.Model(&model.Project{}).Where("id IN (?)", bindProjectIds).Select("id", "name").Find(&projects).Error; err != nil {
+		return nil, fmt.Errorf("查询项目失败: %v", err)
+	}
+	for _, project := range projects {
+		res = append(res, api.GetUserProjectOptionsRes{
+			Label: project.Name,
+			Value: project.ID,
+		})
+	}
+	return &res, nil
 }
 
 // 返回用户结果

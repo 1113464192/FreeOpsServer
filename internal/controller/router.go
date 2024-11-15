@@ -54,6 +54,7 @@ func NewRoute() *gin.Engine {
 			userRoute.PUT("ssh-key", UpdateSSHKey)                  // 添加私钥,走jumpserver则不需要该功能
 			userRoute.PUT("bind-roles", BindUserRoles)              // 用户绑定角色
 			userRoute.GET("roles", GetUserRoles)                    // 查看用户所有角色
+			userRoute.GET("project-options", GetUserProjectOptions) // 查看用户所有项目选项
 		}
 
 		// ------------角色相关--------------
@@ -134,16 +135,18 @@ func NewRoute() *gin.Engine {
 		// 便于运维自定义脚本路径参数模板、设定运营参数自动填入模板变量、设定任务涵盖模板执行顺序、设定每个任务的检查脚本路径
 		opsRoute := r.Group("ops")
 		{
-			opsRoute.POST("template", UpdateOpsTemplate)             // 创建/修改 模板
-			opsRoute.GET("template", GetOpsTemplate)                 // 查看模板
-			opsRoute.POST("param-template", UpdateOpsParamsTemplate) // 创建/修改 获取参数模板 (从运营文案信息获取参数的正则模板)
-			opsRoute.GET("param-template", GetOpsParamsTemplate)     // 查看参数
-			opsRoute.PUT("bind-template-params", BindTemplateParams) // 绑定模板参数
-			opsRoute.GET("template-params", GetTemplateParams)       // 查看模板关联的参数
+			opsRoute.POST("template", UpdateOpsTemplate)               // 创建/修改 模板
+			opsRoute.GET("template", GetOpsTemplate)                   // 查看模板
+			opsRoute.DELETE("template", DeleteOpsTemplate)             // 删除模板
+			opsRoute.POST("param-template", UpdateOpsParamsTemplate)   // 创建/修改 获取参数模板 (从运营文案信息获取参数的正则模板)
+			opsRoute.GET("param-template", GetOpsParamsTemplate)       // 查看参数
+			opsRoute.DELETE("param-template", DeleteOpsParamsTemplate) // 删除参数
+			opsRoute.PUT("bind-template-params", BindTemplateParams)   // 绑定模板参数
+			opsRoute.GET("template-params", GetTemplateParams)         // 查看模板关联的参数
 			// 还需要拼接执行模板顺序的任务接口、执行任务接口、获取任务运行状态接口、任务日志接口
 			opsRoute.POST("task", UpdateOpsTask)                            // 创建/修改 任务(拼接执行模板顺序的任务)
 			opsRoute.GET("task", GetOpsTask)                                // 查看任务
-			opsRoute.POST("run-task-check-script", RunOpsTaskCheckScript)   // 执行任务
+			opsRoute.POST("run-task-check-script", RunOpsTaskCheckScript)   // 执行并等待运营检查脚本返回结果
 			opsRoute.POST("submit-task", SubmitOpsTask)                     // 提交任务
 			opsRoute.PUT("approve-task", ApproveOpsTask)                    // 用户审批任务
 			opsRoute.GET("task-pending-approvers", GetTaskPendingApprovers) // 查询任务还未审批的审核员

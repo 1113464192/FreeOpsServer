@@ -56,21 +56,26 @@ func UpdateOpsTemplate(c *gin.Context) {
 // @Summary 查询操作模板信息
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data Query api.GetOpsTemplatesReq true "传新增或者修改操作模板的所需参数"
+// @Param data query api.GetOpsTemplatesReq true "传新增或者修改操作模板的所需参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
 // @Router /ops/template [get]
 func GetOpsTemplate(c *gin.Context) {
 	var (
-		temReq api.GetOpsTemplatesReq
-		err    error
+		temReq         api.GetOpsTemplatesReq
+		bindProjectIds []uint
+		err            error
 	)
 	if err = c.ShouldBind(&temReq); err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	result, err := service.OpsServiceApp().GetOpsTemplate(&temReq)
+	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		return
+	}
+	result, err := service.OpsServiceApp().GetOpsTemplate(&temReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作模板失败", err)
 		c.JSON(500, util.ServerErrorResponse("查询运维操作模板失败", err))
@@ -81,6 +86,37 @@ func GetOpsTemplate(c *gin.Context) {
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",
 		Data: result,
+	})
+}
+
+// DeleteOpsTemplate
+// @Tags 运维操作相关
+// @title 删除操作模板
+// @description 删除操作模板
+// @Summary 删除操作模板
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param ids body api.IdsReq true "模板IDs"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /ops/template [delete]
+func DeleteOpsTemplate(c *gin.Context) {
+	var param api.IdsReq
+	if err := c.ShouldBind(&param); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if err := service.OpsServiceApp().DeleteOpsTemplate(param.Ids); err != nil {
+		logger.Log().Error("ops", "删除运维操作模板失败", err)
+		c.JSON(500, util.ServerErrorResponse("删除运维操作模板失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "删除运维操作模板成功", fmt.Sprintf("ID: %v", param.Ids))
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
 	})
 }
 
@@ -124,7 +160,7 @@ func UpdateOpsParamsTemplate(c *gin.Context) {
 // @Summary 获取运维操作的参数模板
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data Query api.GetOpsParamsTemplatesReq true "传新增或者修改操作模板的所需参数"
+// @Param data query api.GetOpsParamsTemplatesReq true "传新增或者修改操作模板的所需参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -149,6 +185,37 @@ func GetOpsParamsTemplate(c *gin.Context) {
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",
 		Data: result,
+	})
+}
+
+// DeleteOpsParamsTemplate
+// @Tags 运维操作相关
+// @title 删除运维操作的参数模板
+// @description 删除运维操作的参数模板
+// @Summary 删除运维操作的参数模板
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param ids body api.IdsReq true "模板IDs"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /ops/param-template [delete]
+func DeleteOpsParamsTemplate(c *gin.Context) {
+	var param api.IdsReq
+	if err := c.ShouldBind(&param); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if err := service.OpsServiceApp().DeleteOpsParamsTemplate(param.Ids); err != nil {
+		logger.Log().Error("ops", "删除运维操作的参数模板失败", err)
+		c.JSON(500, util.ServerErrorResponse("删除运维操作的参数模板失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "删除运维操作的参数模板成功", fmt.Sprintf("ID: %v", param.Ids))
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
 	})
 }
 
@@ -226,7 +293,7 @@ func GetTemplateParams(c *gin.Context) {
 // @Summary 新增/修改 运维操作任务信息
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data formData api.UpdateOpsTaskReq true "传新增或者修改操作模板的所需参数"
+// @Param data body api.UpdateOpsTaskReq true "传新增或者修改操作模板的所需参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -260,21 +327,26 @@ func UpdateOpsTask(c *gin.Context) {
 // @Summary 查询运维操作任务信息
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data Query api.GetOpsTaskReq true "传新增或者修改操作模板的所需参数"
+// @Param data query api.GetOpsTaskReq true "传新增或者修改操作模板的所需参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
 // @Router /ops/task [get]
 func GetOpsTask(c *gin.Context) {
 	var (
-		taskReq api.GetOpsTaskReq
-		err     error
+		taskReq        api.GetOpsTaskReq
+		bindProjectIds []uint
+		err            error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	result, err := service.OpsServiceApp().GetOpsTask(taskReq)
+	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		return
+	}
+	result, err := service.OpsServiceApp().GetOpsTask(taskReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作任务信息失败", err)
 		c.JSON(500, util.ServerErrorResponse("查询运维操作任务信息失败", err))
@@ -295,7 +367,7 @@ func GetOpsTask(c *gin.Context) {
 // @Summary 执行一个阻塞的任务并返回结果
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data body api.RunSingleOpsTaskReq true ""
+// @Param data body api.RunOpsTaskCheckScriptReq true "请输入需要的参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -331,7 +403,7 @@ func RunOpsTaskCheckScript(c *gin.Context) {
 // @Summary 提交运维操作任务
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data body api.SubmitOpsTaskReq true ""
+// @Param data body api.SubmitOpsTaskReq true "请输入需要的参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -374,7 +446,7 @@ func SubmitOpsTask(c *gin.Context) {
 // @Summary 用户审批任务
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param tid formData api.ApproveOpsTaskReq true ""
+// @Param tid formData api.ApproveOpsTaskReq true "请输入需要的参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -444,7 +516,7 @@ func GetTaskPendingApprovers(c *gin.Context) {
 // @Summary 查询运维操作任务日志
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param data Query api.GetOpsTaskLogReq true "传新增或者修改操作模板的所需参数"
+// @Param data query api.GetOpsTaskLogReq true "传新增或者修改操作模板的所需参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
@@ -452,7 +524,6 @@ func GetTaskPendingApprovers(c *gin.Context) {
 func GetOpsTaskLog(c *gin.Context) {
 	var (
 		taskReq        api.GetOpsTaskLogReq
-		roleIds        []uint
 		bindProjectIds []uint
 		err            error
 	)
@@ -460,18 +531,10 @@ func GetOpsTaskLog(c *gin.Context) {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	// 获取角色对应的项目ID
-	if roleIds, err = service.RoleServiceApp().GetSelfRoleIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("获取角色IDs失败", err))
-		logger.Log().Error("ops", "获取角色IDs失败", err)
+	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
 		return
 	}
-	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
-		logger.Log().Error("ops", "获取角色对应的项目ID失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色对应的项目ID失败", err))
-		return
-	}
-
 	result, err := service.OpsServiceApp().GetOpsTaskLog(taskReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作任务日志失败", err)
@@ -534,11 +597,9 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 		c.JSON(500, util.ServerErrorResponse("获取角色对应的项目ID失败", err))
 		return
 	}
-	if err = service.OpsServiceApp().GetOpsTaskRunningWS(conn, c, bindProjectIds); err != nil {
+	if err = service.OpsServiceApp().GetOpsTaskRunningWS(conn, bindProjectIds); err != nil {
 		logger.Log().Error("ops", "实时同步执行中的任务状态失败", err)
 		c.JSON(500, util.ServerErrorResponse("实时同步执行中的任务状态失败", err))
 		return
 	}
-	// 结束websocket时应该返回
-	defer conn.Close()
 }

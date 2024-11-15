@@ -32,6 +32,11 @@ var autoMigrateModelList = []interface{}{
 	&RoleProject{},
 	&Host{},
 	&Game{},
+	&OpsTemplate{},
+	&OpsParam{},
+	&OpsTemplateParam{},
+	&OpsTask{},
+	&OpsTaskLog{},
 }
 
 func Database() {

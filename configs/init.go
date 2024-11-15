@@ -15,9 +15,9 @@ import (
 )
 
 func Init() {
-	err := declareGlobal()
+	err := declareRootPath()
 	if err != nil {
-		panic(fmt.Errorf("获取项目根目录失败: %s ", err))
+		panic(fmt.Errorf("获取项目根目录失败: %v ", err))
 	}
 	viper.SetConfigFile(global.RootPath + "/configs/config.yaml")
 	if err = viper.ReadInConfig(); err != nil {
@@ -37,13 +37,15 @@ func Init() {
 		}
 	})
 
-	declareConcurrencyVar()
+	if err = declareGlobal(); err != nil {
+		panic(fmt.Errorf("declareGlobal初始化失败: %v", err))
+	}
 }
 
 // FindRootDir 递归向上查找直到找到 go.mod 文件，返回该目录作为项目根目录
 func findRootDir(dir string) (string, error) {
 	// 检查当前目录是否存在 go.mod 文件
-	if _, err := os.Stat(filepath.Join(dir, "go.mod")); err == nil {
+	if _, err := os.Stat(filepath.Join(dir, `go.mod`)); err == nil {
 		return dir, nil
 	} else if !os.IsNotExist(err) {
 		// 发生了其他错误
@@ -61,7 +63,7 @@ func findRootDir(dir string) (string, error) {
 	return findRootDir(parentDir)
 }
 
-func declareGlobal() (err error) {
+func declareRootPath() (err error) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return errors.New("No caller information")
@@ -69,15 +71,20 @@ func declareGlobal() (err error) {
 	dir := filepath.Dir(filename)
 	global.RootPath, err = findRootDir(dir)
 	global.RootPath = strings.Replace(global.RootPath, "\\", "/", -1)
-
-	// ssh密钥
-	global.OpsSSHKey, err = os.ReadFile(global.Conf.SshConfig.OpsKeyPath)
 	return err
 }
 
 func declareConcurrencyVar() {
+
 	// 设置总并发数
 	global.Sem = semaphore.NewWeighted(global.Conf.Concurrency.Number)
 	global.MaxWebSSH = uint64(global.Conf.Webssh.MaxConnNumber)
 	global.WebSSHCounter = 0
+}
+
+func declareGlobal() (err error) {
+	declareConcurrencyVar()
+	// ssh密钥
+	global.OpsSSHKey, err = os.ReadFile(global.Conf.SshConfig.OpsKeyPath)
+	return err
 }

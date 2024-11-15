@@ -44,32 +44,27 @@ func (s *MenuService) validateComponentName(component string) bool {
 	return false
 }
 
-func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
-	var (
-		menu  model.Menu
-		count int64
-		props string
-		query *string
-	)
-
+// 判断写入Menu的参数是否符合规范
+func (s *MenuService) validateMenuParams(params *api.UpdateMenuReq) (props string, query *string, err error) {
+	var count int64
 	// 判断父ID是否存在于菜单
 	if params.ParentId != 0 {
 		if err = model.DB.Model(&model.Menu{}).Where("id = ?", params.ParentId).Count(&count).Error; err != nil || count < 1 {
-			return fmt.Errorf("menu ID不存在: %d, 或有错误信息: %v", params.ID, err)
+			return "", nil, fmt.Errorf("menu ID不存在: %d, 或有错误信息: %v", params.ID, err)
 		}
 	}
 
 	// 判断菜单页面的component命名是否符合前端规范
 	if params.Component != "" && params.MenuType == consts.MenuModelMenuTypeIsMenu {
 		if !s.validateComponentName(params.Component) {
-			return fmt.Errorf("component命名不符合规范: %s", params.Component)
+			return "", nil, fmt.Errorf("component命名不符合规范: %s", params.Component)
 		}
 	}
 
 	// 判断ActiveMenu是否存在于路由
 	if params.ActiveMenu != "" {
 		if err = model.DB.Model(&model.Menu{}).Where("route_name = ?", params.ActiveMenu).Count(&count).Error; err != nil || count < 1 {
-			return fmt.Errorf("route_name不存在: %s, 或有错误信息: %v", params.ActiveMenu, err)
+			return "", nil, fmt.Errorf("route_name不存在: %s, 或有错误信息: %v", params.ActiveMenu, err)
 		}
 	}
 
@@ -87,11 +82,11 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		propsMap := params.Props.(map[string]any)
 		propsByte, err := json.Marshal(propsMap)
 		if err != nil {
-			return fmt.Errorf("props序列化失败: %v", err)
+			return "", nil, fmt.Errorf("props序列化失败: %v", err)
 		}
 		props = string(propsByte)
 	default:
-		return fmt.Errorf("props类型错误: %T", params.Props)
+		return "", nil, fmt.Errorf("props类型错误: %T", params.Props)
 	}
 
 	if params.Query != nil {
@@ -100,13 +95,29 @@ func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
 		} else {
 			queryByte, err := json.Marshal(params.Query)
 			if err != nil {
-				return fmt.Errorf("query序列化失败: %v", err)
+				return "", nil, fmt.Errorf("query序列化失败: %v", err)
 			}
 			queryString := string(queryByte)
 			query = &queryString
 		}
 	} else {
 		query = nil
+	}
+	return props, query, err
+}
+
+// 创建/修改 菜单
+// 菜单字段逻辑较多，因此逐一和写入mysql规范占用行数较多
+func (s *MenuService) UpdateMenu(params *api.UpdateMenuReq) (err error) {
+	var (
+		menu  model.Menu
+		count int64
+		props string
+		query *string
+	)
+
+	if props, query, err = s.validateMenuParams(params); err != nil {
+		return err
 	}
 
 	if params.ID != 0 {

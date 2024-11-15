@@ -20,14 +20,14 @@ type UpdateGameStatusReq struct {
 }
 
 type GetGameReq struct {
-	Id          uint   `form:"id" json:"id"`
-	Type        uint8  `form:"type" json:"type"`
-	Status      uint8  `form:"status" json:"status"`
-	ProjectName string `form:"projectName" json:"projectName"`
-	HostName    string `form:"hostName" json:"hostName"`
-	Ipv4        string `form:"ipv4" json:"ipv4"`
-	CrossId     uint   `form:"crossId" json:"crossId"`
-	CommonId    uint   `form:"commonId" json:"commonId"`
+	Id        uint   `form:"id" json:"id"`
+	Type      uint8  `form:"type" json:"type"`
+	Status    uint8  `form:"status" json:"status"`
+	ProjectId uint   `form:"projectId" json:"projectId"`
+	HostName  string `form:"hostName" json:"hostName"`
+	Ipv4      string `form:"ipv4" json:"ipv4"`
+	CrossId   uint   `form:"crossId" json:"crossId"`
+	CommonId  uint   `form:"commonId" json:"commonId"`
 }
 
 type GetGamesReq struct {

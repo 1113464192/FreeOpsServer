@@ -17,15 +17,15 @@ type UpdateHostReq struct {
 }
 
 type GetHostReq struct {
-	ID          uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
-	Name        string `form:"name" json:"name"`
-	Ipv4        string `form:"ipv4" json:"ipv4"`
-	Ipv6        string `form:"ipv6" json:"ipv6"`
-	Vip         string `form:"vip" json:"vip"`
-	Zone        string `form:"zone" json:"zone"`
-	Cloud       string `form:"cloud" json:"cloud"`
-	System      string `form:"system" json:"system"`
-	ProjectName string `form:"projectName" json:"projectName"`
+	ID        uint   `form:"id" json:"id"` // 修改才需要传，没有传算新增
+	Name      string `form:"name" json:"name"`
+	Ipv4      string `form:"ipv4" json:"ipv4"`
+	Ipv6      string `form:"ipv6" json:"ipv6"`
+	Vip       string `form:"vip" json:"vip"`
+	Zone      string `form:"zone" json:"zone"`
+	Cloud     string `form:"cloud" json:"cloud"`
+	System    string `form:"system" json:"system"`
+	ProjectId uint   `form:"projectId" json:"projectId"`
 }
 
 type GetHostsReq struct {

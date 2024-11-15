@@ -3,16 +3,15 @@ package consts
 import "FreeOps/internal/model"
 
 // 拥有软删除字段的model
+// 新增model时除了这两个，别忘了autoMigrateModelList也要加上
 var SoftDeleteModelList = []interface{}{
 	&model.User{},
 	&model.Role{},
 	&model.Menu{},
 	&model.Api{},
 	&model.JwtBlacklist{},
-	&model.UserRecord{},
 	&model.Host{},
 	&model.Project{},
-	&model.Game{},
 	&model.OpsTemplate{},
 	&model.OpsTask{},
 	&model.OpsTaskLog{},

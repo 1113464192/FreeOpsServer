@@ -11,7 +11,7 @@ type OpsTaskLog struct {
 	Auditors        string `json:"auditors" gorm:"type: text;comment: 审核员"`
 	PendingAuditors string `json:"pendingAuditors" gorm:"type: text;comment: 未审批的审核员"`
 	RejectAuditor   uint   `json:"rejectAuditor" gorm:"comment: 拒绝执行的审核员"`
-	TaskId          uint   `json:"taskId" gorm:"comment: 任务ID;index"`
+	TaskId          uint   `json:"taskId" gorm:"comment: 任务ID"`
 	ProjectId       uint   `json:"projectId" gorm:"comment: 项目ID;index"`
 	Submitter       uint   `json:"submitter" gorm:"comment: 提交的用户"`
 }

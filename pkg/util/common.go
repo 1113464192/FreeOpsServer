@@ -11,8 +11,6 @@ import (
 	"os"
 	"reflect"
 	"regexp"
-	"strconv"
-	"strings"
 )
 
 func IsDir(path string) bool {
@@ -74,29 +72,19 @@ func UniqueUint(uintSlice []uint) (result []uint) {
 }
 
 // uint切片转string
-func UintSliceToString(uintSlice []uint) (result string) {
-	// 如[]uint{1, 2, 3} -> "1, 2, 3"
-	for i, v := range uintSlice {
-		if i == 0 {
-			result += string(v)
-		} else {
-			result += ", " + string(v)
-		}
+func UintSliceToString(uintSlice []uint) (result string, err error) {
+	bytes, err := json.Marshal(uintSlice)
+	if err != nil {
+		return "", err
 	}
-	return result
+	return string(bytes), nil
 }
 
 // string切片转uint
 func StringToUintSlice(str string) (result []uint, err error) {
-	// 如"1, 2, 3" -> []uint{1, 2, 3}
-	strSlice := strings.Split(str, ",")
-	for _, s := range strSlice {
-		s = strings.TrimSpace(s)
-		num, convErr := strconv.ParseUint(s, 10, 32)
-		if convErr != nil {
-			return nil, convErr
-		}
-		result = append(result, uint(num))
+	err = json.Unmarshal([]byte(str), &result)
+	if err != nil {
+		return nil, err
 	}
 	return result, nil
 }

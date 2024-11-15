@@ -55,12 +55,20 @@ func UpdateGame(c *gin.Context) {
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Router /games [get]
 func GetGames(c *gin.Context) {
-	var params api.GetGamesReq
-	if err := c.ShouldBind(&params); err != nil {
+	var (
+		params         api.GetGamesReq
+		bindProjectIds []uint
+	)
+	err := c.ShouldBind(&params)
+	if err != nil {
 		c.JSON(500, util.BindErrorResponse(err))
 		return
 	}
-	res, err := service.GameServiceApp().GetGames(&params)
+	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
+		c.JSON(500, util.ServerErrorResponse("查询用户项目ID失败", err))
+		return
+	}
+	res, err := service.GameServiceApp().GetGames(&params, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("game", "查询游戏服信息失败", err)
 		c.JSON(500, util.ServerErrorResponse("查询游戏服信息失败", err))
