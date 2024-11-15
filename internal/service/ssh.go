@@ -128,8 +128,12 @@ func (s *SSHService) RunSSHCmd(param *api.SSHRunReq, ch chan *api.SSHResultRes, 
 // 检查是否符合执行条件
 func (s *SSHService) CheckSSHParam(param *[]api.SSHRunReq) error {
 	for _, p := range *param {
-		if p.HostIp == "" || p.Username == "" || p.SSHPort == 0 || p.Cmd == "" || p.Key == nil || p.Passphrase == nil {
-			return fmt.Errorf("执行参数中存在空值: \n%v", p)
+		if p.HostIp == "" || p.Username == "" || p.SSHPort == 0 || p.Cmd == "" || p.Key == nil {
+			keyStr := "key存在"
+			if p.Key == nil {
+				keyStr = "key不存在"
+			}
+			return fmt.Errorf("执行参数中存在空值: \n HostIp: %s\nUsername: %s\nSSHPort: %d\nCmd: %s\n%s: ", p.HostIp, p.Username, p.SSHPort, p.Cmd, keyStr)
 		}
 	}
 	return nil
