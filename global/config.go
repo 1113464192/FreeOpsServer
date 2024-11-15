@@ -4,7 +4,6 @@ type Config struct {
 	Mysql        Mysql        `json:"mysql"`
 	Logger       Logger       `json:"logger"`
 	SshConfig    SshConfig    `json:"ssh_timeout"`
-	ClientSide   ClientSide   `json:"client_side"`
 	Webssh       Webssh       `json:"webssh"`
 	System       System       `json:"system"`
 	Concurrency  Concurrency  `json:"concurrency"`
@@ -21,8 +20,7 @@ type Mysql struct {
 }
 
 type Logger struct {
-	Level      string
-	ExpiredDay int
+	Level string
 }
 
 type SshConfig struct {
@@ -32,11 +30,7 @@ type SshConfig struct {
 	OpsKeyPassphrase string
 }
 
-type ClientSide struct {
-	IsSSL string
-	Port  string
-}
-
+// 保留，暂时不用改，有空再从以前的代码中迁移webSSH代码过来
 type Webssh struct {
 	ReadBufferSize   int
 	WriteBufferSize  int
@@ -55,6 +49,7 @@ type System struct {
 	Mode string
 }
 
+// 保留，暂时不用改，有空再从以前的代码中迁移这段CI代码过来
 type GitWebhook struct {
 	GithubSecret   string
 	GitlabSecret   string
@@ -69,7 +64,6 @@ type SecurityVars struct {
 	TokenExpireDuration        string
 	RefreshTokenExpireDuration string
 	TokenKey                   string
-	ClientReqMd5Key            string
 	AllowedCIDR                string
 }
 

@@ -371,7 +371,7 @@ func GetOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/run-single-task [post]
+// @Router /ops/run-task-check-script [post]
 func RunOpsTaskCheckScript(c *gin.Context) {
 	var (
 		taskReq api.RunOpsTaskCheckScriptReq

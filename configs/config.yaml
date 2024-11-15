@@ -14,8 +14,6 @@ mysql:
 logger:
   # Error | Warning | Info | Debug
   level: "Info"
-  #  七天前删除就填-7
-  expiredDay: -7
 
 sshConfig:
   # 仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
@@ -29,10 +27,7 @@ sshConfig:
   # 没有设置passphrase则留空字符串
   opsKeyPassphrase : ""
 
-clientSide:
-  isSSL: "true" # 是否启用SSL
-  port: 8081
-
+# 保留，暂时不用改，有空再从以前的代码中迁移webSSH代码过来
 webssh:
   # 读写缓存大小
   readBufferSize: 4096
@@ -54,6 +49,7 @@ concurrency:
   number: 5000
 
 # webhook的secret
+# 保留，暂时不用改，有空再从以前的代码中迁移这段CI代码过来
 gitWebhook:
   githubSecret: "test"
 #  githubSecret: "fanqihang"
@@ -78,7 +74,5 @@ securityVars:
   refreshTokenExpireDuration: "168h"
   # token key
   tokenKey: "52995df076de0cf040lp1a9e932687209c194a95cz098p5a22c341a84e4e33dc"
-  # Client Req md5 Key
-  clientReqMd5Key: "arhgfdbgfghfgdsfsfgfds"
   # 允许的CIDR
   allowedCIDR: "0.0.0.0/0"

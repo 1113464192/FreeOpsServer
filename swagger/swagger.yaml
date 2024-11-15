@@ -1644,7 +1644,7 @@ paths:
       summary: 新增/修改 运维操作的参数模板
       tags:
       - 运维操作相关
-  /ops/run-single-task:
+  /ops/run-task-check-script:
     post:
       description: 目前主要是为了执行运维的检查脚本，返回给运营审批时阅览
       parameters:

@@ -2116,7 +2116,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/run-single-task": {
+        "/ops/run-task-check-script": {
             "post": {
                 "description": "目前主要是为了执行运维的检查脚本，返回给运营审批时阅览",
                 "produces": [
