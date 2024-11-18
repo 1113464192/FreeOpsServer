@@ -110,8 +110,8 @@ type SubmitOpsTaskReq struct {
 }
 
 type ApproveOpsTaskReq struct {
-	TaskId  uint `form:"taskId" json:"taskId" binding:"required"`
-	IsAllow bool `form:"isAllow" json:"isAllow" binding:"required"`
+	TaskId  uint `form:"taskId" json:"taskId" binding:"required"` // 任务日志ID
+	IsAllow bool `form:"isAllow" json:"isAllow"`
 }
 
 type GetTaskPendingApproversRes struct {

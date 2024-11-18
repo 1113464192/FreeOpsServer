@@ -1475,9 +1475,9 @@ paths:
         type: string
       - in: formData
         name: isAllow
-        required: true
         type: boolean
-      - in: formData
+      - description: 任务日志ID
+        in: formData
         name: taskId
         required: true
         type: integer

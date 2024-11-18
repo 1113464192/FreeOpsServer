@@ -1866,11 +1866,11 @@ const docTemplate = `{
                     {
                         "type": "boolean",
                         "name": "isAllow",
-                        "in": "formData",
-                        "required": true
+                        "in": "formData"
                     },
                     {
                         "type": "integer",
+                        "description": "任务日志ID",
                         "name": "taskId",
                         "in": "formData",
                         "required": true

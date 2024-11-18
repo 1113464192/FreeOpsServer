@@ -534,6 +534,22 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 	return &result, errors.New("转换运维操作任务信息结果失败")
 }
 
+// OpsTemplate按照自己提供的id顺序排序
+func sortTemplatesByIds(templates []model.OpsTemplate, temIds []uint) []model.OpsTemplate {
+	templateMap := make(map[uint]model.OpsTemplate)
+	for _, template := range templates {
+		templateMap[template.ID] = template
+	}
+
+	sortedTemplates := make([]model.OpsTemplate, 0, len(temIds))
+	for _, id := range temIds {
+		if template, exists := templateMap[id]; exists {
+			sortedTemplates = append(sortedTemplates, template)
+		}
+	}
+	return sortedTemplates
+}
+
 // 提取运营文案中的参数分给关联的模板
 func (s *OpsService) extractOpsTaskParams(temIds []uint, content string) (commands []string, err error) {
 	var (
@@ -545,6 +561,9 @@ func (s *OpsService) extractOpsTaskParams(temIds []uint, content string) (comman
 	if err = model.DB.Model(&model.OpsTemplate{}).Where("id IN (?)", temIds).Find(&templates).Error; err != nil {
 		return nil, fmt.Errorf("查询运维操作模板失败: %v", err)
 	}
+
+	// 按照temIds的顺序对templates进行排序
+	templates = sortTemplatesByIds(templates, temIds)
 
 	// 解析content，提取参数值
 	lines := strings.Split(content, "\n")
@@ -658,13 +677,16 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		ProjectId:     task.ProjectId,
 		Submitter:     submitter,
 	}
-	if params.Auditors != nil {
+	if params.Auditors != nil && len(params.Auditors) > 0 {
 		if taskLog.Auditors, err = util.UintSliceToString(params.Auditors); err != nil {
 			return fmt.Errorf("auditors转换为string失败: %v", err)
 		}
 		if taskLog.PendingAuditors, err = util.UintSliceToString(params.Auditors); err != nil {
 			return fmt.Errorf("pendingAuditors转换为string失败: %v", err)
 		}
+	} else {
+		taskLog.Auditors = "[]"
+		taskLog.PendingAuditors = "[]"
 	}
 	if len(params.Auditors) == 0 {
 		taskLog.Status = consts.OpsTaskStatusIsRunning
@@ -735,14 +757,14 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 		stepStatusList []api.OpsTaskLogtepStatus
 		stepStatusByte []byte
 	)
-	taskLog.Status = consts.OpsTaskStatusIsSuccess
 	if err = json.Unmarshal([]byte(taskLog.StepStatus), &stepStatusList); err != nil {
 		logger.Log().Error("ops", "RunOpsTaskSequential查询任务日志中的StepStatus失败", err)
 		taskLog.Status = consts.OpsTaskStatusIsFailed
 		return
 	}
 	for _, sshReq := range *sshReqs {
-		result, err := SSH().RunSSHCmdAsync(sshReqs)
+		cmdReq := []api.SSHRunReq{sshReq}
+		result, err := SSH().RunSSHCmdAsync(&cmdReq)
 		var isBreak bool
 		if err != nil {
 			logger.Log().Error("ops", "RunOpsTaskSequential RunSSH失败", err)
@@ -767,6 +789,11 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 		}
 		if isBreak {
 			break
+		}
+	}
+	if taskLog.Status != consts.OpsTaskStatusIsFailed {
+		if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("status", consts.OpsTaskStatusIsSuccess).Error; err != nil {
+			logger.Log().Error("ops", "RunOpsTaskSequential更新taskLog失败", err)
 		}
 	}
 }
@@ -891,6 +918,9 @@ func (s *OpsService) ApproveOpsTask(params api.ApproveOpsTaskReq, uid uint) (err
 		return fmt.Errorf("taskLog %d PendingAuditors中不包含uid: %d", params.TaskId, uid)
 	}
 	util.DeleteUintSliceByPtr(&pendingAuditors, uid)
+	if taskLog.PendingAuditors, err = util.UintSliceToString(pendingAuditors); err != nil {
+		return fmt.Errorf("pendingAuditors转换为string失败: %v", err)
+	}
 	if !params.IsAllow {
 		taskLog.RejectAuditor = uid
 		taskLog.Status = consts.OpsTaskStatusIsRejected
@@ -1003,6 +1033,7 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 			}
 		}
 		result = append(result, res)
+		return &result, err
 	}
 	return &result, errors.New("转换运维操作任务日志的结果失败")
 }
@@ -1020,13 +1051,12 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 		if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", params.ID).First(&taskLog).Error; err != nil {
 			return nil, fmt.Errorf("查询运维操作任务日志失败: %v", err)
 		}
-
-		res, err = s.getOpsTaskLogResult(taskLog, true)
-		if res == nil {
-			return nil, errors.New("运维操作任务信息转换结果失败, res为nil")
-		}
+		res, err = s.getOpsTaskLogResult(&taskLog, true)
 		if err != nil {
 			return nil, fmt.Errorf("运维操作任务信息转换结果失败: err: %v", err)
+		}
+		if res == nil {
+			return nil, errors.New("运维操作任务信息转换结果失败, res为nil")
 		}
 
 		result = api.GetOpsTaskLogsRes{
@@ -1072,11 +1102,11 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 		}
 	}
 	res, err = s.getOpsTaskLogResult(&taskLogs, false)
-	if res == nil {
-		return nil, errors.New("运维操作任务日志转换结果失败, res为nil")
-	}
 	if err != nil {
 		return nil, fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
+	}
+	if res == nil {
+		return nil, errors.New("运维操作任务日志转换结果失败, res为nil")
 	}
 	result = api.GetOpsTaskLogsRes{
 		Records:  *res,
