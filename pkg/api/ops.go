@@ -19,11 +19,12 @@ type GetOpsTemplatesReq struct {
 }
 
 type GetOpsTemplateRes struct {
-	ID        uint   `form:"id" json:"id"`
-	UpdatedAt string `form:"updatedAt" json:"updatedAt"`
-	Name      string `form:"name" json:"name"`
-	Content   string `form:"content" json:"content,omitempty"`
-	ProjectId uint   `form:"projectId" json:"projectId"`
+	ID          uint   `form:"id" json:"id"`
+	UpdatedAt   string `form:"updatedAt" json:"updatedAt"`
+	Name        string `form:"name" json:"name"`
+	Content     string `form:"content" json:"content,omitempty"`
+	ProjectName string `form:"projectName" json:"projectName"`
+	ProjectId   uint   `form:"projectId" json:"projectId"`
 }
 
 type GetOpsTemplatesRes struct {

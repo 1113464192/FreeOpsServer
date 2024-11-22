@@ -61,6 +61,29 @@ func (s *OpsService) UpdateOpsTemplate(params *api.UpdateOpsTemplateReq) (err er
 	}
 }
 
+func (s *OpsService) getOpsTemplatesProjectName(templates *[]model.OpsTemplate) (map[uint]string, error) {
+	// 查询所有相关的项目名称
+	var (
+		projectIds []uint
+		err        error
+	)
+	for _, tem := range *templates {
+		projectIds = append(projectIds, tem.ProjectId)
+	}
+
+	var projects []model.Project
+	if err = model.DB.Model(&model.Project{}).Select("id", "name").Where("id IN (?)", projectIds).Find(&projects).Error; err != nil {
+		return nil, fmt.Errorf("查询项目名称失败: %v", err)
+	}
+
+	// 创建一个映射以便快速查找项目名称
+	projectNameMap := make(map[uint]string)
+	for _, project := range projects {
+		projectNameMap[project.ID] = project.Name
+	}
+	return projectNameMap, nil
+}
+
 // 查询运维模板，不需要content则不传ID
 func (s *OpsService) GetOpsTemplate(params *api.GetOpsTemplatesReq, bindProjectIds []uint) (*api.GetOpsTemplatesRes, error) {
 	var (
@@ -69,17 +92,24 @@ func (s *OpsService) GetOpsTemplate(params *api.GetOpsTemplatesReq, bindProjectI
 	)
 
 	if params.ID != 0 {
-		var template model.OpsTemplate
+		var (
+			template    model.OpsTemplate
+			projectName string
+		)
 		if err = model.DB.Model(&model.OpsTemplate{}).Where("id = ?", params.ID).First(&template).Error; err != nil {
 			return nil, fmt.Errorf("查询运维操作模板失败: %v", err)
+		}
+		if err = model.DB.Model(&model.Project{}).Where("id = ?", template.ProjectId).Pluck("name", &projectName).Error; err != nil {
+			return nil, fmt.Errorf("查询项目名称失败: %v", err)
 		}
 		result := api.GetOpsTemplatesRes{
 			Records: []api.GetOpsTemplateRes{
 				{
-					ID:        template.ID,
-					Name:      template.Name,
-					Content:   template.Content,
-					ProjectId: template.ProjectId,
+					ID:          template.ID,
+					Name:        template.Name,
+					Content:     template.Content,
+					ProjectName: projectName,
+					ProjectId:   template.ProjectId,
 				},
 			},
 			Page:     1,
@@ -118,14 +148,21 @@ func (s *OpsService) GetOpsTemplate(params *api.GetOpsTemplatesReq, bindProjectI
 			return nil, fmt.Errorf("查询运维操作模板失败: %v", err)
 		}
 	}
-	var res []api.GetOpsTemplateRes
-	var result api.GetOpsTemplatesRes
+	var (
+		res            []api.GetOpsTemplateRes
+		result         api.GetOpsTemplatesRes
+		projectNameMap map[uint]string
+	)
+	if projectNameMap, err = s.getOpsTemplatesProjectName(&templates); err != nil {
+		return nil, err
+	}
 	for _, tem := range templates {
 		v := api.GetOpsTemplateRes{
-			ID:        tem.ID,
-			UpdatedAt: tem.UpdatedAt.Format("2006-01-02 15:04:05"),
-			Name:      tem.Name,
-			ProjectId: tem.ProjectId,
+			ID:          tem.ID,
+			UpdatedAt:   tem.UpdatedAt.Format("2006-01-02 15:04:05"),
+			Name:        tem.Name,
+			ProjectName: projectNameMap[tem.ProjectId],
+			ProjectId:   tem.ProjectId,
 		}
 		res = append(res, v)
 	}
