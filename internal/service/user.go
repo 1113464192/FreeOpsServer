@@ -102,11 +102,18 @@ func (s *UserService) UpdateUser(params *api.UpdateUserReq) (string, error) {
 		}
 
 		// 判断username是否和现有用户重复
-		err = model.DB.Model(&user).Where("username = ? AND id != ?", params.Username, params.ID).Count(&count).Error
+		err = model.DB.Model(&user).Where("username = ? AND id != ? ", params.Username, params.ID).Count(&count).Error
 		if err != nil {
 			return "", fmt.Errorf("查询用户失败: %v", err)
 		} else if count > 0 {
 			return "", fmt.Errorf("用户名已被使用: %s", params.Username)
+		}
+		// 判断昵称是否和现有用户重复
+		err = model.DB.Model(&user).Where("nickname = ? AND id != ? ", params.Nickname, params.ID).Count(&count).Error
+		if err != nil {
+			return "", fmt.Errorf("查询用户失败: %v", err)
+		} else if count > 0 {
+			return "", fmt.Errorf("昵称已被使用: %s", params.Username)
 		}
 
 		if err = model.DB.Model(&model.User{}).Where("id = ?", params.ID).Update("updated_at", time.Now()).Error; err != nil {
@@ -136,7 +143,13 @@ func (s *UserService) UpdateUser(params *api.UpdateUserReq) (string, error) {
 		} else if count > 0 {
 			return "", fmt.Errorf("用户名(%s)已存在", params.Username)
 		}
-
+		// 判断昵称是否和现有用户重复
+		err = model.DB.Model(&user).Where("nickname = ?", params.Nickname).Count(&count).Error
+		if err != nil {
+			return "", fmt.Errorf("查询用户失败: %v", err)
+		} else if count > 0 {
+			return "", fmt.Errorf("昵称已存在: %s", params.Username)
+		}
 		user = model.User{
 			Status:     params.Status,
 			Username:   params.Username,
@@ -238,6 +251,7 @@ func (s *UserService) GetUserPrivilege(user *model.User, roles *[]model.Role) (r
 	res = &api.GetUserPrivilegeRes{
 		UserId:   user.ID,
 		Username: user.Username,
+		Nickname: user.Nickname,
 		Roles:    roleCodes,
 		Buttons:  buttonCodes,
 	}

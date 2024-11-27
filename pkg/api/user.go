@@ -83,6 +83,7 @@ type GetUserRecordLogsRes struct {
 type GetUserPrivilegeRes struct {
 	UserId   uint     `json:"userId" form:"userId"`
 	Username string   `json:"username" form:"username"`
+	Nickname string   `json:"nickname" form:"nickname"`
 	Roles    []string `json:"roles" form:"roles"`
 	Buttons  []string `json:"buttons" form:"buttons"`
 }

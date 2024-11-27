@@ -1048,6 +1048,61 @@ func (s *OpsService) GetTaskPendingApprovers() (*[]api.GetTaskPendingApproversRe
 	return &result, err
 }
 
+func (s *OpsService) getOpsTaskLogUserNames(auditors []uint, rejectAuditor uint, submitter uint, pendingAuditors []uint) (
+	auditorNames []string, rejectAuditorName string, submitterName string, pendingAuditorNames []string, err error) {
+	// 创建一个集合来存储所有唯一的用户ID
+	userIdsMap := make(map[uint]struct{})
+
+	// 添加审核员ID
+	for _, auditor := range auditors {
+		if auditor != 0 {
+			userIdsMap[auditor] = struct{}{}
+		}
+	}
+
+	// 添加提交者ID
+	if submitter != 0 {
+		userIdsMap[submitter] = struct{}{}
+	}
+
+	// 将集合中的用户ID转换为切片
+	userIds := make([]uint, 0, len(userIdsMap))
+	for userId := range userIdsMap {
+		userIds = append(userIds, userId)
+	}
+
+	// 查询用户信息
+	var users []model.User
+	if err = model.DB.Model(&model.User{}).Where("id IN (?)", userIds).Select("id", "nickname").Find(&users).Error; err != nil {
+		return nil, "", "", nil, fmt.Errorf("查询用户信息失败: %v", err)
+	}
+
+	// 构建用户ID到用户名的映射
+	userNameMap := make(map[uint]string)
+	for _, user := range users {
+		userNameMap[user.ID] = user.Nickname
+	}
+
+	// 根据传入的用户ID列表，获取对应的用户名
+	for _, auditor := range auditors {
+		auditorNames = append(auditorNames, userNameMap[auditor])
+	}
+
+	if rejectAuditor != 0 {
+		rejectAuditorName = userNameMap[rejectAuditor]
+	}
+
+	submitterName = userNameMap[submitter]
+
+	if pendingAuditors != nil && len(pendingAuditors) > 0 {
+		for _, pendingAuditor := range pendingAuditors {
+			pendingAuditorNames = append(pendingAuditorNames, userNameMap[pendingAuditor])
+		}
+	}
+
+	return auditorNames, rejectAuditorName, submitterName, pendingAuditorNames, err
+}
+
 func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetOpsTaskLogRes, error) {
 	var (
 		result []api.GetOpsTaskLogRes
@@ -1081,6 +1136,15 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 				}
 				if err = json.Unmarshal([]byte(taskLog.PendingAuditors), &res.PendingAuditors); err != nil {
 					return nil, fmt.Errorf("taskLog中的PendingAuditors 不符合 json 格式: %v", err)
+				}
+				if res.AuditorNames, res.RejectAuditorName, res.SubmitterName, res.PendingAuditorNames, err = s.
+					getOpsTaskLogUserNames(res.Auditors, res.RejectAuditor, res.Submitter, res.PendingAuditors); err != nil {
+					return nil, fmt.Errorf("查询用户信息失败: %v", err)
+				}
+			} else {
+				if res.AuditorNames, res.RejectAuditorName, res.SubmitterName, _, err = s.
+					getOpsTaskLogUserNames(res.Auditors, res.RejectAuditor, res.Submitter, res.PendingAuditors); err != nil {
+					return nil, fmt.Errorf("查询用户信息失败: %v", err)
 				}
 			}
 			result = append(result, res)
