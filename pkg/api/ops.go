@@ -81,6 +81,7 @@ type GetOpsTaskRes struct {
 	IsIntranet      bool   `form:"isIntranet" json:"isIntranet"`
 	IsConcurrent    bool   `form:"isConcurrent" json:"isConcurrent"`
 	ProjectId       uint   `form:"projectId" json:"projectId"`
+	ProjectName     string `form:"projectName" json:"projectName"`
 }
 
 type GetOpsTasksRes struct {
@@ -139,6 +140,7 @@ type GetOpsTaskLogRes struct {
 	Auditors        []uint                `json:"auditors"`
 	PendingAuditors []uint                `json:"pendingAuditors,omitempty"`
 	RejectAuditor   uint                  `json:"rejectAuditor"`
+	ProjectName     string                `json:"projectName"`
 	ProjectId       uint                  `json:"projectId"`
 	Submitter       uint                  `json:"submitter"`
 }

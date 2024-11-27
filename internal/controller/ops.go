@@ -360,6 +360,37 @@ func GetOpsTask(c *gin.Context) {
 	})
 }
 
+// DeleteOpsTask
+// @Tags 运维操作相关
+// @title 删除运维操作任务信息
+// @description 删除运维操作任务信息
+// @Summary 删除运维操作任务信息
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param ids body api.IdsReq true "任务IDs"
+// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Router /ops/task [delete]
+func DeleteOpsTask(c *gin.Context) {
+	var param api.IdsReq
+	if err := c.ShouldBind(&param); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+	if err := service.OpsServiceApp().DeleteOpsTask(param.Ids); err != nil {
+		logger.Log().Error("ops", "删除运维操作任务信息失败", err)
+		c.JSON(500, util.ServerErrorResponse("删除运维操作任务信息失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "删除运维操作任务信息成功", fmt.Sprintf("ID: %v", param.Ids))
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+	})
+}
+
 // RunOpsTaskCheckScript
 // @Tags 运维操作相关
 // @title 执行一个阻塞的任务并返回结果

@@ -61,14 +61,14 @@ func (s *OpsService) UpdateOpsTemplate(params *api.UpdateOpsTemplateReq) (err er
 	}
 }
 
-func (s *OpsService) getOpsTemplatesProjectName(templates *[]model.OpsTemplate) (map[uint]string, error) {
-	// 查询所有相关的项目名称
+// 通用函数，用于查询项目名称
+func getProjectNames[T any](items *[]T, getProjectId func(T) uint) (map[uint]string, error) {
 	var (
 		projectIds []uint
 		err        error
 	)
-	for _, tem := range *templates {
-		projectIds = append(projectIds, tem.ProjectId)
+	for _, item := range *items {
+		projectIds = append(projectIds, getProjectId(item))
 	}
 
 	var projects []model.Project
@@ -76,12 +76,32 @@ func (s *OpsService) getOpsTemplatesProjectName(templates *[]model.OpsTemplate) 
 		return nil, fmt.Errorf("查询项目名称失败: %v", err)
 	}
 
-	// 创建一个映射以便快速查找项目名称
 	projectNameMap := make(map[uint]string)
 	for _, project := range projects {
 		projectNameMap[project.ID] = project.Name
 	}
 	return projectNameMap, nil
+}
+
+// 获取OpsTask的项目名称
+func (s *OpsService) getOpsTasksProjectName(tasks *[]model.OpsTask) (map[uint]string, error) {
+	return getProjectNames(tasks, func(task model.OpsTask) uint {
+		return task.ProjectId
+	})
+}
+
+// 获取OpsTemplate的项目名称
+func (s *OpsService) getOpsTemplatesProjectName(templates *[]model.OpsTemplate) (map[uint]string, error) {
+	return getProjectNames(templates, func(template model.OpsTemplate) uint {
+		return template.ProjectId
+	})
+}
+
+// 获取OpsTaskLog的项目名称
+func (s *OpsService) getOpsTaskLogsProjectName(logs *[]model.OpsTaskLog) (map[uint]string, error) {
+	return getProjectNames(logs, func(log model.OpsTaskLog) uint {
+		return log.ProjectId
+	})
 }
 
 // 查询运维模板，不需要content则不传ID
@@ -202,8 +222,8 @@ func (s *OpsService) UpdateOpsParamsTemplate(params model.OpsParam) (err error) 
 		count    int64
 	)
 	if params.ID != 0 {
-		if err = model.DB.Model(&model.OpsParam{}).Where("id != ? AND keyword = ? AND variable = ?", params.ID, params.Keyword, params.Variable).Count(&count).Error; count > 0 || err != nil {
-			return fmt.Errorf("有相同的 TemplateParam,id: %d Param: %s variable: %s , 或有错误信息: %v", params.ID, params.Keyword, params.Variable, err)
+		if err = model.DB.Model(&model.OpsParam{}).Where("id != ? AND keyword = ?", params.ID, params.Keyword).Count(&count).Error; count > 0 || err != nil {
+			return fmt.Errorf("有相同的 TemplateParam,id: %d Param: %s, 或有错误信息: %v", params.ID, params.Keyword, err)
 		}
 		if err = model.DB.Model(&model.OpsParam{}).Where("id = ?", params.ID).First(&template).Error; err != nil {
 			return fmt.Errorf("查询运维操作的参数模板失败: %v", err)
@@ -215,8 +235,8 @@ func (s *OpsService) UpdateOpsParamsTemplate(params model.OpsParam) (err error) 
 		}
 		return err
 	} else {
-		if err = model.DB.Model(&model.OpsParam{}).Where("keyword = ? AND variable = ?", params.Keyword, params.Variable).Count(&count).Error; count > 0 || err != nil {
-			return fmt.Errorf("TemplateParam 已存在,id: %d Param: %s variable: %s , 或有错误信息: %v", params.ID, params.Keyword, params.Variable, err)
+		if err = model.DB.Model(&model.OpsParam{}).Where("keyword = ?", params.Keyword).Count(&count).Error; count > 0 || err != nil {
+			return fmt.Errorf("TemplateParam 已存在,id: %d Param: %s, 或有错误信息: %v", params.ID, params.Keyword, err)
 		}
 		template = model.OpsParam{
 			Keyword:  params.Keyword,
@@ -506,6 +526,10 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 	)
 	// 批量查询不需要temIds和auditors
 	if tasks, ok := opsObj.(*[]model.OpsTask); ok {
+		var projectNameMap map[uint]string
+		if projectNameMap, err = s.getOpsTasksProjectName(tasks); err != nil {
+			return nil, err
+		}
 		for _, task := range *tasks {
 			res := api.GetOpsTaskRes{
 				ID:           task.ID,
@@ -513,6 +537,7 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 				HostId:       task.HostId,
 				IsIntranet:   task.IsIntranet,
 				IsConcurrent: task.IsConcurrent,
+				ProjectName:  projectNameMap[task.ProjectId],
 				ProjectId:    task.ProjectId,
 			}
 			result = append(result, res)
@@ -534,6 +559,9 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 			IsIntranet:      task.IsIntranet,
 			IsConcurrent:    task.IsConcurrent,
 			ProjectId:       task.ProjectId,
+		}
+		if err = model.DB.Model(&model.Project{}).Where("id = ?", task.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
+			return nil, fmt.Errorf("查询项目名称失败: %v", err)
 		}
 		// 判断模板ID和审批人ID还是否在template表和user表中
 		if uintIds, err = util.StringToUintSlice(task.TemplateIds); err != nil {
@@ -569,6 +597,14 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 		return &result, err
 	}
 	return &result, errors.New("转换运维操作任务信息结果失败")
+}
+
+// 删除运维操作模板
+func (s *OpsService) DeleteOpsTask(ids []uint) (err error) {
+	if err = model.DB.Where("id IN (?)", ids).Delete(&model.OpsTask{}).Error; err != nil {
+		return fmt.Errorf("删除运维操作任务信息失败 %d: %v", ids, err)
+	}
+	return nil
 }
 
 // OpsTemplate按照自己提供的id顺序排序
@@ -1019,12 +1055,17 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 	)
 	// 批量查询不需要temIds和auditors
 	if taskLogs, ok := opsObj.(*[]model.OpsTaskLog); ok {
+		var projectNameMap map[uint]string
+		if projectNameMap, err = s.getOpsTaskLogsProjectName(taskLogs); err != nil {
+			return nil, err
+		}
 		for _, taskLog := range *taskLogs {
 			res := api.GetOpsTaskLogRes{
 				ID:            taskLog.ID,
 				Name:          taskLog.Name,
 				Status:        taskLog.Status,
 				RejectAuditor: taskLog.RejectAuditor,
+				ProjectName:   projectNameMap[taskLog.ProjectId],
 				ProjectId:     taskLog.ProjectId,
 				Submitter:     taskLog.Submitter,
 			}
@@ -1054,6 +1095,9 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 			RejectAuditor: taskLog.RejectAuditor,
 			ProjectId:     taskLog.ProjectId,
 			Submitter:     taskLog.Submitter,
+		}
+		if err = model.DB.Model(&model.Project{}).Where("id = ?", taskLog.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
+			return nil, fmt.Errorf("查询项目名称失败: %v", err)
 		}
 		if err = json.Unmarshal([]byte(taskLog.Auditors), &res.Auditors); err != nil {
 			return nil, fmt.Errorf("taskLog中的Auditors 不符合 json 格式: %v", err)
