@@ -11,7 +11,7 @@ type SSHRunReq struct {
 
 // 返回更改
 type SSHResultRes struct {
-	HostIp   string
-	Status   int
-	Response string
+	HostIp   string `json:"hostIp"`
+	Status   int    `json:"status"`
+	Response string `json:"response"`
 }

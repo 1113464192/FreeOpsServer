@@ -67,6 +67,19 @@ definitions:
     - hostCount
     - projectId
     type: object
+  api.GetOpsTaskTmpCommandsReq:
+    properties:
+      execContent:
+        description: 运营的执行内容文案，从中根据Params提取参数放入模板中执行
+        type: string
+      templateIds:
+        items:
+          type: integer
+        type: array
+    required:
+    - execContent
+    - templateIds
+    type: object
   api.IdsReq:
     properties:
       ids:
@@ -108,6 +121,9 @@ definitions:
         items:
           type: integer
         type: array
+      checkResponse:
+        description: 运维检测脚本根据ExecContext返回的信息，存储到任务日志中
+        type: string
       execContent:
         description: 运营的执行内容文案，从中根据Params提取参数放入各个模板中执行
         type: string
@@ -1530,6 +1546,39 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 运维操作模板与运维操作的参数模板关系绑定
+      tags:
+      - 运维操作相关
+  /ops/commands:
+    post:
+      description: 查看根据参数会生成的命令
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 请输入需要的参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/api.GetOpsTaskTmpCommandsReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"code": "", msg: "", data: ""}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 查看根据参数会生成的命令
       tags:
       - 运维操作相关
   /ops/param-template:
@@ -3147,45 +3196,6 @@ paths:
           schema:
             $ref: '#/definitions/api.Response'
       summary: 查询用户的角色
-      tags:
-      - 用户相关
-  /users/ssh-key:
-    put:
-      description: "文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa\t\t走jumpserver则无需使用"
-      parameters:
-      - description: 格式为：Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: 私钥文件上传
-        in: formData
-        name: keyFile
-        type: file
-      - description: 私钥文本内容上传
-        in: formData
-        name: keyStr
-        type: string
-      - description: 私钥通行证密码上传
-        in: formData
-        name: Passphrase
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"data":{},"meta":{msg":"Success"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "403":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-        "500":
-          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
-          schema:
-            $ref: '#/definitions/api.Response'
-      summary: 提交自身私钥
       tags:
       - 用户相关
 swagger: "2.0"

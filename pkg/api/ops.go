@@ -76,8 +76,9 @@ type GetOpsTaskRes struct {
 	Name            string `form:"name" json:"name"`
 	CheckTemplateId uint   `form:"checkTemplateId" json:"checkTemplateId,omitempty"`
 	TemplateIds     []uint `form:"templateIds" json:"templateIds,omitempty"`
-	Auditors        []uint `form:"userIds" json:"userIds,omitempty"`
+	Auditors        []uint `form:"auditors" json:"auditors,omitempty"`
 	HostId          uint   `form:"hostId" json:"hostId"`
+	HostName        string `form:"hostName" json:"hostName"`
 	IsIntranet      bool   `form:"isIntranet" json:"isIntranet"`
 	IsConcurrent    bool   `form:"isConcurrent" json:"isConcurrent"`
 	ProjectId       uint   `form:"projectId" json:"projectId"`
@@ -103,12 +104,18 @@ type OpsTaskLogtepStatus struct {
 	SSHResponseStatus int    `json:"sshResponseStatus"`
 }
 
+type GetOpsTaskTmpCommandsReq struct {
+	TemplateIds []uint `form:"templateIds" json:"templateIds" binding:"required"`
+	ExecContext string `form:"execContent" json:"execContent" binding:"required"` // 运营的执行内容文案，从中根据Params提取参数放入模板中执行
+}
+
 type SubmitOpsTaskReq struct {
-	TaskId      uint   `form:"taskId" json:"taskId" binding:"required"`
-	ExecContext string `form:"execContent" json:"execContent" binding:"required"` // 运营的执行内容文案，从中根据Params提取参数放入各个模板中执行
-	TemplateIds []uint `form:"templateIds" json:"templateIds" binding:"required"` // 模板是可勾选的，因此不一定完全执行taskId的所有模板，所以需要单独传。按顺序如:1,2,3
-	Auditors    []uint `form:"auditors" json:"auditors"`
-	Submitter   uint   `form:"submitter" json:"submitter" binding:"required"` // 提交者
+	TaskId        uint   `form:"taskId" json:"taskId" binding:"required"`
+	ExecContext   string `form:"execContent" json:"execContent" binding:"required"` // 运营的执行内容文案，从中根据Params提取参数放入各个模板中执行
+	CheckResponse string `form:"checkResponse" json:"checkResponse"`                // 运维检测脚本根据ExecContext返回的信息，存储到任务日志中
+	TemplateIds   []uint `form:"templateIds" json:"templateIds" binding:"required"` // 模板是可勾选的，因此不一定完全执行taskId的所有模板，所以需要单独传。按顺序如:1,2,3
+	Auditors      []uint `form:"auditors" json:"auditors"`
+	Submitter     uint   `form:"submitter" json:"submitter" binding:"required"` // 提交者
 }
 
 type ApproveOpsTaskReq struct {
@@ -134,6 +141,8 @@ type GetOpsTaskLogReq struct {
 type GetOpsTaskLogRes struct {
 	ID                  uint                  `json:"id"`
 	Name                string                `json:"name"`
+	ExecContext         string                `json:"execContext,omitempty"`
+	CheckResponse       string                `json:"checkResponse,omitempty"`
 	Commands            []string              `json:"commands,omitempty"`
 	StepStatus          []OpsTaskLogtepStatus `json:"stepStatus,omitempty"`
 	Status              uint8                 `json:"status"`

@@ -427,6 +427,43 @@ func RunOpsTaskCheckScript(c *gin.Context) {
 	})
 }
 
+// GetOpsTaskTmpCommands
+// @Tags 运维操作相关
+// @title 查看根据参数会生成的命令
+// @description 查看根据参数会生成的命令
+// @Summary 查看根据参数会生成的命令
+// @Produce  application/json
+// @Param Authorization header string true "格式为：Bearer 用户令牌"
+// @Param data body api.GetOpsTaskTmpCommandsReq true "请输入需要的参数"
+// @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
+// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
+// @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
+// @Router /ops/commands [post]
+func GetOpsTaskTmpCommands(c *gin.Context) {
+	var (
+		params api.GetOpsTaskTmpCommandsReq
+		err    error
+	)
+	if err = c.ShouldBind(&params); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+
+	res, err := service.OpsServiceApp().GetOpsTaskTmpCommands(params)
+	if err != nil {
+		logger.Log().Error("ops", "查看根据参数会生成的命令失败", err)
+		c.JSON(500, util.ServerErrorResponse("查看根据参数会生成的命令失败", err))
+		return
+	}
+
+	logger.Log().Info("ops", "查看根据参数会生成的命令成功")
+	c.JSON(200, api.Response{
+		Code: consts.SERVICE_SUCCESS_CODE,
+		Msg:  "Success",
+		Data: res,
+	})
+}
+
 // SubmitOpsTask
 // @Tags 运维操作相关
 // @title 提交运维操作任务

@@ -17,6 +17,4 @@ type User struct {
 	Nickname   string         `json:"nickname" gorm:"type:varchar(30);comment:昵称"`
 	UserPhone  string         `json:"userPhone" gorm:"type:varchar(50);comment:手机号"`
 	UserEmail  string         `json:"userEmail" gorm:"type:varchar(50);comment:邮箱"`
-	PriKey     []byte         `json:"priKey" gorm:"type:blob;comment: 用户私钥，不传为NULL,走jumpserver则无需使用;unique"`
-	Passphrase []byte         `json:"passphrase" gorm:"type:blob;comment: 用户私钥通行密码，不传为NULL"`
 }

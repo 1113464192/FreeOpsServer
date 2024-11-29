@@ -5,6 +5,8 @@ import "gorm.io/gorm"
 type OpsTaskLog struct {
 	gorm.Model
 	Name            string `json:"name" gorm:"type: varchar(10);comment: 任务名;index"`
+	ExecContext     string `json:"execContext" gorm:"type: text;comment: 运营的执行读取文案"`
+	CheckResponse   string `json:"checkResponse" gorm:"type: text;comment: 运维检测脚本根据ExecContext返回的信息"`
 	Commands        string `json:"commands" gorm:"type: text;comment: [echo '1', echo '2']"`
 	StepStatus      string `json:"stepStatus" gorm:"type: text;comment: commands执行顺序的每一步的状态(等待中、执行中、执行成功、执行失败), 键值切片对应Status/Res/Command/SSHStatus"`
 	Status          uint8  `json:"status" gorm:"comment: 整个任务的状态(0: 等待中、1: 执行中、2: 执行成功、3: 执行失败、4: 拒绝执行);index"`

@@ -51,7 +51,6 @@ func NewRoute() *gin.Engine {
 			userRoute.POST("logout", UserLogout)                    // 登出
 			userRoute.GET("history-action", GetUserRecordLogs)      // 查询用户所有的历史操作
 			userRoute.GET("history-month-exist", GetUserRecordDate) // 查询有多少个月份表可供查询
-			userRoute.PUT("ssh-key", UpdateSSHKey)                  // 添加私钥,走jumpserver则不需要该功能
 			userRoute.PUT("bind-roles", BindUserRoles)              // 用户绑定角色
 			userRoute.GET("roles", GetUserRoles)                    // 查看用户所有角色
 			userRoute.GET("project-options", GetUserProjectOptions) // 查看用户所有项目选项
@@ -147,6 +146,7 @@ func NewRoute() *gin.Engine {
 			opsRoute.POST("task", UpdateOpsTask)                            // 创建/修改 任务(拼接执行模板顺序的任务)
 			opsRoute.DELETE("task", DeleteOpsTask)                          // 删除任务
 			opsRoute.GET("task", GetOpsTask)                                // 查看任务
+			opsRoute.POST("commands", GetOpsTaskTmpCommands)                // 查看根据参数会生成的命令
 			opsRoute.POST("submit-task", SubmitOpsTask)                     // 提交任务
 			opsRoute.PUT("approve-task", ApproveOpsTask)                    // 用户审批任务
 			opsRoute.GET("task-pending-approvers", GetTaskPendingApprovers) // 查询任务还未审批的审核员

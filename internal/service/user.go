@@ -1,7 +1,6 @@
 package service
 
 import (
-	"FreeOps/global"
 	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
@@ -10,8 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
-	"mime/multipart"
 	"strings"
 	"time"
 )
@@ -214,10 +211,15 @@ func (s *UserService) GetUsers(params api.GetUsersReq) (result *api.GetUsersRes,
 	if err = getDB.Count(&total).Error; err != nil {
 		return nil, fmt.Errorf("查询用户总数失败: %v", err)
 	}
-	if err = getDB.Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&users).Error; err != nil {
-		return nil, fmt.Errorf("查询用户失败: %v", err)
+	if params.Page != 0 && params.PageSize != 0 {
+		if err = getDB.Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&users).Error; err != nil {
+			return nil, fmt.Errorf("查询用户失败: %v", err)
+		}
+	} else {
+		if err = getDB.Find(&users).Error; err != nil {
+			return nil, fmt.Errorf("查询用户失败: %v", err)
+		}
 	}
-
 	// 过滤结果
 	res, err := s.GetResults(&users)
 	if err != nil {
@@ -293,63 +295,6 @@ func (s *UserService) ChangeUserPassword(params api.ChangeUserPasswordReq) (err 
 		return fmt.Errorf("更新用户 %d 密码失败: %v", params.ID, err)
 	}
 	return err
-}
-
-// 通过文件更新私钥
-func (s *UserService) UpdateKeyFileContext(file *multipart.FileHeader, passphrase string, id uint) error {
-	fileP, err := file.Open()
-	if err != nil {
-		return err
-	}
-	defer fileP.Close()
-
-	fileBytes, err := io.ReadAll(fileP)
-	if err != nil {
-		return err
-	}
-
-	// AES加密并写入prikey
-	var data []byte
-	data, err = util.EncryptAESCBC(fileBytes, []byte(global.Conf.SecurityVars.AesKey), []byte(global.Conf.SecurityVars.AesIv))
-	if err != nil {
-		return fmt.Errorf("用户私钥加密失败: %v", err)
-	}
-	if err = model.DB.Model(&model.User{}).Where("id = ?", id).Update("pri_key", data).Error; err != nil {
-		return fmt.Errorf("私钥写入数据库失败: %v", err)
-	}
-
-	// AES加密并写入passphrase
-	data, err = util.EncryptAESCBC([]byte(passphrase), []byte(global.Conf.SecurityVars.AesKey), []byte(global.Conf.SecurityVars.AesIv))
-	if err != nil {
-		return fmt.Errorf("用户passphrase加密失败: %v", err)
-	}
-	if err = model.DB.Model(&model.User{}).Where("id = ?", id).Update("passphrase", data).Error; err != nil {
-		return errors.New("通行证密码写入数据库失败")
-	}
-	return nil
-}
-
-// 通过字符串更新私钥内容
-func (s *UserService) UpdateSSHKey(key []byte, passphrase string, id uint) (err error) {
-	// AES加密并写入prikey
-	var data []byte
-	data, err = util.EncryptAESCBC(key, []byte(global.Conf.SecurityVars.AesKey), []byte(global.Conf.SecurityVars.AesIv))
-	if err != nil {
-		return fmt.Errorf("用户私钥加密失败: %v", err)
-	}
-	if err = model.DB.Model(&model.User{}).Where("id = ?", id).Update("pri_key", data).Error; err != nil {
-		return fmt.Errorf("私钥字符串写入数据库失败: %v", err)
-	}
-
-	// AES加密并写入passphrase
-	data, err = util.EncryptAESCBC([]byte(passphrase), []byte(global.Conf.SecurityVars.AesKey), []byte(global.Conf.SecurityVars.AesIv))
-	if err != nil {
-		return fmt.Errorf("用户passphrase加密失败: %v", err)
-	}
-	if err = model.DB.Model(&model.User{}).Where("id = ?", id).Update("passphrase", data).Error; err != nil {
-		return fmt.Errorf("通行证密码写入数据库失败: %v", err)
-	}
-	return nil
 }
 
 func (s *UserService) BindUserRoles(uid uint, roleIds []uint) (err error) {

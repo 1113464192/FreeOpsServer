@@ -9,7 +9,6 @@ import (
 	"FreeOps/pkg/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io"
 	"strconv"
 	"strings"
 )
@@ -417,74 +416,6 @@ func GetUserRecordLogs(c *gin.Context) {
 		Code: consts.SERVICE_SUCCESS_CODE,
 		Msg:  "Success",
 		Data: res,
-	})
-}
-
-// UpdateSSHKey
-// @Tags 用户相关
-// @title 提交自身私钥
-// @description 文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa		走jumpserver则无需使用
-// @Summary 提交自身私钥
-// @Produce  application/json
-// @Param Authorization header string true "格式为：Bearer 用户令牌"
-// @Param keyFile formData file false "私钥文件上传"
-// @Param keyStr formData string false "私钥文本内容上传"
-// @Param Passphrase formData string false "私钥通行证密码上传"
-// @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
-// @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/ssh-key [put]
-func UpdateSSHKey(c *gin.Context) {
-	file, err := c.FormFile("keyFile")
-	var keyStr string
-	if err != nil {
-		keyStr = c.PostForm("keyStr")
-		if keyStr == "" {
-			c.JSON(500, util.ServerErrorResponse("上传失败", err))
-			return
-		}
-	}
-	passphrase := c.PostForm("Passphrase")
-
-	user, err := util.GetClaimsUser(c)
-	if err != nil {
-		c.JSON(200, api.Response{
-			Code: consts.SERVICE_MODAL_LOGOUT_CODE,
-			Msg:  err.Error(),
-		})
-		return
-	}
-	var keyBytes []byte
-	if keyStr == "" {
-
-		fileP, err := file.Open()
-		defer fileP.Close()
-		if err != nil {
-			logger.Log().Error("user", "打开文件失败", err)
-			c.JSON(500, util.ServerErrorResponse("打开文件失败", err))
-			return
-		}
-
-		keyBytes, err = io.ReadAll(fileP)
-		if err != nil {
-			logger.Log().Error("user", "读取文件失败", err)
-			c.JSON(500, util.ServerErrorResponse("读取文件失败", err))
-			return
-		}
-	} else {
-		keyBytes = []byte(keyStr)
-	}
-
-	err = service.UserServiceApp().UpdateSSHKey(keyBytes, passphrase, user.ID)
-	if err != nil {
-		logger.Log().Error("user", "上传文件写入个人密钥失败失败", err)
-		c.JSON(500, util.ServerErrorResponse("上传文件写入个人密钥失败", err))
-		return
-	}
-	logger.Log().Info("user", "上传文件写入个人密钥成功", fmt.Sprintf("用户ID: %d", user.ID))
-	c.JSON(200, api.Response{
-		Code: consts.SERVICE_SUCCESS_CODE,
-		Msg:  "Success",
 	})
 }
 

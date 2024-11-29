@@ -1948,6 +1948,56 @@ const docTemplate = `{
                 }
             }
         },
+        "/ops/commands": {
+            "post": {
+                "description": "查看根据参数会生成的命令",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "运维操作相关"
+                ],
+                "summary": "查看根据参数会生成的命令",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "请输入需要的参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.GetOpsTaskTmpCommandsReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/ops/param-template": {
             "get": {
                 "description": "获取运维操作的参数模板",
@@ -4392,65 +4442,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/users/ssh-key": {
-            "put": {
-                "description": "文件/文本都可以，是私钥不要提交公钥！私钥如: id_rsa\t\t走jumpserver则无需使用",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户相关"
-                ],
-                "summary": "提交自身私钥",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "格式为：Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "file",
-                        "description": "私钥文件上传",
-                        "name": "keyFile",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "私钥文本内容上传",
-                        "name": "keyStr",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "私钥通行证密码上传",
-                        "name": "Passphrase",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
-                        "schema": {
-                            "$ref": "#/definitions/api.Response"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -4552,6 +4543,25 @@ const docTemplate = `{
                 }
             }
         },
+        "api.GetOpsTaskTmpCommandsReq": {
+            "type": "object",
+            "required": [
+                "execContent",
+                "templateIds"
+            ],
+            "properties": {
+                "execContent": {
+                    "description": "运营的执行内容文案，从中根据Params提取参数放入模板中执行",
+                    "type": "string"
+                },
+                "templateIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "api.IdsReq": {
             "type": "object",
             "required": [
@@ -4619,6 +4629,10 @@ const docTemplate = `{
                     "items": {
                         "type": "integer"
                     }
+                },
+                "checkResponse": {
+                    "description": "运维检测脚本根据ExecContext返回的信息，存储到任务日志中",
+                    "type": "string"
                 },
                 "execContent": {
                     "description": "运营的执行内容文案，从中根据Params提取参数放入各个模板中执行",

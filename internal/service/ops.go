@@ -371,6 +371,8 @@ func (s *OpsService) validateTask(params api.UpdateOpsTaskReq) (auditors string,
 			return "", "", fmt.Errorf("auditors 转换为 string 失败: %v", err)
 		}
 		auditors = string(auditorBytes)
+	} else {
+		auditors = ""
 	}
 	if err = model.DB.Model(&model.OpsTemplate{}).Where("id IN (?)", params.TemplateIds).Count(&count).Error; count != int64(len(params.TemplateIds)) || err != nil {
 		notExistIds, err2 := util.FindNotExistIDs(consts.MysqlTableNameOpsTemplate, params.TemplateIds)
@@ -399,6 +401,9 @@ func (s *OpsService) UpdateOpsTask(params api.UpdateOpsTaskReq) (err error) {
 		}
 		if err = model.DB.Model(&model.OpsTask{}).Where("id = ?", params.ID).First(&task).Error; err != nil {
 			return fmt.Errorf("查询运维操作任务信息失败: %v", err)
+		}
+		if task.Auditors == nil {
+			task.Auditors = new(string)
 		}
 		if *task.Auditors, task.TemplateIds, err = s.validateTask(params); err != nil {
 			return err
@@ -519,6 +524,35 @@ func (s *OpsService) GetOpsTask(params api.GetOpsTaskReq, bindProjectIds []uint)
 	return &result, err
 }
 
+// 通用函数，用于查询项目名称
+func getHostNames[T any](items *[]T, getHostId func(T) uint) (map[uint]string, error) {
+	var (
+		hostIds []uint
+		err     error
+	)
+	for _, item := range *items {
+		hostIds = append(hostIds, getHostId(item))
+	}
+
+	var hosts []model.Host
+	if err = model.DB.Model(&model.Host{}).Select("id", "name").Where("id IN (?)", hostIds).Find(&hosts).Error; err != nil {
+		return nil, fmt.Errorf("查询服务器名称失败: %v", err)
+	}
+
+	hostNameMap := make(map[uint]string)
+	for _, host := range hosts {
+		hostNameMap[host.ID] = host.Name
+	}
+	return hostNameMap, nil
+}
+
+// 获取OpsTask的项目名称
+func (s *OpsService) getOpsTaskHostNames(tasks *[]model.OpsTask) (map[uint]string, error) {
+	return getHostNames(tasks, func(task model.OpsTask) uint {
+		return task.HostId
+	})
+}
+
 func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) {
 	var (
 		result []api.GetOpsTaskRes
@@ -530,11 +564,16 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 		if projectNameMap, err = s.getOpsTasksProjectName(tasks); err != nil {
 			return nil, err
 		}
+		var hostNameMap map[uint]string
+		if hostNameMap, err = s.getOpsTaskHostNames(tasks); err != nil {
+			return nil, err
+		}
 		for _, task := range *tasks {
 			res := api.GetOpsTaskRes{
 				ID:           task.ID,
 				Name:         task.Name,
 				HostId:       task.HostId,
+				HostName:     hostNameMap[task.HostId],
 				IsIntranet:   task.IsIntranet,
 				IsConcurrent: task.IsConcurrent,
 				ProjectName:  projectNameMap[task.ProjectId],
@@ -562,6 +601,9 @@ func (s *OpsService) getOpsTaskResult(opsObj any) (*[]api.GetOpsTaskRes, error) 
 		}
 		if err = model.DB.Model(&model.Project{}).Where("id = ?", task.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)
+		}
+		if err = model.DB.Model(&model.Host{}).Where("id = ?", task.HostId).Pluck("name", &res.HostName).Error; err != nil {
+			return nil, fmt.Errorf("查询服务器名称失败: %v", err)
 		}
 		// 判断模板ID和审批人ID还是否在template表和user表中
 		if uintIds, err = util.StringToUintSlice(task.TemplateIds); err != nil {
@@ -728,6 +770,26 @@ func (s *OpsService) RunOpsTaskCheckScript(params api.RunOpsTaskCheckScriptReq) 
 	return result, err
 }
 
+// 查看执行运维任务的命令
+func (s *OpsService) GetOpsTaskTmpCommands(params api.GetOpsTaskTmpCommandsReq) (commands []string, err error) {
+	var count int64
+	if err = model.DB.Model(&model.OpsTemplate{}).Where("id IN (?)", params.TemplateIds).Count(&count).Error; count != int64(len(params.TemplateIds)) || err != nil {
+		notExistIds, err2 := util.FindNotExistIDs(consts.MysqlTableNameOpsTemplate, params.TemplateIds)
+		if err2 != nil {
+			return nil, fmt.Errorf("查询OpsTemplate失败: %v", err2)
+		}
+		return nil, fmt.Errorf("OpsTemplate 不存在ID: %d, 如果查询OpsTemplate失败: %v", notExistIds, err)
+	}
+	// 提取运营文案中的参数分给关联的模板
+	if commands, err = s.extractOpsTaskParams(params.TemplateIds, params.ExecContext); err != nil {
+		return nil, fmt.Errorf("提取运营文案中的参数分给关联的模板失败: %v", err)
+	}
+	if len(params.TemplateIds) != len(commands) {
+		return nil, fmt.Errorf("模板ID和生成的命令数量不匹配")
+	}
+	return commands, err
+}
+
 // 提交运维操作任务
 func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) (err error) {
 	var (
@@ -795,7 +857,8 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		return fmt.Errorf("stepStatus转换json失败: %v", err)
 	}
 	taskLog.StepStatus = string(stepStatusByte)
-
+	taskLog.ExecContext = params.ExecContext
+	taskLog.CheckResponse = params.CheckResponse
 	if err = model.DB.Create(&taskLog).Error; err != nil {
 		return fmt.Errorf("创建运维操作任务日志失败: %v", err)
 	}
@@ -1141,6 +1204,8 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 					getOpsTaskLogUserNames(res.Auditors, res.RejectAuditor, res.Submitter, res.PendingAuditors); err != nil {
 					return nil, fmt.Errorf("查询用户信息失败: %v", err)
 				}
+				res.ExecContext = taskLog.ExecContext
+				res.CheckResponse = taskLog.CheckResponse
 			} else {
 				if res.AuditorNames, res.RejectAuditorName, res.SubmitterName, _, err = s.
 					getOpsTaskLogUserNames(res.Auditors, res.RejectAuditor, res.Submitter, res.PendingAuditors); err != nil {
@@ -1176,6 +1241,8 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 			if err = json.Unmarshal([]byte(taskLog.PendingAuditors), &res.PendingAuditors); err != nil {
 				return nil, fmt.Errorf("taskLog中的PendingAuditors 不符合 json 格式: %v", err)
 			}
+			res.ExecContext = taskLog.ExecContext
+			res.CheckResponse = taskLog.CheckResponse
 		}
 		result = append(result, res)
 		return &result, err
@@ -1272,9 +1339,15 @@ func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds 
 	var (
 		taskLogs []model.OpsTaskLog
 	)
+	// 获取当前时间和10秒前的时间
+	now := time.Now()
+	tenSecondsAgo := now.Add(-10 * time.Second)
 	// 实时同步任务状态
 	for {
-		if err = model.DB.Model(&model.OpsTaskLog{}).Where("status = ? AND project_id IN (?)", consts.OpsTaskStatusIsRunning, bindProjectIds).Find(&taskLogs).Error; err != nil {
+		if err = model.DB.Model(&model.OpsTaskLog{}).
+			Where("((status = ? OR status = ? OR status = ?) AND project_id IN (?)) AND (status = ? OR updated_at >= ?)",
+				consts.OpsTaskStatusIsRunning, consts.OpsTaskStatusIsSuccess, consts.OpsTaskStatusIsFailed, bindProjectIds, consts.OpsTaskStatusIsRunning, tenSecondsAgo).
+			Find(&taskLogs).Error; err != nil {
 			return fmt.Errorf("查询运维操作任务日志失败: %v", err)
 		}
 		result, err := s.getOpsTaskLogResult(&taskLogs, true)
