@@ -97,7 +97,7 @@ type RunOpsTaskCheckScriptReq struct {
 	TaskId      uint   `form:"taskId" json:"taskId" binding:"required"`
 }
 
-type OpsTaskLogtepStatus struct {
+type OpsTaskLogStepStatus struct {
 	Command           string `json:"command"`
 	StartTime         string `json:"startTime"`
 	EndTime           string `json:"endTime"`
@@ -141,26 +141,26 @@ type GetOpsTaskLogReq struct {
 }
 
 type GetOpsTaskLogRes struct {
-	ID                  uint                  `json:"id"`
-	StartTime           string                `json:"startTime"`
-	EndTime             string                `json:"endTime"`
-	Name                string                `json:"name"`
-	HostIp              string                `json:"hostIp"`
-	ExecContext         string                `json:"execContext,omitempty"`
-	CheckResponse       string                `json:"checkResponse,omitempty"`
-	Commands            []string              `json:"commands,omitempty"`
-	StepStatus          []OpsTaskLogtepStatus `json:"stepStatus,omitempty"`
-	Status              uint8                 `json:"status"`
-	Auditors            []uint                `json:"auditors,omitempty"`
-	AuditorNames        []string              `json:"auditorNames,omitempty"`
-	PendingAuditors     []uint                `json:"pendingAuditors,omitempty"`
-	PendingAuditorNames []string              `json:"pendingAuditorNames,omitempty"`
-	RejectAuditor       uint                  `json:"rejectAuditor,omitempty"`
-	RejectAuditorName   string                `json:"rejectAuditorName,omitempty"`
-	ProjectName         string                `json:"projectName"`
-	ProjectId           uint                  `json:"projectId"`
-	Submitter           uint                  `json:"submitter"`
-	SubmitterName       string                `json:"submitterName"`
+	ID                  uint                   `json:"id"`
+	StartTime           string                 `json:"startTime"`
+	EndTime             string                 `json:"endTime"`
+	Name                string                 `json:"name"`
+	HostIp              string                 `json:"hostIp"`
+	ExecContext         string                 `json:"execContext,omitempty"`
+	CheckResponse       string                 `json:"checkResponse,omitempty"`
+	Commands            []string               `json:"commands,omitempty"`
+	StepStatus          []OpsTaskLogStepStatus `json:"stepStatus,omitempty"`
+	Status              uint8                  `json:"status"`
+	Auditors            []uint                 `json:"auditors,omitempty"`
+	AuditorNames        []string               `json:"auditorNames,omitempty"`
+	PendingAuditors     []uint                 `json:"pendingAuditors,omitempty"`
+	PendingAuditorNames []string               `json:"pendingAuditorNames,omitempty"`
+	RejectAuditor       uint                   `json:"rejectAuditor,omitempty"`
+	RejectAuditorName   string                 `json:"rejectAuditorName,omitempty"`
+	ProjectName         string                 `json:"projectName"`
+	ProjectId           uint                   `json:"projectId"`
+	Submitter           uint                   `json:"submitter"`
+	SubmitterName       string                 `json:"submitterName"`
 }
 
 type GetOpsTaskLogsRes struct {
@@ -170,12 +170,8 @@ type GetOpsTaskLogsRes struct {
 	Total    int64              `json:"total"`
 }
 
-//type GetOpsTaskRunningWSRes struct {
-//	Name         string `json:"name"`
-//	Command      string `json:"command"`
-//	Status       uint8  `json:"status"`
-//	ProjectName  string `json:"projectName"`
-//	Submitter    string `json:"submitter"`
-//	IsIntranet   bool   `json:"isIntranet"`
-//	IsConcurrent bool   `json:"isConcurrent"`
-//}
+type GetOpsTaskRunningWSRes struct {
+	Name          string                 `json:"name"`
+	SubmitterName string                 `json:"submitterName"`
+	Children      []OpsTaskLogStepStatus `json:"children,omitempty"`
+}

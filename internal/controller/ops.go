@@ -561,31 +561,28 @@ func ApproveOpsTask(c *gin.Context) {
 func GetOpsTaskNeedApprove(c *gin.Context) {
 	wsConn, user, _, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
-		c.JSON(500, util.ServerErrorResponse("websocket连接升级失败", err))
+		c.JSON(500, util.ServerErrorResponse("WebSocket 连接升级失败", err))
+		return
 	}
-	defer func(wsConn *websocket.Conn) {
+	logger.Log().Info("ops", "GetOpsTaskNeedApprove WebSocket 连接升级成功")
+	defer func() {
 		if wsConn != nil {
-			wsConn.WriteMessage(websocket.CloseMessage, []byte("websocket连接关闭"))
+			wsConn.WriteMessage(websocket.CloseMessage, []byte("WebSocket 连接关闭"))
 			wsConn.Close()
 		}
-	}(wsConn)
+	}()
 
 	if wsConn == nil || user == nil {
-		c.JSON(500, util.ServerErrorResponse("WebSocket连接或用户信息为空", nil))
+		c.JSON(500, util.ServerErrorResponse("WebSocket 连接或用户信息为空", nil))
 		return
 	}
 
 	if err = service.OpsServiceApp().GetOpsTaskNeedApprove(wsConn, user.ID); err != nil {
-		logger.Log().Error("ops", "查询用户是否有任务需要审批 失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询用户是否有任务需要审批 失败", err))
+		logger.Log().Error("ops", "任务审批查询失败", err)
 		return
 	}
 
-	logger.Log().Info("ops", "查询用户是否有任务需要审批 成功")
-	c.JSON(200, api.Response{
-		Code: consts.SERVICE_SUCCESS_CODE,
-		Msg:  "Success",
-	})
+	logger.Log().Info("ops", "任务审批查询成功")
 }
 
 // GetUserTaskPending
@@ -692,11 +689,15 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 	wsConn, _, roles, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
 		c.JSON(500, util.ServerErrorResponse("websocket连接升级失败", err))
+		return
 	}
-	defer func(wsConn *websocket.Conn) {
-		wsConn.WriteMessage(websocket.CloseMessage, []byte("websocket连接关闭"))
-		wsConn.Close()
-	}(wsConn)
+	logger.Log().Info("ops", "GetOpsTaskRunningWS WebSocket 连接升级成功")
+	defer func() {
+		if wsConn != nil {
+			wsConn.WriteMessage(websocket.CloseMessage, []byte("WebSocket 连接关闭"))
+			wsConn.Close()
+		}
+	}()
 	var (
 		roleIds        []uint
 		bindProjectIds []uint
@@ -711,7 +712,6 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 	}
 	if err = service.OpsServiceApp().GetOpsTaskRunningWS(wsConn, bindProjectIds); err != nil {
 		logger.Log().Error("ops", "实时同步执行中的任务状态失败", err)
-		c.JSON(500, util.ServerErrorResponse("实时同步执行中的任务状态失败", err))
 		return
 	}
 }

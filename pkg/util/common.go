@@ -4,6 +4,7 @@ import (
 	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/pkg/api"
+	"FreeOps/pkg/logger"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -286,18 +287,13 @@ func UpgraderWebSocket(c *gin.Context, isAuth bool) (*websocket.Conn, *model.Use
 	)
 	var upgrader = websocket.Upgrader{
 		HandshakeTimeout: consts.WebSocketHandshakeTimeout,
-		// 读写缓冲大小, 这个值越大，一次可以处理的数据就越多，但是也会消耗更多的内存
-		// 如果不设置的话它们的值默认是 4096 byte
-		ReadBufferSize:  consts.WebSocketReadBufferSize,
-		WriteBufferSize: consts.WebSocketWriteBufferSize,
-		// 检查请求Origin,处理跨域默认只允许同源,会拒绝跨域的WebSocket请求。设置为直接返回true即可允许跨域
+		ReadBufferSize:   consts.WebSocketReadBufferSize,
+		WriteBufferSize:  consts.WebSocketWriteBufferSize,
 		CheckOrigin: func(r *http.Request) bool {
 			return true
 		},
 		Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
-			// 写入状态码
 			w.WriteHeader(status)
-			// 写入错误信息
 			w.Write([]byte("WebSocket upgrade failed: " + reason.Error()))
 		},
 	}
@@ -305,10 +301,11 @@ func UpgraderWebSocket(c *gin.Context, isAuth bool) (*websocket.Conn, *model.Use
 	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
 		return nil, nil, nil, fmt.Errorf("websocket连接失败: %v", err)
 	}
+	logger.Log().Info("common", "websocket连接成功")
 	if isAuth {
-		// 读取第一条消息进行身份验证
 		_, message, err := conn.ReadMessage()
 		if err != nil {
+			conn.Close()
 			return nil, nil, nil, fmt.Errorf("读取认证消息失败: %v", err)
 		}
 		var authMsg struct {
@@ -316,16 +313,19 @@ func UpgraderWebSocket(c *gin.Context, isAuth bool) (*websocket.Conn, *model.Use
 			Token string `json:"token"`
 		}
 		if err = json.Unmarshal(message, &authMsg); err != nil || authMsg.Type != "auth" {
+			conn.Close()
 			return nil, nil, nil, fmt.Errorf("无效的认证消息")
 		}
 		user, roles, ok := validateToken(authMsg.Token)
 		if !ok {
 			conn.WriteMessage(websocket.TextMessage, []byte(`{"type": "auth_result", "success": false}`))
+			conn.Close()
 			return nil, nil, nil, fmt.Errorf("token认证失败")
 		}
 
 		conn.WriteMessage(websocket.TextMessage, []byte(`{"type": "auth_result", "success": true}`))
 		return conn, user, roles, err
 	}
+	logger.Log().Info("common", "websocket auth认证通过")
 	return conn, nil, nil, err
 }
