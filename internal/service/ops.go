@@ -393,8 +393,15 @@ func (s *OpsService) validateTask(params api.UpdateOpsTaskReq) (auditors string,
 func (s *OpsService) UpdateOpsTask(params api.UpdateOpsTaskReq) (err error) {
 	var (
 		task  model.OpsTask
+		host  model.Host
 		count int64
 	)
+	if err = model.DB.Where("id = ?", params.HostId).Select("vip").First(&host).Error; err != nil {
+		return fmt.Errorf("查询运维管理机信息失败: %v", err)
+	}
+	if params.IsIntranet && host.Vip == "" {
+		return errors.New("运维管理机没有内网IP")
+	}
 	if params.ID != 0 {
 		if err = model.DB.Model(&model.OpsTask{}).Where("id != ? AND project_id = ? AND name = ?", params.ID, params.ProjectId, params.Name).Count(&count).Error; count > 0 || err != nil {
 			return fmt.Errorf("同项目下除自身外仍有相同的名称的 TaskName,id: %d projectId: %d name: %s , 或有错误信息: %v", params.ID, params.ProjectId, params.Name, err)
@@ -794,6 +801,7 @@ func (s *OpsService) GetOpsTaskTmpCommands(params api.GetOpsTaskTmpCommandsReq) 
 func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) (err error) {
 	var (
 		task           model.OpsTask
+		host           model.Host
 		taskLog        model.OpsTaskLog
 		stepStatusList []api.OpsTaskLogtepStatus
 		commands       []string
@@ -811,6 +819,24 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		TaskId:        task.ID,
 		ProjectId:     task.ProjectId,
 		Submitter:     submitter,
+		StartTime:     nil,
+		ExecContext:   params.ExecContext,
+		CheckResponse: params.CheckResponse,
+	}
+	if err = model.DB.Where("id = ?", task.HostId).Select("ipv4", "vip", "ipv6").First(&host).Error; err != nil {
+		return fmt.Errorf("查询host失败，hostID: %d, err: %v", task.HostId, err)
+	}
+	if task.IsIntranet {
+		if host.Vip == "" {
+			return errors.New("host没有内网IP")
+		}
+		taskLog.HostIp = host.Vip
+	} else if host.Ipv4 != "" {
+		taskLog.HostIp = host.Ipv4
+	} else if host.Ipv6 != nil && *host.Ipv6 != "" {
+		taskLog.HostIp = *host.Ipv6
+	} else {
+		return errors.New("host的参数错误")
 	}
 	if params.Auditors != nil && len(params.Auditors) > 0 {
 		if taskLog.Auditors, err = util.UintSliceToString(params.Auditors); err != nil {
@@ -857,8 +883,6 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		return fmt.Errorf("stepStatus转换json失败: %v", err)
 	}
 	taskLog.StepStatus = string(stepStatusByte)
-	taskLog.ExecContext = params.ExecContext
-	taskLog.CheckResponse = params.CheckResponse
 	if err = model.DB.Create(&taskLog).Error; err != nil {
 		return fmt.Errorf("创建运维操作任务日志失败: %v", err)
 	}
@@ -870,12 +894,19 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 	return err
 }
 
-func (s *OpsService) updateStepData(stepStatusList *[]api.OpsTaskLogtepStatus, command string, status int, res string, sshResStatus int) {
+func (s *OpsService) updateStepData(stepStatusList *[]api.OpsTaskLogtepStatus, command string, startTime string,
+	endTime string, status int, res string, sshResStatus int) {
 	for i := range *stepStatusList {
 		stepStatus := &(*stepStatusList)[i]
 		if stepStatus.Command == command {
 			if status != consts.OpsTaskStatusIsWaiting {
 				stepStatus.Status = status
+			}
+			if startTime != "" {
+				stepStatus.StartTime = startTime
+			}
+			if endTime != "" {
+				stepStatus.EndTime = endTime
 			}
 			if res != "" {
 				stepStatus.Response = res
@@ -900,20 +931,22 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 	}
 	for _, sshReq := range *sshReqs {
 		cmdReq := []api.SSHRunReq{sshReq}
+		s.updateStepData(&stepStatusList, sshReq.Cmd, time.Now().Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsWaiting, "", 0)
 		result, err := SSH().RunSSHCmdAsync(&cmdReq)
+		s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0)
 		var isBreak bool
 		if err != nil {
 			logger.Log().Error("ops", "RunOpsTaskSequential RunSSH失败", err)
-			s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
 			taskLog.Status = consts.OpsTaskStatusIsFailed
 			isBreak = true
 		}
 		if (*result)[0].Status != 0 {
-			s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
 			taskLog.Status = consts.OpsTaskStatusIsFailed
 			isBreak = true
 		} else {
-			s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
 		}
 		if stepStatusByte, err = json.Marshal(stepStatusList); err != nil {
 			logger.Log().Error("ops", "RunOpsTaskSequential转换stepStatusByte失败", err)
@@ -928,8 +961,12 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 		}
 	}
 	if taskLog.Status != consts.OpsTaskStatusIsFailed {
-		if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("status", consts.OpsTaskStatusIsSuccess).Error; err != nil {
-			logger.Log().Error("ops", "RunOpsTaskSequential更新taskLog失败", err)
+		endTime := time.Now()
+		if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
+			Status:  taskLog.Status,
+			EndTime: &endTime,
+		}).Error; err != nil {
+			logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
 		}
 	}
 }
@@ -952,21 +989,23 @@ func (s *OpsService) RunOpsTaskConcurrent(sshReqs *[]api.SSHRunReq, taskLog *mod
 		wg.Add(1)
 		go func(sshReq api.SSHRunReq) {
 			defer wg.Done()
+			s.updateStepData(&stepStatusList, sshReq.Cmd, time.Now().Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsRunning, "", 0)
 			result, err := SSH().RunSSHCmdAsync(&[]api.SSHRunReq{sshReq})
 			mu.Lock()
 			defer mu.Unlock()
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0)
 			if err != nil {
 				logger.Log().Error("ops", "RunOpsTaskConcurrent RunSSH失败", err)
-				s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
+				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
 				taskFailed = true
 				return
 			}
 			if (*result)[0].Status != 0 {
-				s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
+				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
 				taskFailed = true
 				return
 			}
-			s.updateStepData(&stepStatusList, sshReq.Cmd, consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
 
 			var stepStatusByte []byte
 			if stepStatusByte, err = json.Marshal(stepStatusList); err != nil {
@@ -986,7 +1025,11 @@ func (s *OpsService) RunOpsTaskConcurrent(sshReqs *[]api.SSHRunReq, taskLog *mod
 	} else {
 		taskLog.Status = consts.OpsTaskStatusIsSuccess
 	}
-	if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("status", taskLog.Status).Error; err != nil {
+	endTime := time.Now()
+	if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
+		Status:  taskLog.Status,
+		EndTime: &endTime,
+	}).Error; err != nil {
 		logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
 	}
 }
@@ -1015,6 +1058,10 @@ func (s *OpsService) runOpsTaskCommands(taskLog *model.OpsTaskLog) (err error) {
 		return fmt.Errorf("生成SSH命令失败: %v", err)
 	}
 
+	if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("start_time", time.Now()).Error; err != nil {
+		return fmt.Errorf("更新taskLog的startTime失败: %v", err)
+	}
+
 	// 按照属性决定并发执行还是串行执行
 	go func() {
 		if task.IsConcurrent {
@@ -1038,20 +1085,20 @@ func (s *OpsService) ApproveOpsTask(params api.ApproveOpsTaskReq, uid uint) (err
 		}
 	}()
 	// 对当前操作的taskLog加行锁
-	if err = tx.Model(&model.OpsTaskLog{}).Where("id = ?", params.TaskId).First(&taskLog).Set("gorm:query_option", "FOR UPDATE").Error; err != nil {
-		return fmt.Errorf("查询taskLog并加锁失败，taskLogID: %d, err: %v", params.TaskId, err)
+	if err = tx.Model(&model.OpsTaskLog{}).Where("id = ?", params.ID).First(&taskLog).Set("gorm:query_option", "FOR UPDATE").Error; err != nil {
+		return fmt.Errorf("查询taskLog并加锁失败，taskLogID: %d, err: %v", params.ID, err)
 	}
 
 	if taskLog.Status != consts.OpsTaskStatusIsWaiting {
-		return fmt.Errorf("taskLog %d 不是等待审批状态", params.TaskId)
+		return fmt.Errorf("taskLog %d 不是等待审批状态", params.ID)
 	}
 
 	if err = json.Unmarshal([]byte(taskLog.PendingAuditors), &pendingAuditors); err != nil {
-		return fmt.Errorf("taskLog %d PendingAuditors转换失败: %v", params.TaskId, err)
+		return fmt.Errorf("taskLog %d PendingAuditors转换失败: %v", params.ID, err)
 	}
 
 	if !util.IsUintSliceContain(pendingAuditors, uid) {
-		return fmt.Errorf("taskLog %d PendingAuditors中不包含uid: %d", params.TaskId, uid)
+		return fmt.Errorf("taskLog %d PendingAuditors中不包含uid: %d", params.ID, uid)
 	}
 	util.DeleteUintSliceByPtr(&pendingAuditors, uid)
 	if taskLog.PendingAuditors, err = util.UintSliceToString(pendingAuditors); err != nil {
@@ -1079,35 +1126,109 @@ func (s *OpsService) ApproveOpsTask(params api.ApproveOpsTaskReq, uid uint) (err
 	return err
 }
 
-func (s *OpsService) GetTaskPendingApprovers() (*[]api.GetTaskPendingApproversRes, error) {
+func (s *OpsService) GetOpsTaskNeedApprove(wsConn *websocket.Conn, uid uint) error {
+	if wsConn == nil {
+		return fmt.Errorf("WebSocket connection is nil")
+	}
 	var (
-		taskLogs             []model.OpsTaskLog
-		result               []api.GetTaskPendingApproversRes
-		pendingApprovers     []uint
-		pendingApproverNames []string
-		SubmitterName        string
-		err                  error
+		count int64
+		err   error
 	)
-	if err = model.DB.Model(&model.OpsTaskLog{}).Where("status = ?", consts.OpsTaskStatusIsWaiting).Find(&taskLogs).Error; err != nil {
-		return nil, fmt.Errorf("查询等待审批的任务失败: %v", err)
+	// 处理pong消息
+	wsConn.SetReadDeadline(time.Now().Add(consts.WebSocketPongWait))
+	wsConn.SetPongHandler(func(appData string) error {
+		// 重置读取存活时间
+		wsConn.SetReadDeadline(time.Now().Add(consts.WebSocketPongWait))
+		return nil
+	})
+	// 实时同步任务状态
+	ticker := time.NewTicker(consts.WebSocketPingWait)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if wsConn == nil {
+				return fmt.Errorf("WebSocket connection is nil")
+			}
+			if err = wsConn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+					// 前端主动断开连接，返回nil
+					return nil
+				}
+				return fmt.Errorf("发送Ping失败: %v", err)
+			}
+		default:
+			if err = model.DB.Model(&model.OpsTaskLog{}).
+				Where("status = ?", consts.OpsTaskStatusIsWaiting).
+				Where("JSON_CONTAINS(pending_auditors, ?)", uid).
+				Count(&count).Error; err != nil {
+				logger.Log().Error("ops", "查询用户是否有需要审批的任务失败", err)
+				return fmt.Errorf("查询用户是否有需要审批的任务失败: %v", err)
+			}
+			if count > 0 {
+				message := []byte(fmt.Sprintf("%t", count > 0))
+				if wsConn == nil {
+					return fmt.Errorf("WebSocket connection is nil")
+				}
+				if err = wsConn.WriteMessage(websocket.TextMessage, message); err != nil {
+					if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+						// 前端主动断开连接，返回nil
+						return nil
+					}
+					return fmt.Errorf("发送任务状态失败: %v", err)
+				}
+			}
+			time.Sleep(consts.WebSocketPingWait)
+		}
 	}
-	for _, taskLog := range taskLogs {
-		if err = json.Unmarshal([]byte(taskLog.PendingAuditors), &pendingApprovers); err != nil {
-			return nil, fmt.Errorf("taskLog %d pendingApprovers转换失败: %v", taskLog.TaskId, err)
-		}
-		if err = model.DB.Model(&model.User{}).Where("id IN (?)", pendingApprovers).Pluck("username", &pendingApproverNames).Error; err != nil {
-			return nil, fmt.Errorf("查询等待审批的任务的审批人失败: %v", err)
-		}
-		if err = model.DB.Model(&model.User{}).Where("id = ?", taskLog.Submitter).Pluck("username", &SubmitterName).Error; err != nil {
-			return nil, fmt.Errorf("查询等待审批的任务的提交人失败: %v", err)
-		}
-		res := api.GetTaskPendingApproversRes{
-			TaskName:     taskLog.Name,
-			PendingUsers: pendingApproverNames,
-			Submitter:    SubmitterName,
-		}
-		result = append(result, res)
+}
+
+func (s *OpsService) GetUserTaskPending(uid uint, bindProjectIds []uint, params api.GetUserTaskPendingReq) (*api.GetOpsTaskLogsRes, error) {
+	var (
+		taskLogs []model.OpsTaskLog
+		count    int64
+		res      *[]api.GetOpsTaskLogRes
+		err      error
+	)
+	getDB := model.DB.Model(&model.OpsTaskLog{}).Where("status = ?", consts.OpsTaskStatusIsWaiting).
+		Where("JSON_CONTAINS(pending_auditors, ?)", uid).Find(&taskLogs)
+	if params.TaskName != "" {
+		sqlName := "%" + strings.ToUpper(params.TaskName) + "%"
+		getDB = getDB.Where("UPPER(name) LIKE ?", sqlName)
 	}
+	if params.ProjectId != 0 {
+		if !util.IsUintSliceContain(bindProjectIds, params.ProjectId) {
+			return nil, errors.New("用户无权限查看该项目的运维操作任务日志")
+		}
+		getDB = getDB.Where("project_id = ?", params.ProjectId)
+	} else {
+		getDB = getDB.Where("project_id IN (?)", bindProjectIds)
+	}
+
+	if err = getDB.Count(&count).Error; err != nil {
+		return nil, fmt.Errorf("查询用户待审批任务失败: %v", err)
+	}
+	if params.Page != 0 && params.PageSize != 0 {
+		if err = getDB.Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&taskLogs).Error; err != nil {
+			return nil, fmt.Errorf("查询用户待审批任务失败: %v", err)
+		}
+	} else {
+		if err = getDB.Find(&taskLogs).Error; err != nil {
+			return nil, fmt.Errorf("查询用户待审批任务失败: %v", err)
+		}
+	}
+	if res, err = s.getOpsTaskLogResult(&taskLogs, true); err != nil {
+		return nil, fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
+	} else if res == nil {
+		return nil, errors.New("运维操作任务日志转换结果失败, res为nil")
+	}
+	result := api.GetOpsTaskLogsRes{
+		Records:  *res,
+		Page:     params.Page,
+		PageSize: params.PageSize,
+		Total:    count,
+	}
+
 	return &result, err
 }
 
@@ -1182,10 +1303,17 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 				ID:            taskLog.ID,
 				Name:          taskLog.Name,
 				Status:        taskLog.Status,
+				HostIp:        taskLog.HostIp,
 				RejectAuditor: taskLog.RejectAuditor,
 				ProjectName:   projectNameMap[taskLog.ProjectId],
 				ProjectId:     taskLog.ProjectId,
 				Submitter:     taskLog.Submitter,
+			}
+			if taskLog.StartTime != nil {
+				res.StartTime = taskLog.StartTime.Format("2006-01-02 15:04:05")
+			}
+			if taskLog.EndTime != nil {
+				res.EndTime = taskLog.EndTime.Format("2006-01-02 15:04:05")
 			}
 			if err = json.Unmarshal([]byte(taskLog.Auditors), &res.Auditors); err != nil {
 				return nil, fmt.Errorf("taskLog中的Auditors 不符合 json 格式: %v", err)
@@ -1221,9 +1349,16 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 			ID:            taskLog.ID,
 			Name:          taskLog.Name,
 			Status:        taskLog.Status,
+			HostIp:        taskLog.HostIp,
 			RejectAuditor: taskLog.RejectAuditor,
 			ProjectId:     taskLog.ProjectId,
 			Submitter:     taskLog.Submitter,
+		}
+		if taskLog.StartTime != nil {
+			res.StartTime = taskLog.StartTime.Format("2006-01-02 15:04:05")
+		}
+		if taskLog.EndTime != nil {
+			res.EndTime = taskLog.EndTime.Format("2006-01-02 15:04:05")
 		}
 		if err = model.DB.Model(&model.Project{}).Where("id = ?", taskLog.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)
@@ -1280,13 +1415,15 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 		return &result, err
 	}
 
-	getDB := model.DB.Model(&model.OpsTaskLog{})
+	getDB := model.DB.Model(&model.OpsTaskLog{}).Order("id DESC")
 	if params.Name != "" {
 		sqlName := "%" + strings.ToUpper(params.Name) + "%"
 		getDB = getDB.Where("UPPER(name) LIKE ?", sqlName)
 	}
 	if params.Status != 0 {
 		getDB = getDB.Where("status = ?", params.Status)
+	} else {
+		getDB = getDB.Where("status != ?", consts.OpsTaskStatusIsWaiting)
 	}
 	if params.ProjectId != 0 {
 		if !util.IsUintSliceContain(bindProjectIds, params.ProjectId) {
@@ -1305,15 +1442,15 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 	}
 	var taskLogs []model.OpsTaskLog
 	if params.Page != 0 && params.PageSize != 0 {
-		if err = getDB.Omit("commands", "step_status", "pending_auditors").Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&taskLogs).Error; err != nil {
+		if err = getDB.Offset((params.Page - 1) * params.PageSize).Limit(params.PageSize).Find(&taskLogs).Error; err != nil {
 			return nil, fmt.Errorf("查询运维操作任务日志失败: %v", err)
 		}
 	} else {
-		if err = getDB.Omit("commands", "step_status", "pending_auditors").Find(&taskLogs).Error; err != nil {
+		if err = getDB.Find(&taskLogs).Error; err != nil {
 			return nil, fmt.Errorf("查询运维操作任务日志失败: %v", err)
 		}
 	}
-	res, err = s.getOpsTaskLogResult(&taskLogs, false)
+	res, err = s.getOpsTaskLogResult(&taskLogs, true)
 	if err != nil {
 		return nil, fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
 	}
@@ -1331,38 +1468,61 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 }
 
 func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds []uint) (err error) {
-	defer wsConn.Close()
-	// 设置关闭处理程序
-	wsConn.SetCloseHandler(func(code int, text string) error {
-		return nil
-	})
 	var (
 		taskLogs []model.OpsTaskLog
+		ticker   = time.NewTicker(3 * time.Second)
 	)
-	// 获取当前时间和10秒前的时间
-	now := time.Now()
-	tenSecondsAgo := now.Add(-10 * time.Second)
-	// 实时同步任务状态
+	defer ticker.Stop()
+
+	pingTicker := time.NewTicker(consts.WebSocketPingWait)
+	defer pingTicker.Stop()
+
+	// 处理pong消息
+	wsConn.SetReadDeadline(time.Now().Add(consts.WebSocketPongWait))
+	wsConn.SetPongHandler(func(appData string) error {
+		// 重置读取存活时间
+		wsConn.SetReadDeadline(time.Now().Add(consts.WebSocketPongWait))
+		return nil
+	})
+
 	for {
-		if err = model.DB.Model(&model.OpsTaskLog{}).
-			Where("((status = ? OR status = ? OR status = ?) AND project_id IN (?)) AND (status = ? OR updated_at >= ?)",
-				consts.OpsTaskStatusIsRunning, consts.OpsTaskStatusIsSuccess, consts.OpsTaskStatusIsFailed, bindProjectIds, consts.OpsTaskStatusIsRunning, tenSecondsAgo).
-			Find(&taskLogs).Error; err != nil {
-			return fmt.Errorf("查询运维操作任务日志失败: %v", err)
-		}
-		result, err := s.getOpsTaskLogResult(&taskLogs, true)
-		if result == nil {
-			return errors.New("运维操作任务日志转换结果失败, result为nil")
-		}
-		if err != nil {
-			return fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
-		}
-		for _, res := range *result {
-			err = wsConn.WriteJSON(res)
+		select {
+		case <-ticker.C:
+			// 获取当前时间和6秒前的时间
+			now := time.Now()
+			tenSecondsAgo := now.Add(-6 * time.Second)
+
+			if err = model.DB.Model(&model.OpsTaskLog{}).
+				Where("((status = ? OR status = ? OR status = ?) AND project_id IN (?)) AND (status = ? OR updated_at >= ?)",
+					consts.OpsTaskStatusIsRunning, consts.OpsTaskStatusIsSuccess, consts.OpsTaskStatusIsFailed, bindProjectIds, consts.OpsTaskStatusIsRunning, tenSecondsAgo).
+				Find(&taskLogs).Error; err != nil {
+				return fmt.Errorf("查询运维操作任务日志失败: %v", err)
+			}
+			result, err := s.getOpsTaskLogResult(&taskLogs, true)
+			if result == nil {
+				return errors.New("运维操作任务日志转换结果失败, result为nil")
+			}
 			if err != nil {
-				return fmt.Errorf("发送任务状态失败: %v", err)
+				return fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
+			}
+			for _, res := range *result {
+				if err = wsConn.WriteJSON(res); err != nil {
+					if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+						// 前端主动断开连接，返回nil
+						return nil
+					}
+					return fmt.Errorf("发送任务状态失败: %v", err)
+				}
+			}
+		case <-pingTicker.C:
+			if err = wsConn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+					// 前端主动断开连接，返回nil
+					return nil
+				}
+				return fmt.Errorf("发送Ping失败: %v", err)
 			}
 		}
-		time.Sleep(1 * time.Second) // 每秒发送一次
+
 	}
 }

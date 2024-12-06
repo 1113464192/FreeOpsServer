@@ -26,6 +26,13 @@ func NewRoute() *gin.Engine {
 		authRoute.GET("error", CustomError)
 		authRoute.GET("constant-routes", GetConstantRoutes) // 获取所有常量路由
 	}
+	// --------不走头信息权限验证的功能接口----------
+	//websocket
+	nonAuthOpsRoute := r.Group("ops")
+	{
+		nonAuthOpsRoute.GET("task-need-approve", GetOpsTaskNeedApprove) // 查询用户是否有待审批的任务
+		nonAuthOpsRoute.GET("task-running-ws", GetOpsTaskRunningWS)     // 实时查看运行中的任务
+	}
 
 	// ---------Git-Webhook相关----------
 	//gitWebhookRouter := r.Group("git-gitWebhook")
@@ -143,16 +150,15 @@ func NewRoute() *gin.Engine {
 			opsRoute.PUT("bind-template-params", BindTemplateParams)   // 绑定模板参数
 			opsRoute.GET("template-params", GetTemplateParams)         // 查看模板关联的参数
 			// 还需要拼接执行模板顺序的任务接口、执行任务接口、获取任务运行状态接口、任务日志接口
-			opsRoute.POST("task", UpdateOpsTask)                            // 创建/修改 任务(拼接执行模板顺序的任务)
-			opsRoute.DELETE("task", DeleteOpsTask)                          // 删除任务
-			opsRoute.GET("task", GetOpsTask)                                // 查看任务
-			opsRoute.POST("commands", GetOpsTaskTmpCommands)                // 查看根据参数会生成的命令
-			opsRoute.POST("submit-task", SubmitOpsTask)                     // 提交任务
-			opsRoute.PUT("approve-task", ApproveOpsTask)                    // 用户审批任务
-			opsRoute.GET("task-pending-approvers", GetTaskPendingApprovers) // 查询任务还未审批的审核员
-			opsRoute.POST("run-task-check-script", RunOpsTaskCheckScript)   // 执行并等待运营检查脚本返回结果
-			opsRoute.GET("task-log", GetOpsTaskLog)                         // 查看任务日志
-			opsRoute.GET("task-running-ws", GetOpsTaskRunningWS)            // 查看任务运行中的任务
+			opsRoute.POST("task", UpdateOpsTask)                          // 创建/修改 任务(拼接执行模板顺序的任务)
+			opsRoute.DELETE("task", DeleteOpsTask)                        // 删除任务
+			opsRoute.GET("task", GetOpsTask)                              // 查看任务
+			opsRoute.POST("commands", GetOpsTaskTmpCommands)              // 查看根据参数会生成的命令
+			opsRoute.POST("submit-task", SubmitOpsTask)                   // 提交任务
+			opsRoute.PUT("approve-task", ApproveOpsTask)                  // 用户审批任务
+			opsRoute.GET("task-pending", GetUserTaskPending)              // 查询用户待审批的任务
+			opsRoute.POST("run-task-check-script", RunOpsTaskCheckScript) // 执行并等待运营检查脚本返回结果
+			opsRoute.GET("task-log", GetOpsTaskLog)                       // 查看任务日志
 		}
 		// ---------云平台相关------------
 		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)，云平台相关运维脚本路径和参数写死在service层

@@ -1864,16 +1864,16 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "integer",
+                        "description": "任务日志ID",
+                        "name": "id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "boolean",
                         "name": "isAllow",
                         "in": "formData"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "任务日志ID",
-                        "name": "taskId",
-                        "in": "formData",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -2508,16 +2508,48 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task-pending-approvers": {
+        "/ops/task-need-approve": {
             "get": {
-                "description": "获取等待中的任务与对应尚未审批的用户",
+                "description": "查询用户是否有任务需要审批",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "运维操作相关"
                 ],
-                "summary": "获取等待中的任务与对应尚未审批的用户",
+                "summary": "查询用户是否有任务需要审批",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"code\": \"\", msg: \"\", data: \"\"}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/ops/task-pending": {
+            "get": {
+                "description": "查询待用户审批的任务",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "运维操作相关"
+                ],
+                "summary": "查询待用户审批的任务",
                 "parameters": [
                     {
                         "type": "string",
@@ -2525,6 +2557,28 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "current",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "projectId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页大小",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "taskName",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -2559,15 +2613,6 @@ const docTemplate = `{
                     "运维操作相关"
                 ],
                 "summary": "实时同步执行中的任务状态",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "格式为：Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",

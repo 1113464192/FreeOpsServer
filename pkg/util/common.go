@@ -6,11 +6,16 @@ import (
 	"FreeOps/pkg/api"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 	"math/rand"
+	"net/http"
 	"os"
 	"reflect"
 	"regexp"
+	"time"
 )
 
 func IsDir(path string) bool {
@@ -246,4 +251,81 @@ func FindNotExistIDs(tableName string, ids []uint) ([]uint, error) {
 	}
 
 	return FindDifference(ids, existIDs), nil
+}
+
+func validateToken(token string) (*model.User, *[]model.Role, bool) {
+	// 判断是否在黑名单
+	err := model.DB.Where("jwt = ?", token).First(&model.JwtBlacklist{}).Error
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil, false
+	}
+	// 判断token是否已过期
+	var claims *CustomClaims
+	claims, err = ParseToken(token)
+	if err != nil {
+		return nil, nil, false
+	}
+
+	// 判断用户是否被禁用
+	if claims.User.Status != consts.UserModelStatusEnabled {
+		return nil, nil, false
+	}
+	// 判断用户的updateAt是否在token签发之后
+	var updateAt time.Time
+	if err = model.DB.Model(&model.User{}).Where("id = ?", claims.User.ID).Select("updated_at").Scan(&updateAt).Error; err != nil || updateAt != claims.User.UpdatedAt {
+		return nil, nil, false
+	}
+	return &claims.User, &claims.Roles, true
+}
+
+// UpgraderWebsocket
+func UpgraderWebSocket(c *gin.Context, isAuth bool) (*websocket.Conn, *model.User, *[]model.Role, error) {
+	var (
+		conn *websocket.Conn
+		err  error
+	)
+	var upgrader = websocket.Upgrader{
+		HandshakeTimeout: consts.WebSocketHandshakeTimeout,
+		// 读写缓冲大小, 这个值越大，一次可以处理的数据就越多，但是也会消耗更多的内存
+		// 如果不设置的话它们的值默认是 4096 byte
+		ReadBufferSize:  consts.WebSocketReadBufferSize,
+		WriteBufferSize: consts.WebSocketWriteBufferSize,
+		// 检查请求Origin,处理跨域默认只允许同源,会拒绝跨域的WebSocket请求。设置为直接返回true即可允许跨域
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+		Error: func(w http.ResponseWriter, r *http.Request, status int, reason error) {
+			// 写入状态码
+			w.WriteHeader(status)
+			// 写入错误信息
+			w.Write([]byte("WebSocket upgrade failed: " + reason.Error()))
+		},
+	}
+
+	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		return nil, nil, nil, fmt.Errorf("websocket连接失败: %v", err)
+	}
+	if isAuth {
+		// 读取第一条消息进行身份验证
+		_, message, err := conn.ReadMessage()
+		if err != nil {
+			return nil, nil, nil, fmt.Errorf("读取认证消息失败: %v", err)
+		}
+		var authMsg struct {
+			Type  string `json:"type"`
+			Token string `json:"token"`
+		}
+		if err = json.Unmarshal(message, &authMsg); err != nil || authMsg.Type != "auth" {
+			return nil, nil, nil, fmt.Errorf("无效的认证消息")
+		}
+		user, roles, ok := validateToken(authMsg.Token)
+		if !ok {
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"type": "auth_result", "success": false}`))
+			return nil, nil, nil, fmt.Errorf("token认证失败")
+		}
+
+		conn.WriteMessage(websocket.TextMessage, []byte(`{"type": "auth_result", "success": true}`))
+		return conn, user, roles, err
+	}
+	return conn, nil, nil, err
 }

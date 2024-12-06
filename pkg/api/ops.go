@@ -99,6 +99,8 @@ type RunOpsTaskCheckScriptReq struct {
 
 type OpsTaskLogtepStatus struct {
 	Command           string `json:"command"`
+	StartTime         string `json:"startTime"`
+	EndTime           string `json:"endTime"`
 	Status            int    `json:"status"`
 	Response          string `json:"response"`
 	SSHResponseStatus int    `json:"sshResponseStatus"`
@@ -119,14 +121,14 @@ type SubmitOpsTaskReq struct {
 }
 
 type ApproveOpsTaskReq struct {
-	TaskId  uint `form:"taskId" json:"taskId" binding:"required"` // 任务日志ID
+	ID      uint `form:"id" json:"id" binding:"required"` // 任务日志ID
 	IsAllow bool `form:"isAllow" json:"isAllow"`
 }
 
-type GetTaskPendingApproversRes struct {
-	TaskName     string   `json:"taskName"`
-	Submitter    string   `json:"submitter"`
-	PendingUsers []string `json:"pendingUsers"`
+type GetUserTaskPendingReq struct {
+	TaskName  string `form:"taskName" json:"taskName"`
+	ProjectId uint   `form:"projectId" json:"projectId"`
+	PageInfo
 }
 
 type GetOpsTaskLogReq struct {
@@ -140,7 +142,10 @@ type GetOpsTaskLogReq struct {
 
 type GetOpsTaskLogRes struct {
 	ID                  uint                  `json:"id"`
+	StartTime           string                `json:"startTime"`
+	EndTime             string                `json:"endTime"`
 	Name                string                `json:"name"`
+	HostIp              string                `json:"hostIp"`
 	ExecContext         string                `json:"execContext,omitempty"`
 	CheckResponse       string                `json:"checkResponse,omitempty"`
 	Commands            []string              `json:"commands,omitempty"`

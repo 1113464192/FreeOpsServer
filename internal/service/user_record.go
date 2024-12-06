@@ -91,7 +91,7 @@ func (s *UserRecord) GetUserRecordLogs(param api.GetUserRecordLogsReq) (logs *[]
 	}
 
 	// 先取出total
-	if err := getDB.Count(&total).Error; err != nil {
+	if err = getDB.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
 	if total == 0 {
@@ -100,7 +100,7 @@ func (s *UserRecord) GetUserRecordLogs(param api.GetUserRecordLogsReq) (logs *[]
 
 	userRecord := []model.UserRecord{}
 
-	if err := getDB.Order("id desc").
+	if err = getDB.Order("id desc").
 		Offset((param.PageInfo.Page - 1) * param.PageInfo.PageSize).Limit(param.PageInfo.PageSize).Find(&userRecord).Error; err != nil {
 		return nil, 0, err
 	}

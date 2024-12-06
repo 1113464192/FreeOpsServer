@@ -68,7 +68,21 @@ func UserLogin(c *gin.Context) {
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
 // @Router /auth/refreshToken [post]
 func RefreshToken(c *gin.Context) {
-	refreshToken := c.PostForm("refreshToken")
+	var requestBody map[string]string
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		c.JSON(500, util.BindErrorResponse(err))
+		return
+	}
+
+	refreshToken, exists := requestBody["refreshToken"]
+	if !exists {
+		c.JSON(500, api.Response{
+			Code: "500",
+			Msg:  "refreshToken不存在",
+			Data: nil,
+		})
+		return
+	}
 	res, code, err := service.UserServiceApp().RefreshToken(refreshToken)
 	var msg string
 	var data any

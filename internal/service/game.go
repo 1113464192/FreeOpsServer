@@ -130,7 +130,7 @@ func (s *GameService) GetGames(params *api.GetGamesReq, bindProjectIds []uint) (
 	var err error
 	var count int64
 
-	getDB := model.DB.Model(&model.Game{})
+	getDB := model.DB.Model(&model.Game{}).Order("id DESC")
 	if params.Id != 0 {
 		getDB = getDB.Where("id = ?", params.Id)
 	}
