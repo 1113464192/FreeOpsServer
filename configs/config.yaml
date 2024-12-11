@@ -1,6 +1,5 @@
 mysql:
-  conf: "root:fqh123456@tcp(106.52.66.254:20001)/ops?charset=utf8&parseTime=True&loc=Local"
-#  conf: "root:passwd@tcp(192.168.18.36:3306)/ops?charset=utf8&parseTime=True&loc=Local"
+  conf: "root:passwd@tcp(192.168.18.36:3306)/database?charset=utf8&parseTime=True&loc=Local"
   # 设置Mysql的批处理大小
   createBatchSize: 1000
   # 慢日志阈值(秒)
@@ -22,8 +21,7 @@ sshConfig:
   # 运维连接的ssh用户
   opsSSHUsername: "root"
   # 运维管理SSH密钥路径
-#  opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
-  opsKeyPath: "F:/key/id_rsa"
+  opsKeyPath: "/home/jumpserver/.ssh/id_rsa"
   # 没有设置passphrase则留空字符串
   opsKeyPassphrase : ""
 
@@ -70,9 +68,9 @@ securityVars:
   # jwt签发名
   jwtIssuer: "opsManager"
   # tokentime  仅限整数，1h就是1小时，1m就是一分钟等,最大只能是h
-  tokenExpireDuration: "24h"
+  tokenExpireDuration: "30m"
   refreshTokenExpireDuration: "168h"
   # token key
-  tokenKey: "52995df076de0cf040lp1a9e932687209c194a95cz098p5a22c341a84e4e33dc"
+  tokenKey: "20c5c3f0dbc05ce7802ad081b213a9acfb4be84d0fbf39657ebaa0fea9147fb9"
   # 允许的CIDR
   allowedCIDR: "0.0.0.0/0"

@@ -67,6 +67,9 @@ func (s *UserRecord) GetUserRecordDate() (dates []string, err error) {
 
 // 查询月份记录
 func (s *UserRecord) GetUserRecordLogs(param api.GetUserRecordLogsReq) (logs *[]api.GetUserRecordLogsServiceRes, total int64, err error) {
+	if param.Date == "" {
+		return nil, 0, nil
+	}
 	tableName := fmt.Sprintf("%s_%s", consts.MysqlTableNameUserRecord, param.Date)
 	if !model.DB.Migrator().HasTable(tableName) {
 		return nil, 0, errors.New("没有这个日期的行为记录表存在: " + tableName)

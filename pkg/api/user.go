@@ -50,11 +50,11 @@ type AuthLoginRes struct {
 
 // 查询用户操作记录
 type GetUserRecordLogsReq struct {
-	Username string `json:"username" form:"username"`            // 用户名
-	Method   string `json:"method" form:"method"`                // 请求方法
-	Status   string `json:"status" form:"status"`                // 返回状态
-	Ip       string `json:"ip" form:"ip"`                        // 请求ip
-	Date     string `json:"date" form:"date" binding:"required"` // 年月，如：2006_01
+	Username string `json:"username" form:"username"` // 用户名
+	Method   string `json:"method" form:"method"`     // 请求方法
+	Status   string `json:"status" form:"status"`     // 返回状态
+	Ip       string `json:"ip" form:"ip"`             // 请求ip
+	Date     string `json:"date" form:"date"`         // 年月，如：2006_01
 	PageInfo
 }
 

@@ -5,6 +5,7 @@ import (
 	"FreeOps/internal/controller"
 	"FreeOps/internal/crontab"
 	"FreeOps/internal/model"
+	"FreeOps/internal/service"
 	"log"
 )
 
@@ -13,6 +14,8 @@ func main() {
 	model.Database()
 	crontab.Cron()
 	model.AutoMigrateMysql()
+	// 创建casbin_rule表
+	service.CasbinServiceApp().Casbin()
 
 	r := controller.NewRoute()
 
