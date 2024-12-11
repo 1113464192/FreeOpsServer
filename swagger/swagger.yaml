@@ -992,6 +992,33 @@ paths:
       summary: 修改游戏服状态
       tags:
       - 游戏服相关
+  /home/info:
+    get:
+      description: 获取展示基本信息
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: 首页展示信息
+      tags:
+      - 首页相关
   /hosts:
     delete:
       description: 删除指定服务器

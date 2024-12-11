@@ -1106,6 +1106,47 @@ const docTemplate = `{
                 }
             }
         },
+        "/home/info": {
+            "get": {
+                "description": "获取展示基本信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "首页相关"
+                ],
+                "summary": "首页展示信息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/hosts": {
             "get": {
                 "description": "查询所有/指定条件服务器的信息",

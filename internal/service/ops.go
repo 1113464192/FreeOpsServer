@@ -895,7 +895,7 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 }
 
 func (s *OpsService) updateStepData(stepStatusList *[]api.OpsTaskLogStepStatus, command string, startTime string,
-	endTime string, status int, res string, sshResStatus int) {
+	endTime string, status uint8, res string, sshResStatus int) {
 	for i := range *stepStatusList {
 		stepStatus := &(*stepStatusList)[i]
 		if stepStatus.Command == command {
@@ -927,13 +927,16 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 	if err = json.Unmarshal([]byte(taskLog.StepStatus), &stepStatusList); err != nil {
 		logger.Log().Error("ops", "RunOpsTaskSequential查询任务日志中的StepStatus失败", err)
 		taskLog.Status = consts.OpsTaskStatusIsFailed
+		if err = model.DB.Save(taskLog).Error; err != nil {
+			logger.Log().Error("ops", "RunOpsTaskSequential保存taskLog失败", err)
+		}
 		return
 	}
 	startTime := time.Now()
-	if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
-		StartTime: &startTime,
-	}).Error; err != nil {
-		logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
+	taskLog.StartTime = &startTime
+	if err = model.DB.Save(taskLog).Error; err != nil {
+		logger.Log().Error("ops", "RunOpsTaskSequential保存taskLog失败", err)
+		return
 	}
 	for _, sshReq := range *sshReqs {
 		cmdReq := []api.SSHRunReq{sshReq}
@@ -967,13 +970,14 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 		}
 	}
 	if taskLog.Status != consts.OpsTaskStatusIsFailed {
-		endTime := time.Now()
-		if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
-			Status:  taskLog.Status,
-			EndTime: &endTime,
-		}).Error; err != nil {
-			logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
-		}
+		taskLog.Status = consts.OpsTaskStatusIsSuccess
+	}
+	endTime := time.Now()
+	if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
+		Status:  taskLog.Status,
+		EndTime: &endTime,
+	}).Error; err != nil {
+		logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
 	}
 }
 
@@ -988,15 +992,18 @@ func (s *OpsService) RunOpsTaskConcurrent(sshReqs *[]api.SSHRunReq, taskLog *mod
 	if err := json.Unmarshal([]byte(taskLog.StepStatus), &stepStatusList); err != nil {
 		logger.Log().Error("ops", "RunOpsTaskConcurrent查询任务日志中的StepStatus失败", err)
 		taskLog.Status = consts.OpsTaskStatusIsFailed
+		if err = model.DB.Save(taskLog).Error; err != nil {
+			logger.Log().Error("ops", "RunOpsTaskSequential保存taskLog失败", err)
+		}
 		return
 	}
 
 	startTime := time.Now()
-	err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
-		StartTime: &startTime,
-	}).Error
+	taskLog.StartTime = &startTime
+	err := model.DB.Save(taskLog).Error
 	if err != nil {
-		logger.Log().Error("ops", "RunOpsTaskConcurrent更新taskLog失败", err)
+		logger.Log().Error("ops", "RunOpsTaskSequential保存taskLog失败", err)
+		return
 	}
 
 	for _, sshReq := range *sshReqs {
@@ -1040,7 +1047,7 @@ func (s *OpsService) RunOpsTaskConcurrent(sshReqs *[]api.SSHRunReq, taskLog *mod
 		taskLog.Status = consts.OpsTaskStatusIsSuccess
 	}
 	endTime := time.Now()
-	if err := model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
+	if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Updates(model.OpsTaskLog{
 		Status:  taskLog.Status,
 		EndTime: &endTime,
 	}).Error; err != nil {
@@ -1172,13 +1179,7 @@ func (s *OpsService) GetOpsTaskNeedApprove(wsConn *websocket.Conn, uid uint) (er
 				return fmt.Errorf("WebSocket connection is nil")
 			}
 			// 发送 ping
-			if err = wsConn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
-					logger.Log().Info("ops", "WebSocket closed by client")
-					return nil
-				}
-				return fmt.Errorf("发送 Ping 消息失败: %v", err)
-			}
+			wsConn.WriteMessage(websocket.PingMessage, nil)
 		default:
 			// 查询任务状态
 			if err = model.DB.Model(&model.OpsTaskLog{}).
@@ -1491,10 +1492,49 @@ func (s *OpsService) GetOpsTaskLog(params api.GetOpsTaskLogReq, bindProjectIds [
 	return &result, err
 }
 
-func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds []uint) (err error) {
+func (s *OpsService) getOpsTaskRunningResult(bindProjectIds []uint) (wsRes []byte, err error) {
 	var (
 		taskLogs []model.OpsTaskLog
-		ticker   = time.NewTicker(3 * time.Second)
+	)
+	// 获取当前时间和6秒前的时间
+	now := time.Now()
+	SecondsAgo := now.Add(-10 * time.Second)
+	if err = model.DB.Model(&model.OpsTaskLog{}).
+		Where("((status = ?) OR (status = ? AND updated_at >= ?)) AND project_id IN (?)",
+			consts.OpsTaskStatusIsRunning, consts.OpsTaskStatusIsSuccess, SecondsAgo, bindProjectIds).
+		Find(&taskLogs).Error; err != nil {
+		return nil, fmt.Errorf("查询运维操作任务日志失败: %v", err)
+	}
+	result, err := s.getOpsTaskLogResult(&taskLogs, true)
+	if result == nil {
+		return nil, errors.New("运维操作任务日志转换结果失败, result为nil")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
+	}
+	var (
+		response []api.GetOpsTaskRunningWSRes
+	)
+	for _, res := range *result {
+		var resp api.GetOpsTaskRunningWSRes
+		resp.Name = res.Name
+		resp.Status = res.Status
+		resp.StartTime = res.StartTime
+		resp.EndTime = res.EndTime
+		resp.SubmitterName = res.SubmitterName
+		resp.Children = res.StepStatus
+		response = append(response, resp)
+	}
+	if wsRes, err = json.Marshal(response); err != nil {
+		return nil, fmt.Errorf("转换运维操作任务日志结果失败: %v", err)
+	}
+	return wsRes, err
+}
+
+func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds []uint) (err error) {
+	var (
+		ticker = time.NewTicker(3 * time.Second)
+		wsRes  []byte
 	)
 	defer ticker.Stop()
 
@@ -1508,36 +1548,24 @@ func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds 
 		wsConn.SetReadDeadline(time.Now().Add(consts.WebSocketPongWait))
 		return nil
 	})
-
+	// 先进行一次发送
+	if wsRes, err = s.getOpsTaskRunningResult(bindProjectIds); err != nil {
+		return fmt.Errorf("查询运维操作任务日志失败: %v", err)
+	}
+	if err = wsConn.WriteMessage(websocket.TextMessage, wsRes); err != nil {
+		if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
+			// 前端主动断开连接，返回nil
+			return nil
+		}
+		return fmt.Errorf("发送任务状态失败: %v", err)
+	}
 	for {
 		select {
 		case <-ticker.C:
-			// 获取当前时间和6秒前的时间
-			now := time.Now()
-			tenSecondsAgo := now.Add(-6 * time.Second)
-
-			if err = model.DB.Model(&model.OpsTaskLog{}).
-				Where("((status = ? OR status = ? OR status = ?) AND project_id IN (?)) AND (status = ? OR updated_at >= ?)",
-					consts.OpsTaskStatusIsRunning, consts.OpsTaskStatusIsSuccess, consts.OpsTaskStatusIsFailed, bindProjectIds, consts.OpsTaskStatusIsRunning, tenSecondsAgo).
-				Find(&taskLogs).Error; err != nil {
+			if wsRes, err = s.getOpsTaskRunningResult(bindProjectIds); err != nil {
 				return fmt.Errorf("查询运维操作任务日志失败: %v", err)
 			}
-			result, err := s.getOpsTaskLogResult(&taskLogs, true)
-			if result == nil {
-				return errors.New("运维操作任务日志转换结果失败, result为nil")
-			}
-			if err != nil {
-				return fmt.Errorf("运维操作任务日志转换结果失败: err: %v", err)
-			}
-			var response []api.GetOpsTaskRunningWSRes
-			for _, res := range *result {
-				var resp api.GetOpsTaskRunningWSRes
-				resp.Name = res.Name
-				resp.SubmitterName = res.SubmitterName
-				resp.Children = res.StepStatus
-				response = append(response, resp)
-			}
-			if err = wsConn.WriteJSON(response); err != nil {
+			if err = wsConn.WriteMessage(websocket.TextMessage, wsRes); err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
 					// 前端主动断开连接，返回nil
 					return nil
@@ -1545,13 +1573,7 @@ func (s *OpsService) GetOpsTaskRunningWS(wsConn *websocket.Conn, bindProjectIds 
 				return fmt.Errorf("发送任务状态失败: %v", err)
 			}
 		case <-pingTicker.C:
-			if err = wsConn.WriteMessage(websocket.PingMessage, nil); err != nil {
-				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseNormalClosure) {
-					// 前端主动断开连接，返回nil
-					return nil
-				}
-				return fmt.Errorf("发送Ping失败: %v", err)
-			}
+			wsConn.WriteMessage(websocket.PingMessage, nil)
 		}
 
 	}

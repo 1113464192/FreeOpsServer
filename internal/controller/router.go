@@ -46,6 +46,11 @@ func NewRoute() *gin.Engine {
 	{
 		// -------------接口权限测试--------------
 		r.GET("ping2", Test2)
+		// ------------home相关------------
+		homeRoute := r.Group("home")
+		{
+			homeRoute.GET("info", GetHomeInfo) // 获取首页信息
+		}
 
 		// ------------用户相关------------
 		userRoute := r.Group("users")

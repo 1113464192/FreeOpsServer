@@ -101,7 +101,7 @@ type OpsTaskLogStepStatus struct {
 	Command           string `json:"command"`
 	StartTime         string `json:"startTime"`
 	EndTime           string `json:"endTime"`
-	Status            int    `json:"status"`
+	Status            uint8  `json:"status"`
 	Response          string `json:"response"`
 	SSHResponseStatus int    `json:"sshResponseStatus"`
 }
@@ -172,6 +172,9 @@ type GetOpsTaskLogsRes struct {
 
 type GetOpsTaskRunningWSRes struct {
 	Name          string                 `json:"name"`
+	StartTime     string                 `json:"startTime"`
+	EndTime       string                 `json:"endTime"`
+	Status        uint8                  `json:"status"`
 	SubmitterName string                 `json:"submitterName"`
 	Children      []OpsTaskLogStepStatus `json:"children,omitempty"`
 }
