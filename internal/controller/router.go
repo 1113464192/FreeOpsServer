@@ -44,10 +44,10 @@ func NewRoute() *gin.Engine {
 	//	gitWebhookRouter.PATCH("project-update-status", UpdateGitWebhookStatus) // 更改git-webhook记录的状态码
 	//}
 	// ------------验证相关------------
-	r.Use(middleware.JWTAuthMiddleware()).Use(middleware.CasbinHandler()).Use(middleware.UserRecord())
+	apiRoute.Use(middleware.JWTAuthMiddleware()).Use(middleware.CasbinHandler()).Use(middleware.UserRecord())
 	{
 		// -------------接口权限测试--------------
-		r.GET("ping2", Test2)
+		apiRoute.GET("ping2", Test2)
 		// ------------home相关------------
 		homeRoute := apiRoute.Group("home")
 		{

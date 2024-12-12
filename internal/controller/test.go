@@ -30,7 +30,7 @@ func Test(c *gin.Context) {
 // @Produce  application/json
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
 // @Success 200 {} api.Response "{"code": "0000", msg: "string", data: "string"}"
-// @Router /ping2 [get]
+// @Router /api/ping2 [get]
 func Test2(c *gin.Context) {
 	c.JSON(200, api.Response{
 		Code: consts.SERVICE_SUCCESS_CODE,

@@ -38,7 +38,7 @@ func Cors() gin.HandlerFunc {
 
 		// 如果请求的头信息中包含了不被服务器支持的头信息，浏览器会拦截请求，并阻止JavaScript代码对返回结果的访问
 		c.Header("Access-Control-Allow-Origin", origin)
-		c.Header("Access-Control-Allow-Headers", "Origin,Content-Length,Content-Type,Cookie,Authorization,token")
+		c.Header("Access-Control-Allow-Headers", "Origin,Content-Length,Content-Type,Cookie,Authorization,token,x-request-id")
 		c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS,DELETE,PUT")
 		c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type, New-Token, New-Expires-At")
 		c.Header("Access-Control-Allow-Credentials", "true")
