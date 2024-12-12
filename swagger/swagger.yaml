@@ -273,7 +273,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /apis:
+  /api/apis:
     delete:
       description: 删除apis
       parameters:
@@ -392,7 +392,7 @@ paths:
       summary: 新增/修改API信息
       tags:
       - API相关
-  /apis/group:
+  /api/apis/group:
     get:
       description: 获取API所有组
       parameters:
@@ -419,7 +419,7 @@ paths:
       summary: 获取API所有组
       tags:
       - API相关
-  /apis/tree:
+  /api/apis/tree:
     get:
       description: 获取API树
       parameters:
@@ -446,7 +446,7 @@ paths:
       summary: 获取API树
       tags:
       - API相关
-  /auth/constant-routes:
+  /api/auth/constant-routes:
     get:
       description: 获取所有常量路由
       produces:
@@ -467,7 +467,7 @@ paths:
       summary: 获取所有常量路由
       tags:
       - 公共相关
-  /auth/error:
+  /api/auth/error:
     get:
       description: 自定义错误返回
       parameters:
@@ -493,7 +493,7 @@ paths:
       summary: 自定义错误返回
       tags:
       - 公共相关
-  /auth/login:
+  /api/auth/login:
     post:
       description: 用户名长度不少于4位，密码不少于6位
       parameters:
@@ -523,7 +523,7 @@ paths:
       summary: 用户登录
       tags:
       - 公共相关
-  /auth/refreshToken:
+  /api/auth/refreshToken:
     post:
       description: refreshToken放在data请求
       parameters:
@@ -546,7 +546,7 @@ paths:
       summary: 刷新Token
       tags:
       - 公共相关
-  /buttons:
+  /api/buttons:
     get:
       description: 查询所有/指定条件按钮的信息
       parameters:
@@ -626,7 +626,7 @@ paths:
       summary: 新增/修改按钮信息
       tags:
       - 按钮相关
-  /buttons/menus:
+  /api/buttons/menus:
     delete:
       description: 删除指定菜单的按钮
       parameters:
@@ -659,7 +659,7 @@ paths:
       summary: 删除菜单按钮
       tags:
       - 按钮相关
-  /clouds/create/host:
+  /api/clouds/create/host:
     post:
       description: 购买服务器
       parameters:
@@ -692,7 +692,7 @@ paths:
       summary: 购买服务器
       tags:
       - 云平台相关
-  /clouds/create/project:
+  /api/clouds/create/project:
     post:
       description: 新增云项目信息
       parameters:
@@ -725,7 +725,7 @@ paths:
       summary: 新增云项目信息
       tags:
       - 云平台相关
-  /clouds/query/project:
+  /api/clouds/query/project:
     get:
       description: 获取云项目ID
       parameters:
@@ -762,7 +762,7 @@ paths:
       summary: 获取云项目ID
       tags:
       - 云平台相关
-  /clouds/update/project:
+  /api/clouds/update/project:
     post:
       description: 修改云项目信息
       parameters:
@@ -799,7 +799,7 @@ paths:
       summary: 修改云项目信息
       tags:
       - 云平台相关
-  /games:
+  /api/games:
     delete:
       description: 删除指定游戏服
       parameters:
@@ -957,7 +957,7 @@ paths:
       summary: 新增/修改游戏服信息
       tags:
       - 游戏服相关
-  /games/status:
+  /api/games/status:
     patch:
       description: 修改游戏服状态
       parameters:
@@ -992,7 +992,7 @@ paths:
       summary: 修改游戏服状态
       tags:
       - 游戏服相关
-  /home/info:
+  /api/home/info:
     get:
       description: 获取展示基本信息
       parameters:
@@ -1019,7 +1019,7 @@ paths:
       summary: 首页展示信息
       tags:
       - 首页相关
-  /hosts:
+  /api/hosts:
     delete:
       description: 删除指定服务器
       parameters:
@@ -1193,7 +1193,7 @@ paths:
       summary: 新增/修改服务器信息
       tags:
       - 服务器相关
-  /hosts/game-info:
+  /api/hosts/game-info:
     get:
       description: 获取服务器各业务信息总数
       parameters:
@@ -1225,7 +1225,7 @@ paths:
       summary: 获取服务器各业务信息总数
       tags:
       - 服务器相关
-  /hosts/summary:
+  /api/hosts/summary:
     get:
       description: 查询服务器列表
       parameters:
@@ -1257,7 +1257,7 @@ paths:
       summary: 获取服务器列表
       tags:
       - 服务器相关
-  /menus:
+  /api/menus:
     delete:
       description: 删除菜单信息
       parameters:
@@ -1362,7 +1362,7 @@ paths:
       summary: 新增/修改菜单信息
       tags:
       - 菜单相关
-  /menus/all-pages:
+  /api/menus/all-pages:
     get:
       description: 获取所有页面
       parameters:
@@ -1389,7 +1389,7 @@ paths:
       summary: 获取所有页面
       tags:
       - 菜单相关
-  /menus/buttons:
+  /api/menus/buttons:
     get:
       description: 获取菜单的关联按钮列表
       parameters:
@@ -1421,7 +1421,7 @@ paths:
       summary: 获取菜单的关联按钮列表
       tags:
       - 菜单相关
-  /menus/is-route-exist:
+  /api/menus/is-route-exist:
     get:
       description: 判断路由是否存在
       parameters:
@@ -1453,7 +1453,7 @@ paths:
       summary: 判断路由是否存在
       tags:
       - 菜单相关
-  /menus/tree:
+  /api/menus/tree:
     get:
       description: 获取菜单树
       parameters:
@@ -1480,7 +1480,7 @@ paths:
       summary: 获取菜单树
       tags:
       - 菜单相关
-  /menus/user-routes:
+  /api/menus/user-routes:
     get:
       description: 获取用户路由
       parameters:
@@ -1507,7 +1507,7 @@ paths:
       summary: 获取用户路由
       tags:
       - 菜单相关
-  /ops/approve-task:
+  /api/ops/approve-task:
     put:
       description: 用户审批任务
       parameters:
@@ -1542,7 +1542,7 @@ paths:
       summary: 用户审批任务
       tags:
       - 运维操作相关
-  /ops/bind-template-params:
+  /api/ops/bind-template-params:
     put:
       description: 运维操作模板与运维操作的参数模板关系绑定
       parameters:
@@ -1575,7 +1575,7 @@ paths:
       summary: 运维操作模板与运维操作的参数模板关系绑定
       tags:
       - 运维操作相关
-  /ops/commands:
+  /api/ops/commands:
     post:
       description: 查看根据参数会生成的命令
       parameters:
@@ -1608,7 +1608,7 @@ paths:
       summary: 查看根据参数会生成的命令
       tags:
       - 运维操作相关
-  /ops/param-template:
+  /api/ops/param-template:
     delete:
       description: 删除运维操作的参数模板
       parameters:
@@ -1720,7 +1720,7 @@ paths:
       summary: 新增/修改 运维操作的参数模板
       tags:
       - 运维操作相关
-  /ops/run-task-check-script:
+  /api/ops/run-task-check-script:
     post:
       description: 目前主要是为了执行运维的检查脚本，返回给运营审批时阅览
       parameters:
@@ -1753,7 +1753,7 @@ paths:
       summary: 执行一个阻塞的任务并返回结果
       tags:
       - 运维操作相关
-  /ops/submit-task:
+  /api/ops/submit-task:
     post:
       description: 提交运维操作任务
       parameters:
@@ -1786,7 +1786,7 @@ paths:
       summary: 提交运维操作任务
       tags:
       - 运维操作相关
-  /ops/task:
+  /api/ops/task:
     delete:
       description: 删除运维操作任务信息
       parameters:
@@ -1894,7 +1894,7 @@ paths:
       summary: 新增/修改 运维操作任务信息
       tags:
       - 运维操作相关
-  /ops/task-log:
+  /api/ops/task-log:
     get:
       description: 要获取具体信息直接传ID, 不获取commands等，只批量获取name等基础数据不用传ID
       parameters:
@@ -1944,7 +1944,7 @@ paths:
       summary: 查询运维操作任务日志
       tags:
       - 运维操作相关
-  /ops/task-need-approve:
+  /api/ops/task-need-approve:
     get:
       description: 查询用户是否有任务需要审批
       produces:
@@ -1965,7 +1965,7 @@ paths:
       summary: 查询用户是否有任务需要审批
       tags:
       - 运维操作相关
-  /ops/task-pending:
+  /api/ops/task-pending:
     get:
       description: 查询待用户审批的任务
       parameters:
@@ -2006,7 +2006,7 @@ paths:
       summary: 查询待用户审批的任务
       tags:
       - 运维操作相关
-  /ops/task-running-ws:
+  /api/ops/task-running-ws:
     get:
       description: websocket实时同步权限内的项目执行中的任务状态
       produces:
@@ -2031,7 +2031,7 @@ paths:
       summary: 实时同步执行中的任务状态
       tags:
       - 运维操作相关
-  /ops/template:
+  /api/ops/template:
     delete:
       description: 删除操作模板
       parameters:
@@ -2149,7 +2149,7 @@ paths:
       summary: 新增/修改操作模板信息
       tags:
       - 运维操作相关
-  /ops/template-params:
+  /api/ops/template-params:
     get:
       description: 查询运维操作模板对应的参数模板
       parameters:
@@ -2181,39 +2181,7 @@ paths:
       summary: 查询运维操作模板对应的参数模板
       tags:
       - 运维操作相关
-  /ping:
-    get:
-      description: 无设置权限，返回"Hello world!~~(无权限版)"
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"code": "0000", msg: "string", data: "string"}'
-          schema:
-            type: ""
-      summary: 测试Gin能否正常访问
-      tags:
-      - 测试相关
-  /ping2:
-    get:
-      description: 设置权限，返回"Hello world!~~(验证权限版)"
-      parameters:
-      - description: 格式为：Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"code": "0000", msg: "string", data: "string"}'
-          schema:
-            type: ""
-      summary: 测试Gin能否正常访问
-      tags:
-      - 测试相关
-  /projects:
+  /api/projects:
     delete:
       description: 删除指定项目
       parameters:
@@ -2367,7 +2335,7 @@ paths:
       summary: 新增/修改项目信息
       tags:
       - 项目相关
-  /projects/all-summary:
+  /api/projects/all-summary:
     get:
       description: 查询项目列表
       parameters:
@@ -2394,7 +2362,7 @@ paths:
       summary: 获取项目列表
       tags:
       - 项目相关
-  /projects/assets-total:
+  /api/projects/assets-total:
     get:
       description: 查询项目各资产总数
       parameters:
@@ -2426,7 +2394,7 @@ paths:
       summary: 获取项目各资产总数
       tags:
       - 项目相关
-  /projects/games:
+  /api/projects/games:
     get:
       description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
       parameters:
@@ -2460,7 +2428,7 @@ paths:
       summary: 获取项目的游戏服列表
       tags:
       - 项目相关
-  /projects/hosts:
+  /api/projects/hosts:
     get:
       description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
       parameters:
@@ -2494,7 +2462,7 @@ paths:
       summary: 获取项目的服务器列表
       tags:
       - 项目相关
-  /roles:
+  /api/roles:
     get:
       description: 查询所有/指定条件角色的信息
       parameters:
@@ -2579,7 +2547,7 @@ paths:
       summary: 新增/修改角色信息
       tags:
       - 角色相关
-  /roles/:
+  /api/roles/:
     delete:
       description: 删除指定角色
       parameters:
@@ -2612,7 +2580,7 @@ paths:
       summary: 删除角色
       tags:
       - 角色相关
-  /roles/all-summary:
+  /api/roles/all-summary:
     get:
       description: 查询所有角色的简略信息
       parameters:
@@ -2639,7 +2607,7 @@ paths:
       summary: 所有角色简略信息
       tags:
       - 角色相关
-  /roles/apis:
+  /api/roles/apis:
     get:
       description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
       parameters:
@@ -2673,7 +2641,7 @@ paths:
       summary: 获取角色的API权限列表
       tags:
       - 角色相关
-  /roles/bind:
+  /api/roles/bind:
     put:
       description: '1: api 2: menu 3: button'
       parameters:
@@ -2706,7 +2674,7 @@ paths:
       summary: 关联角色关系
       tags:
       - 角色相关
-  /roles/buttons:
+  /api/roles/buttons:
     get:
       description: 由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3&ids=4
       parameters:
@@ -2740,7 +2708,7 @@ paths:
       summary: 获取角色的按钮权限列表
       tags:
       - 角色相关
-  /roles/menus:
+  /api/roles/menus:
     get:
       description: 获取角色的关联菜单列表
       parameters:
@@ -2774,7 +2742,7 @@ paths:
       summary: 获取角色的关联菜单列表
       tags:
       - 角色相关
-  /roles/projects:
+  /api/roles/projects:
     get:
       description: 获取角色的关联项目列表
       parameters:
@@ -2808,7 +2776,7 @@ paths:
       summary: 获取角色的关联项目列表
       tags:
       - 角色相关
-  /roles/users:
+  /api/roles/users:
     get:
       description: 获取角色的关联用户列表
       parameters:
@@ -2846,7 +2814,7 @@ paths:
       summary: 获取角色的关联用户列表
       tags:
       - 角色相关
-  /users:
+  /api/users:
     get:
       description: 获取用户列表
       parameters:
@@ -2959,7 +2927,7 @@ paths:
       summary: 新增/修改用户信息
       tags:
       - 用户相关
-  /users/:
+  /api/users/:
     delete:
       description: 删除指定用户
       parameters:
@@ -2992,7 +2960,7 @@ paths:
       summary: 删除用户
       tags:
       - 用户相关
-  /users/bind-roles:
+  /api/users/bind-roles:
     put:
       description: 用户绑定角色
       parameters:
@@ -3025,7 +2993,7 @@ paths:
       summary: 用户绑定角色
       tags:
       - 用户相关
-  /users/history-action:
+  /api/users/history-action:
     get:
       description: 查询月份操作记录
       parameters:
@@ -3041,7 +3009,6 @@ paths:
       - description: 年月，如：2006_01
         in: query
         name: date
-        required: true
         type: string
       - description: 请求ip
         in: query
@@ -3081,7 +3048,7 @@ paths:
       summary: 月份操作记录
       tags:
       - 用户相关
-  /users/history-month-exist:
+  /api/users/history-month-exist:
     get:
       description: 获取存在记录的月份
       parameters:
@@ -3108,7 +3075,7 @@ paths:
       summary: 存在记录的月份
       tags:
       - 用户相关
-  /users/logout:
+  /api/users/logout:
     post:
       description: 登出 - 把JWT拉入黑名单
       parameters:
@@ -3131,7 +3098,7 @@ paths:
       summary: 登出
       tags:
       - 用户相关
-  /users/password:
+  /api/users/password:
     patch:
       description: 修改指定用户密码
       parameters:
@@ -3168,7 +3135,7 @@ paths:
       summary: 修改密码
       tags:
       - 用户相关
-  /users/privilege:
+  /api/users/privilege:
     get:
       description: 获取用户权限
       parameters:
@@ -3195,7 +3162,7 @@ paths:
       summary: 用户权限
       tags:
       - 用户相关
-  /users/project-options:
+  /api/users/project-options:
     get:
       description: 返回权限内可以选择的项目的选项
       parameters:
@@ -3222,7 +3189,7 @@ paths:
       summary: 自身权限的项目选型
       tags:
       - 用户相关
-  /users/roles:
+  /api/users/roles:
     get:
       description: 查询用户的角色
       parameters:
@@ -3254,4 +3221,36 @@ paths:
       summary: 查询用户的角色
       tags:
       - 用户相关
+  /ping:
+    get:
+      description: 无设置权限，返回"Hello world!~~(无权限版)"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            type: ""
+      summary: 测试Gin能否正常访问
+      tags:
+      - 测试相关
+  /ping2:
+    get:
+      description: 设置权限，返回"Hello world!~~(验证权限版)"
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            type: ""
+      summary: 测试Gin能否正常访问
+      tags:
+      - 测试相关
 swagger: "2.0"

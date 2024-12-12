@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/apis": {
+        "/api/apis": {
             "get": {
                 "description": "查询apis信息",
                 "produces": [
@@ -195,7 +195,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/apis/group": {
+        "/api/apis/group": {
             "get": {
                 "description": "获取API所有组",
                 "produces": [
@@ -236,7 +236,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/apis/tree": {
+        "/api/apis/tree": {
             "get": {
                 "description": "获取API树",
                 "produces": [
@@ -277,7 +277,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/constant-routes": {
+        "/api/auth/constant-routes": {
             "get": {
                 "description": "获取所有常量路由",
                 "produces": [
@@ -309,7 +309,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/error": {
+        "/api/auth/error": {
             "get": {
                 "description": "自定义错误返回",
                 "produces": [
@@ -349,7 +349,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/login": {
+        "/api/auth/login": {
             "post": {
                 "description": "用户名长度不少于4位，密码不少于6位",
                 "produces": [
@@ -393,7 +393,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/refreshToken": {
+        "/api/auth/refreshToken": {
             "post": {
                 "description": "refreshToken放在data请求",
                 "produces": [
@@ -428,7 +428,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/buttons": {
+        "/api/buttons": {
             "get": {
                 "description": "查询所有/指定条件按钮的信息",
                 "produces": [
@@ -550,7 +550,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/buttons/menus": {
+        "/api/buttons/menus": {
             "delete": {
                 "description": "删除指定菜单的按钮",
                 "produces": [
@@ -600,7 +600,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/clouds/create/host": {
+        "/api/clouds/create/host": {
             "post": {
                 "description": "购买服务器",
                 "produces": [
@@ -650,7 +650,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/clouds/create/project": {
+        "/api/clouds/create/project": {
             "post": {
                 "description": "新增云项目信息",
                 "produces": [
@@ -700,7 +700,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/clouds/query/project": {
+        "/api/clouds/query/project": {
             "get": {
                 "description": "获取云项目ID",
                 "produces": [
@@ -755,7 +755,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/clouds/update/project": {
+        "/api/clouds/update/project": {
             "post": {
                 "description": "修改云项目信息",
                 "produces": [
@@ -810,7 +810,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/games": {
+        "/api/games": {
             "get": {
                 "description": "查询所有/指定条件游戏服的信息",
                 "produces": [
@@ -1053,7 +1053,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/games/status": {
+        "/api/games/status": {
             "patch": {
                 "description": "修改游戏服状态",
                 "produces": [
@@ -1106,7 +1106,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/home/info": {
+        "/api/home/info": {
             "get": {
                 "description": "获取展示基本信息",
                 "produces": [
@@ -1147,7 +1147,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/hosts": {
+        "/api/hosts": {
             "get": {
                 "description": "查询所有/指定条件服务器的信息",
                 "produces": [
@@ -1412,7 +1412,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/hosts/game-info": {
+        "/api/hosts/game-info": {
             "get": {
                 "description": "获取服务器各业务信息总数",
                 "produces": [
@@ -1460,7 +1460,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/hosts/summary": {
+        "/api/hosts/summary": {
             "get": {
                 "description": "查询服务器列表",
                 "produces": [
@@ -1508,7 +1508,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus": {
+        "/api/menus": {
             "get": {
                 "description": "查询菜单信息",
                 "produces": [
@@ -1667,7 +1667,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/all-pages": {
+        "/api/menus/all-pages": {
             "get": {
                 "description": "获取所有页面",
                 "produces": [
@@ -1708,7 +1708,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/buttons": {
+        "/api/menus/buttons": {
             "get": {
                 "description": "获取菜单的关联按钮列表",
                 "produces": [
@@ -1756,7 +1756,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/is-route-exist": {
+        "/api/menus/is-route-exist": {
             "get": {
                 "description": "判断路由是否存在",
                 "produces": [
@@ -1804,7 +1804,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/tree": {
+        "/api/menus/tree": {
             "get": {
                 "description": "获取菜单树",
                 "produces": [
@@ -1845,7 +1845,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/menus/user-routes": {
+        "/api/menus/user-routes": {
             "get": {
                 "description": "获取用户路由",
                 "produces": [
@@ -1886,7 +1886,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/approve-task": {
+        "/api/ops/approve-task": {
             "put": {
                 "description": "用户审批任务",
                 "produces": [
@@ -1939,7 +1939,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/bind-template-params": {
+        "/api/ops/bind-template-params": {
             "put": {
                 "description": "运维操作模板与运维操作的参数模板关系绑定",
                 "produces": [
@@ -1989,7 +1989,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/commands": {
+        "/api/ops/commands": {
             "post": {
                 "description": "查看根据参数会生成的命令",
                 "produces": [
@@ -2039,7 +2039,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/param-template": {
+        "/api/ops/param-template": {
             "get": {
                 "description": "获取运维操作的参数模板",
                 "produces": [
@@ -2207,7 +2207,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/run-task-check-script": {
+        "/api/ops/run-task-check-script": {
             "post": {
                 "description": "目前主要是为了执行运维的检查脚本，返回给运营审批时阅览",
                 "produces": [
@@ -2257,7 +2257,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/submit-task": {
+        "/api/ops/submit-task": {
             "post": {
                 "description": "提交运维操作任务",
                 "produces": [
@@ -2307,7 +2307,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task": {
+        "/api/ops/task": {
             "get": {
                 "description": "要获取具体信息直接传ID, 不获取content等，只批量获取name等基础数据不用传ID",
                 "produces": [
@@ -2471,7 +2471,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task-log": {
+        "/api/ops/task-log": {
             "get": {
                 "description": "要获取具体信息直接传ID, 不获取commands等，只批量获取name等基础数据不用传ID",
                 "produces": [
@@ -2549,7 +2549,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task-need-approve": {
+        "/api/ops/task-need-approve": {
             "get": {
                 "description": "查询用户是否有任务需要审批",
                 "produces": [
@@ -2581,7 +2581,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task-pending": {
+        "/api/ops/task-pending": {
             "get": {
                 "description": "查询待用户审批的任务",
                 "produces": [
@@ -2644,7 +2644,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/task-running-ws": {
+        "/api/ops/task-running-ws": {
             "get": {
                 "description": "websocket实时同步权限内的项目执行中的任务状态",
                 "produces": [
@@ -2682,7 +2682,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/template": {
+        "/api/ops/template": {
             "get": {
                 "description": "要获取content直接传ID, 不获取content等, 只批量获取name等基础数据不用传ID",
                 "produces": [
@@ -2861,7 +2861,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ops/template-params": {
+        "/api/ops/template-params": {
             "get": {
                 "description": "查询运维操作模板对应的参数模板",
                 "produces": [
@@ -2909,56 +2909,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/ping": {
-            "get": {
-                "description": "无设置权限，返回\"Hello world!~~(无权限版)\"",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "测试相关"
-                ],
-                "summary": "测试Gin能否正常访问",
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
-                        "schema": {
-                            "type": ""
-                        }
-                    }
-                }
-            }
-        },
-        "/ping2": {
-            "get": {
-                "description": "设置权限，返回\"Hello world!~~(验证权限版)\"",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "测试相关"
-                ],
-                "summary": "测试Gin能否正常访问",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "格式为：Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
-                        "schema": {
-                            "type": ""
-                        }
-                    }
-                }
-            }
-        },
-        "/projects": {
+        "/api/projects": {
             "get": {
                 "description": "查询所有/指定条件项目的信息",
                 "produces": [
@@ -3187,7 +3138,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/projects/all-summary": {
+        "/api/projects/all-summary": {
             "get": {
                 "description": "查询项目列表",
                 "produces": [
@@ -3228,7 +3179,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/projects/assets-total": {
+        "/api/projects/assets-total": {
             "get": {
                 "description": "查询项目各资产总数",
                 "produces": [
@@ -3276,7 +3227,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/projects/games": {
+        "/api/projects/games": {
             "get": {
                 "description": "由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3\u0026ids=4",
                 "produces": [
@@ -3327,7 +3278,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/projects/hosts": {
+        "/api/projects/hosts": {
             "get": {
                 "description": "由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3\u0026ids=4",
                 "produces": [
@@ -3378,7 +3329,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles": {
+        "/api/roles": {
             "get": {
                 "description": "查询所有/指定条件角色的信息",
                 "produces": [
@@ -3508,7 +3459,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/": {
+        "/api/roles/": {
             "delete": {
                 "description": "删除指定角色",
                 "produces": [
@@ -3558,7 +3509,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/all-summary": {
+        "/api/roles/all-summary": {
             "get": {
                 "description": "查询所有角色的简略信息",
                 "produces": [
@@ -3599,7 +3550,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/apis": {
+        "/api/roles/apis": {
             "get": {
                 "description": "由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3\u0026ids=4",
                 "produces": [
@@ -3650,7 +3601,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/bind": {
+        "/api/roles/bind": {
             "put": {
                 "description": "1: api 2: menu 3: button",
                 "produces": [
@@ -3700,7 +3651,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/buttons": {
+        "/api/roles/buttons": {
             "get": {
                 "description": "由于swagger本身的限制，get请求的切片会报错，并非接口本身问题，请换个方式，如http://127.0.0.1:9081/api/v1/group/apis?ids=3\u0026ids=4",
                 "produces": [
@@ -3751,7 +3702,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/menus": {
+        "/api/roles/menus": {
             "get": {
                 "description": "获取角色的关联菜单列表",
                 "produces": [
@@ -3802,7 +3753,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/projects": {
+        "/api/roles/projects": {
             "get": {
                 "description": "获取角色的关联项目列表",
                 "produces": [
@@ -3853,7 +3804,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/roles/users": {
+        "/api/roles/users": {
             "get": {
                 "description": "获取角色的关联用户列表",
                 "produces": [
@@ -3911,7 +3862,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users": {
+        "/api/users": {
             "get": {
                 "description": "获取用户列表",
                 "produces": [
@@ -4084,7 +4035,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/": {
+        "/api/users/": {
             "delete": {
                 "description": "删除指定用户",
                 "produces": [
@@ -4134,7 +4085,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/bind-roles": {
+        "/api/users/bind-roles": {
             "put": {
                 "description": "用户绑定角色",
                 "produces": [
@@ -4184,7 +4135,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/history-action": {
+        "/api/users/history-action": {
             "get": {
                 "description": "查询月份操作记录",
                 "produces": [
@@ -4212,8 +4163,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "年月，如：2006_01",
                         "name": "date",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     },
                     {
                         "type": "string",
@@ -4268,7 +4218,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/history-month-exist": {
+        "/api/users/history-month-exist": {
             "get": {
                 "description": "获取存在记录的月份",
                 "produces": [
@@ -4309,7 +4259,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/logout": {
+        "/api/users/logout": {
             "post": {
                 "description": "登出 - 把JWT拉入黑名单",
                 "produces": [
@@ -4344,7 +4294,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/password": {
+        "/api/users/password": {
             "patch": {
                 "description": "修改指定用户密码",
                 "produces": [
@@ -4399,7 +4349,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/privilege": {
+        "/api/users/privilege": {
             "get": {
                 "description": "获取用户权限",
                 "produces": [
@@ -4440,7 +4390,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/project-options": {
+        "/api/users/project-options": {
             "get": {
                 "description": "返回权限内可以选择的项目的选项",
                 "produces": [
@@ -4481,7 +4431,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/roles": {
+        "/api/users/roles": {
             "get": {
                 "description": "查询用户的角色",
                 "produces": [
@@ -4524,6 +4474,55 @@ const docTemplate = `{
                         "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
                         "schema": {
                             "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/ping": {
+            "get": {
+                "description": "无设置权限，返回\"Hello world!~~(无权限版)\"",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试相关"
+                ],
+                "summary": "测试Gin能否正常访问",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
+        "/ping2": {
+            "get": {
+                "description": "设置权限，返回\"Hello world!~~(验证权限版)\"",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试相关"
+                ],
+                "summary": "测试Gin能否正常访问",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "type": ""
                         }
                     }
                 }
