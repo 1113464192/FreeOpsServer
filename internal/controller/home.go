@@ -19,7 +19,7 @@ import (
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /home/info [get]
+// @Router /api/home/info [get]
 func GetHomeInfo(c *gin.Context) {
 	res, err := service.HomeServiceApp().GetHomeInfo()
 	if err != nil {

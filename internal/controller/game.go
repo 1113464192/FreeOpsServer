@@ -21,7 +21,7 @@ import (
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /games [post]
+// @Router /api/games [post]
 func UpdateGame(c *gin.Context) {
 	var (
 		gameReq api.UpdateGameReq
@@ -53,7 +53,7 @@ func UpdateGame(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /games [get]
+// @Router /api/games [get]
 func GetGames(c *gin.Context) {
 	var (
 		params         api.GetGamesReq
@@ -94,7 +94,7 @@ func GetGames(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /games [delete]
+// @Router /api/games [delete]
 func DeleteGames(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -125,7 +125,7 @@ func DeleteGames(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /games/status [patch]
+// @Router /api/games/status [patch]
 func UpdateGameStatus(c *gin.Context) {
 	var (
 		statusReq api.UpdateGameStatusReq

@@ -20,7 +20,7 @@ import (
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /clouds/create/project [post]
+// @Router /api/clouds/create/project [post]
 func CreateCloudProject(c *gin.Context) {
 	var (
 		param api.CloudProjectReq
@@ -55,7 +55,7 @@ func CreateCloudProject(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /clouds/create/host [post]
+// @Router /api/clouds/create/host [post]
 func CreateCloudHost(c *gin.Context) {
 	var (
 		param api.CreateCloudHostReq
@@ -90,7 +90,7 @@ func CreateCloudHost(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /clouds/update/project [post]
+// @Router /api/clouds/update/project [post]
 func UpdateCloudProject(c *gin.Context) {
 	var (
 		param api.CloudProjectReq
@@ -125,7 +125,7 @@ func UpdateCloudProject(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /clouds/query/project [get]
+// @Router /api/clouds/query/project [get]
 func GetCloudProjectId(c *gin.Context) {
 	var (
 		param api.CloudProjectReq

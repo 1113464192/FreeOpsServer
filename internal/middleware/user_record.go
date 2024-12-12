@@ -46,7 +46,7 @@ func (r responseBodyWriter) Write(b []byte) (int, error) {
 }
 
 func shouldSkipLogging(method, path string) bool {
-	if method == "GET" {
+	if method == "GET" || method == "OPTIONS" {
 		return true
 	}
 

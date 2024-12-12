@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /projects [post]
+// @Router /api/projects [post]
 func UpdateProject(c *gin.Context) {
 	var (
 		projectReq api.UpdateProjectReq
@@ -54,7 +54,7 @@ func UpdateProject(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects [get]
+// @Router /api/projects [get]
 func GetProjects(c *gin.Context) {
 	var params api.GetProjectsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -86,7 +86,7 @@ func GetProjects(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects/all-summary [get]
+// @Router /api/projects/all-summary [get]
 func GetProjectList(c *gin.Context) {
 	var err error
 	res, err := service.ProjectServiceApp().GetProjectList()
@@ -115,7 +115,7 @@ func GetProjectList(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects [delete]
+// @Router /api/projects [delete]
 func DeleteProjects(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -146,7 +146,7 @@ func DeleteProjects(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects/hosts [get]
+// @Router /api/projects/hosts [get]
 func GetProjectHosts(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -179,7 +179,7 @@ func GetProjectHosts(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects/games [get]
+// @Router /api/projects/games [get]
 func GetProjectGames(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -212,7 +212,7 @@ func GetProjectGames(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /projects/assets-total [get]
+// @Router /api/projects/assets-total [get]
 func GetProjectAssetsTotal(c *gin.Context) {
 	var (
 		id  uint64

@@ -17,9 +17,11 @@ func NewRoute() *gin.Engine {
 	// }
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Use(middleware.Cors())
+	// 所有请求加上api做前缀
+	apiRoute := r.Group("api")
 	r.GET("ping", Test)
 	// ---------登录----------
-	authRoute := r.Group("auth")
+	authRoute := apiRoute.Group("auth")
 	{
 		authRoute.POST("login", UserLogin)
 		authRoute.POST("refreshToken", RefreshToken)
@@ -28,7 +30,7 @@ func NewRoute() *gin.Engine {
 	}
 	// --------不走头信息权限验证的功能接口----------
 	//websocket
-	nonAuthOpsRoute := r.Group("ops")
+	nonAuthOpsRoute := apiRoute.Group("ops")
 	{
 		nonAuthOpsRoute.GET("task-need-approve", GetOpsTaskNeedApprove) // 查询用户是否有待审批的任务
 		nonAuthOpsRoute.GET("task-running-ws", GetOpsTaskRunningWS)     // 实时查看运行中的任务
@@ -47,13 +49,13 @@ func NewRoute() *gin.Engine {
 		// -------------接口权限测试--------------
 		r.GET("ping2", Test2)
 		// ------------home相关------------
-		homeRoute := r.Group("home")
+		homeRoute := apiRoute.Group("home")
 		{
 			homeRoute.GET("info", GetHomeInfo) // 获取首页信息
 		}
 
 		// ------------用户相关------------
-		userRoute := r.Group("users")
+		userRoute := apiRoute.Group("users")
 		{
 			userRoute.POST("", UpdateUser)                          // 新增/修改用户
 			userRoute.GET("", GetUsers)                             // 查询用户切片
@@ -69,7 +71,7 @@ func NewRoute() *gin.Engine {
 		}
 
 		// ------------角色相关--------------
-		roleRoute := r.Group("roles")
+		roleRoute := apiRoute.Group("roles")
 		{
 			roleRoute.POST("", UpdateRole)                   // 新增/修改角色
 			roleRoute.GET("", GetRoles)                      // 获取角色列表
@@ -84,7 +86,7 @@ func NewRoute() *gin.Engine {
 		}
 
 		// ------------Button相关------------
-		buttonRoute := r.Group("buttons")
+		buttonRoute := apiRoute.Group("buttons")
 		{
 			buttonRoute.POST("", UpdateButton)             // 新增/修改按钮
 			buttonRoute.GET("", GetButtons)                // 获取按钮列表
@@ -92,7 +94,7 @@ func NewRoute() *gin.Engine {
 		}
 
 		// ------------菜单相关--------------
-		menuRoute := r.Group("menus")
+		menuRoute := apiRoute.Group("menus")
 		{
 			menuRoute.POST("", UpdateMenu)                // 新增/修改菜单
 			menuRoute.GET("", GetMenus)                   // 获取菜单信息
@@ -105,17 +107,17 @@ func NewRoute() *gin.Engine {
 		}
 
 		// -------------API相关---------------
-		apiRoute := r.Group("apis")
+		apisRoute := apiRoute.Group("apis")
 		{
-			apiRoute.POST("", UpdateApi)       // 新增/修改API
-			apiRoute.GET("", GetApis)          // 获取API列表
-			apiRoute.DELETE("", DeleteApi)     // 删除API
-			apiRoute.GET("group", GetApiGroup) // 获取存在的API组
-			apiRoute.GET("tree", GetApiTree)   // 获取API树
+			apisRoute.POST("", UpdateApi)       // 新增/修改API
+			apisRoute.GET("", GetApis)          // 获取API列表
+			apisRoute.DELETE("", DeleteApi)     // 删除API
+			apisRoute.GET("group", GetApiGroup) // 获取存在的API组
+			apisRoute.GET("tree", GetApiTree)   // 获取API树
 		}
 
 		// ------------项目相关--------------
-		projectRoute := r.Group("projects")
+		projectRoute := apiRoute.Group("projects")
 		{
 			projectRoute.POST("", UpdateProject)                    // 新增/修改项目
 			projectRoute.GET("", GetProjects)                       // 查询项目
@@ -126,7 +128,7 @@ func NewRoute() *gin.Engine {
 			projectRoute.GET("assets-total", GetProjectAssetsTotal) // 查询项目各资产总数
 		}
 		// ----------服务器相关---------------
-		hostRoute := r.Group("hosts")
+		hostRoute := apiRoute.Group("hosts")
 		{
 			hostRoute.POST("", UpdateHost)              // 新增/修改服务器
 			hostRoute.GET("", GetHosts)                 // 查询服务器
@@ -135,7 +137,7 @@ func NewRoute() *gin.Engine {
 			hostRoute.GET("game-info", GetHostGameInfo) // 获取服务器的游戏信息
 		}
 		// ---------游戏服务相关------------
-		gameRoute := r.Group("games")
+		gameRoute := apiRoute.Group("games")
 		{
 			gameRoute.POST("", UpdateGame)              // 新增/修改游戏
 			gameRoute.GET("", GetGames)                 // 查询游戏
@@ -144,7 +146,7 @@ func NewRoute() *gin.Engine {
 		}
 		// --------运维操作服务相关----------
 		// 便于运维自定义脚本路径参数模板、设定运营参数自动填入模板变量、设定任务涵盖模板执行顺序、设定每个任务的检查脚本路径
-		opsRoute := r.Group("ops")
+		opsRoute := apiRoute.Group("ops")
 		{
 			opsRoute.POST("template", UpdateOpsTemplate)               // 创建/修改 模板
 			opsRoute.GET("template", GetOpsTemplate)                   // 查看模板
@@ -168,7 +170,7 @@ func NewRoute() *gin.Engine {
 		// ---------云平台相关------------
 		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)，云平台相关运维脚本路径和参数写死在service层
 		// 不建议平台写死代码，否则改动过于频繁，不能及时配合各项目运维自动化脚本实时改动
-		cloudRoute := r.Group("clouds")
+		cloudRoute := apiRoute.Group("clouds")
 		{
 			// 创建
 			CloudCreateRoute := cloudRoute.Group("create")

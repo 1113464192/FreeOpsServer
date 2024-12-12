@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /apis [post]
+// @Router /api/apis [post]
 func UpdateApi(c *gin.Context) {
 	var (
 		params api.UpdateApiReq
@@ -61,7 +61,7 @@ func UpdateApi(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /apis [get]
+// @Router /api/apis [get]
 func GetApis(c *gin.Context) {
 	var params api.GetApiReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -94,7 +94,7 @@ func GetApis(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /apis [delete]
+// @Router /api/apis [delete]
 func DeleteApi(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -124,7 +124,7 @@ func DeleteApi(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /apis/group [get]
+// @Router /api/apis/group [get]
 func GetApiGroup(c *gin.Context) {
 	res, err := service.ApiServiceApp().GetApiGroup()
 	if err != nil {
@@ -151,7 +151,7 @@ func GetApiGroup(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /apis/tree [get]
+// @Router /api/apis/tree [get]
 func GetApiTree(c *gin.Context) {
 	res, err := service.ApiServiceApp().GetApiTree()
 	if err != nil {

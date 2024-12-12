@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /buttons [post]
+// @Router /api/buttons [post]
 func UpdateButton(c *gin.Context) {
 	var params api.UpdateButtonsReq
 	var err error
@@ -54,7 +54,7 @@ func UpdateButton(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /buttons [get]
+// @Router /api/buttons [get]
 func GetButtons(c *gin.Context) {
 	var params api.GetButtonsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -87,7 +87,7 @@ func GetButtons(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /buttons/menus [delete]
+// @Router /api/buttons/menus [delete]
 func DeleteMenuButtons(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {

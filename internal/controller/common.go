@@ -17,7 +17,7 @@ import (
 // @Param data query api.CustomErrorReq true "必要参数"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /auth/error [get]
+// @Router /api/auth/error [get]
 func CustomError(c *gin.Context) {
 	var param api.CustomErrorReq
 	if err := c.ShouldBind(&param); err != nil {

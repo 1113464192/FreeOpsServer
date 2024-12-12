@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /hosts [post]
+// @Router /api/hosts [post]
 func UpdateHost(c *gin.Context) {
 	var (
 		hostReq api.UpdateHostReq
@@ -54,7 +54,7 @@ func UpdateHost(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /hosts [get]
+// @Router /api/hosts [get]
 func GetHosts(c *gin.Context) {
 	var (
 		params         api.GetHostsReq
@@ -95,7 +95,7 @@ func GetHosts(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /hosts [delete]
+// @Router /api/hosts [delete]
 func DeleteHosts(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -126,7 +126,7 @@ func DeleteHosts(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /hosts/summary [get]
+// @Router /api/hosts/summary [get]
 func GetHostList(c *gin.Context) {
 	pidStr := c.Query("id")
 	pid, err := strconv.ParseUint(pidStr, 10, 64)
@@ -160,7 +160,7 @@ func GetHostList(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /hosts/game-info [get]
+// @Router /api/hosts/game-info [get]
 func GetHostGameInfo(c *gin.Context) {
 	var (
 		id  uint64

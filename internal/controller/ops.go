@@ -24,7 +24,7 @@ import (
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/template [post]
+// @Router /api/ops/template [post]
 func UpdateOpsTemplate(c *gin.Context) {
 	var (
 		temReq api.UpdateOpsTemplateReq
@@ -58,7 +58,7 @@ func UpdateOpsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/template [get]
+// @Router /api/ops/template [get]
 func GetOpsTemplate(c *gin.Context) {
 	var (
 		temReq         api.GetOpsTemplatesReq
@@ -98,7 +98,7 @@ func GetOpsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/template [delete]
+// @Router /api/ops/template [delete]
 func DeleteOpsTemplate(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -129,7 +129,7 @@ func DeleteOpsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/param-template [post]
+// @Router /api/ops/param-template [post]
 func UpdateOpsParamsTemplate(c *gin.Context) {
 	var (
 		temReq model.OpsParam
@@ -162,7 +162,7 @@ func UpdateOpsParamsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/param-template [get]
+// @Router /api/ops/param-template [get]
 func GetOpsParamsTemplate(c *gin.Context) {
 	var (
 		temReq api.GetOpsParamsTemplatesReq
@@ -197,7 +197,7 @@ func GetOpsParamsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/param-template [delete]
+// @Router /api/ops/param-template [delete]
 func DeleteOpsParamsTemplate(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -228,7 +228,7 @@ func DeleteOpsParamsTemplate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"修改权限成功，刷新Token"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/bind-template-params [put]
+// @Router /api/ops/bind-template-params [put]
 func BindTemplateParams(c *gin.Context) {
 	var (
 		params api.BindTemplateParamsReq
@@ -262,7 +262,7 @@ func BindTemplateParams(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"修改权限成功，刷新Token"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/template-params [get]
+// @Router /api/ops/template-params [get]
 func GetTemplateParams(c *gin.Context) {
 	var res []model.OpsParam
 	id, err := strconv.ParseUint(c.Query("id"), 10, 0)
@@ -295,7 +295,7 @@ func GetTemplateParams(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/task [post]
+// @Router /api/ops/task [post]
 func UpdateOpsTask(c *gin.Context) {
 	var (
 		taskReq api.UpdateOpsTaskReq
@@ -329,7 +329,7 @@ func UpdateOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/task [get]
+// @Router /api/ops/task [get]
 func GetOpsTask(c *gin.Context) {
 	var (
 		taskReq        api.GetOpsTaskReq
@@ -369,7 +369,7 @@ func GetOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/task [delete]
+// @Router /api/ops/task [delete]
 func DeleteOpsTask(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -400,7 +400,7 @@ func DeleteOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/run-task-check-script [post]
+// @Router /api/ops/run-task-check-script [post]
 func RunOpsTaskCheckScript(c *gin.Context) {
 	var (
 		taskReq api.RunOpsTaskCheckScriptReq
@@ -436,7 +436,7 @@ func RunOpsTaskCheckScript(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/commands [post]
+// @Router /api/ops/commands [post]
 func GetOpsTaskTmpCommands(c *gin.Context) {
 	var (
 		params api.GetOpsTaskTmpCommandsReq
@@ -473,7 +473,7 @@ func GetOpsTaskTmpCommands(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/submit-task [post]
+// @Router /api/ops/submit-task [post]
 func SubmitOpsTask(c *gin.Context) {
 	var (
 		taskReq api.SubmitOpsTaskReq
@@ -516,7 +516,7 @@ func SubmitOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/approve-task [put]
+// @Router /api/ops/approve-task [put]
 func ApproveOpsTask(c *gin.Context) {
 	var (
 		params api.ApproveOpsTaskReq
@@ -557,7 +557,7 @@ func ApproveOpsTask(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/task-need-approve [get]
+// @Router /api/ops/task-need-approve [get]
 func GetOpsTaskNeedApprove(c *gin.Context) {
 	wsConn, user, _, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
@@ -596,7 +596,7 @@ func GetOpsTaskNeedApprove(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/task-pending [get]
+// @Router /api/ops/task-pending [get]
 func GetUserTaskPending(c *gin.Context) {
 	var (
 		taskReq        api.GetUserTaskPendingReq
@@ -645,7 +645,7 @@ func GetUserTaskPending(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /ops/task-log [get]
+// @Router /api/ops/task-log [get]
 func GetOpsTaskLog(c *gin.Context) {
 	var (
 		taskReq        api.GetOpsTaskLogReq
@@ -684,7 +684,7 @@ func GetOpsTaskLog(c *gin.Context) {
 // @Failure 401 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /ops/task-running-ws [get]
+// @Router /api/ops/task-running-ws [get]
 func GetOpsTaskRunningWS(c *gin.Context) {
 	wsConn, _, roles, err := util.UpgraderWebSocket(c, true)
 	if err != nil {

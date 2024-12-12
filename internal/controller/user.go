@@ -22,7 +22,7 @@ import (
 // @Param data formData api.AuthLoginReq true "用户名, 密码"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /auth/login [post]
+// @Router /api/auth/login [post]
 func UserLogin(c *gin.Context) {
 	var loginReq api.AuthLoginReq
 	if err := c.ShouldBind(&loginReq); err != nil {
@@ -66,7 +66,7 @@ func UserLogin(c *gin.Context) {
 // @Param refreshToken formData string true "refreshToken"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /auth/refreshToken [post]
+// @Router /api/auth/refreshToken [post]
 func RefreshToken(c *gin.Context) {
 	var requestBody map[string]string
 	if err := c.ShouldBindJSON(&requestBody); err != nil {
@@ -113,7 +113,7 @@ func RefreshToken(c *gin.Context) {
 // @Param Authorization header string true "格式为：Bearer 用户令牌"
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /users/logout [post]
+// @Router /api/users/logout [post]
 func UserLogout(c *gin.Context) {
 	authHeader := c.Request.Header.Get("Authorization")
 	parts := strings.SplitN(authHeader, " ", 2)
@@ -142,7 +142,7 @@ func UserLogout(c *gin.Context) {
 // @Success 200 {object} api.Response "{"code": "0000", msg: "string", data: "string"}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"code": "", msg: "", data: ""}"
-// @Router /users [post]
+// @Router /api/users [post]
 func UpdateUser(c *gin.Context) {
 	var (
 		userReq api.UpdateUserReq
@@ -182,7 +182,7 @@ func UpdateUser(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users [get]
+// @Router /api/users [get]
 func GetUsers(c *gin.Context) {
 	var params api.GetUsersReq
 	if err := c.ShouldBindQuery(&params); err != nil {
@@ -215,7 +215,7 @@ func GetUsers(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/privilege [get]
+// @Router /api/users/privilege [get]
 func GetUserPrivilege(c *gin.Context) {
 	user, err := util.GetClaimsUser(c)
 	if err != nil {
@@ -260,7 +260,7 @@ func GetUserPrivilege(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/ [delete]
+// @Router /api/users/ [delete]
 func DeleteUsers(c *gin.Context) {
 	var (
 		param api.IdsReq
@@ -315,7 +315,7 @@ func DeleteUsers(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/password [patch]
+// @Router /api/users/password [patch]
 func ChangeUserPassword(c *gin.Context) {
 	var (
 		param   api.ChangeUserPasswordReq
@@ -377,7 +377,7 @@ func ChangeUserPassword(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/history-month-exist [get]
+// @Router /api/users/history-month-exist [get]
 func GetUserRecordDate(c *gin.Context) {
 	dates, err := service.UserRecordApp().GetUserRecordDate()
 	if err != nil {
@@ -406,7 +406,7 @@ func GetUserRecordDate(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/history-action [get]
+// @Router /api/users/history-action [get]
 func GetUserRecordLogs(c *gin.Context) {
 	var params api.GetUserRecordLogsReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -444,7 +444,7 @@ func GetUserRecordLogs(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"修改权限成功，刷新Token"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/bind-roles [put]
+// @Router /api/users/bind-roles [put]
 func BindUserRoles(c *gin.Context) {
 	var params api.BindUserRolesReq
 	if err := c.ShouldBind(&params); err != nil {
@@ -475,7 +475,7 @@ func BindUserRoles(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/roles [get]
+// @Router /api/users/roles [get]
 func GetUserRoles(c *gin.Context) {
 	userId, err := strconv.ParseUint(c.Query("uid"), 10, 0)
 	if err != nil {
@@ -517,7 +517,7 @@ func GetUserRoles(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /users/project-options [get]
+// @Router /api/users/project-options [get]
 func GetUserProjectOptions(c *gin.Context) {
 	res, err := service.UserServiceApp().GetUserProjectOptions(c)
 	if err != nil {

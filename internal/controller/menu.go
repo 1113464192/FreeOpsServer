@@ -22,7 +22,7 @@ import (
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus [post]
+// @Router /api/menus [post]
 func UpdateMenu(c *gin.Context) {
 	var (
 		params api.UpdateMenuReq
@@ -56,7 +56,7 @@ func UpdateMenu(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus [get]
+// @Router /api/menus [get]
 func GetMenus(c *gin.Context) {
 	var param api.GetMenusReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -89,7 +89,7 @@ func GetMenus(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus [delete]
+// @Router /api/menus [delete]
 func DeleteMenu(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
@@ -121,7 +121,7 @@ func DeleteMenu(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus/buttons [get]
+// @Router /api/menus/buttons [get]
 func GetMenuButtons(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Query("id"), 10, 0)
 	if err != nil {
@@ -153,7 +153,7 @@ func GetMenuButtons(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus/all-pages [get]
+// @Router /api/menus/all-pages [get]
 func GetAllPages(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetAllPages()
 	if err != nil {
@@ -179,7 +179,7 @@ func GetAllPages(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /auth/constant-routes [get]
+// @Router /api/auth/constant-routes [get]
 func GetConstantRoutes(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetConstantRoutes()
 	if err != nil {
@@ -206,7 +206,7 @@ func GetConstantRoutes(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus/user-routes [get]
+// @Router /api/menus/user-routes [get]
 func GetUserRoutes(c *gin.Context) {
 	roles, err := util.GetClaimsRole(c)
 	if err != nil {
@@ -244,7 +244,7 @@ func GetUserRoutes(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus/tree [get]
+// @Router /api/menus/tree [get]
 func GetMenuTree(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetMenuTree()
 	if err != nil {
@@ -272,7 +272,7 @@ func GetMenuTree(c *gin.Context) {
 // @Success 200 {object} api.Response "{"data":{},"meta":{msg":"Success"}}"
 // @Failure 403 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
-// @Router /menus/is-route-exist [get]
+// @Router /api/menus/is-route-exist [get]
 func IsRouteExist(c *gin.Context) {
 	routeName := c.Query("routeName")
 	mBool, err := service.MenuServiceApp().IsRouteExist(routeName)
