@@ -71,13 +71,15 @@ FreeOps是一个功能齐全的运维自动化平台，只需要接入运维入�
         environment:
           TIME_ZONE: Asia/Shanghai
           MYSQL_ROOT_PASSWORD: "yourPassword"
-##### docker-compose -f mariadb-docker.yaml up -d
+##### 启动数据库
+    docker-compose -f mariadb-docker.yaml up -d
 ##### 健康检查
     docker ps
 ##### 创建数据库
-docker exec -it yourDockerContainerID mariadb -uyourUser -p'yourPassword' -e "CREATE DATABASE yourDatabaseName CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+    docker exec -it yourDockerContainerID mariadb -uyourUser -p'yourPassword' -e "CREATE DATABASE yourDatabaseName CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 #### 启动后端服务
 > 配置好configs/config.yaml，尤其是mysql/mariadb路径
+
     cd /data/FreeOpsServer/ && go run main.go
     // 如果能启动，则Crtrl+C关闭，然后执行编译
     go build -o FreeOpsServer main.go
