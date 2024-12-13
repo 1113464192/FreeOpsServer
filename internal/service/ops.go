@@ -895,7 +895,7 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 }
 
 func (s *OpsService) updateStepData(stepStatusList *[]api.OpsTaskLogStepStatus, command string, startTime string,
-	endTime string, status uint8, res string, sshResStatus int) {
+	endTime string, status uint8, res string, sshResStatus int, taskLog *model.OpsTaskLog) error {
 	for i := range *stepStatusList {
 		stepStatus := &(*stepStatusList)[i]
 		if stepStatus.Command == command {
@@ -915,6 +915,22 @@ func (s *OpsService) updateStepData(stepStatusList *[]api.OpsTaskLogStepStatus, 
 			break
 		}
 	}
+
+	// 更新数据库中的 stepStatus 字段
+	stepStatusByte, err := json.Marshal(stepStatusList)
+	if err != nil {
+		return fmt.Errorf("转换 stepStatus 失败: %v", err)
+	}
+	taskLog.StepStatus = string(stepStatusByte)
+
+	// 使用行锁更新 stepStatus 字段
+	tx := model.DB.Begin()
+	if err := tx.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Set("gorm:query_option", "FOR UPDATE").Update("step_status", taskLog.StepStatus).Error; err != nil {
+		tx.Rollback()
+		return fmt.Errorf("更新 stepStatus 失败: %v", err)
+	}
+	tx.Commit()
+	return nil
 }
 
 // 执行串行的运维操作任务
@@ -940,22 +956,22 @@ func (s *OpsService) RunOpsTaskSequential(sshReqs *[]api.SSHRunReq, taskLog *mod
 	}
 	for _, sshReq := range *sshReqs {
 		cmdReq := []api.SSHRunReq{sshReq}
-		s.updateStepData(&stepStatusList, sshReq.Cmd, startTime.Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsWaiting, "", 0)
+		s.updateStepData(&stepStatusList, sshReq.Cmd, startTime.Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsRunning, "", 0, taskLog)
 		result, err := SSH().RunSSHCmdAsync(&cmdReq)
-		s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0)
+		s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0, taskLog)
 		var isBreak bool
 		if err != nil {
 			logger.Log().Error("ops", "RunOpsTaskSequential RunSSH失败", err)
-			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError, taskLog)
 			taskLog.Status = consts.OpsTaskStatusIsFailed
 			isBreak = true
 		}
 		if (*result)[0].Status != 0 {
-			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status, taskLog)
 			taskLog.Status = consts.OpsTaskStatusIsFailed
 			isBreak = true
 		} else {
-			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status, taskLog)
 		}
 		if stepStatusByte, err = json.Marshal(stepStatusList); err != nil {
 			logger.Log().Error("ops", "RunOpsTaskSequential转换stepStatusByte失败", err)
@@ -1010,23 +1026,23 @@ func (s *OpsService) RunOpsTaskConcurrent(sshReqs *[]api.SSHRunReq, taskLog *mod
 		wg.Add(1)
 		go func(sshReq api.SSHRunReq) {
 			defer wg.Done()
-			s.updateStepData(&stepStatusList, sshReq.Cmd, time.Now().Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsRunning, "", 0)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, time.Now().Format("2006-01-02 15:04:05"), "", consts.OpsTaskStatusIsRunning, "", 0, taskLog)
 			result, err := SSH().RunSSHCmdAsync(&[]api.SSHRunReq{sshReq})
 			mu.Lock()
 			defer mu.Unlock()
-			s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", time.Now().Format("2006-01-02 15:04:05"), consts.OpsTaskStatusIsRunning, "", 0, taskLog)
 			if err != nil {
 				logger.Log().Error("ops", "RunOpsTaskConcurrent RunSSH失败", err)
-				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError)
+				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, err.Error(), consts.SSHCustomCmdError, taskLog)
 				taskFailed = true
 				return
 			}
 			if (*result)[0].Status != 0 {
-				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status)
+				s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsFailed, (*result)[0].Response, (*result)[0].Status, taskLog)
 				taskFailed = true
 				return
 			}
-			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status)
+			s.updateStepData(&stepStatusList, sshReq.Cmd, "", "", consts.OpsTaskStatusIsSuccess, (*result)[0].Response, (*result)[0].Status, taskLog)
 
 			var stepStatusByte []byte
 			if stepStatusByte, err = json.Marshal(stepStatusList); err != nil {
