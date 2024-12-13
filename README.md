@@ -74,9 +74,10 @@ FreeOps是一个功能齐全的运维自动化平台，只需要接入运维入�
 ##### docker-compose -f mariadb-docker.yaml up -d
 ##### 健康检查
     docker ps
+##### 创建数据库
+docker exec -it yourDockerContainerID mariadb -uyourUser -p'yourPassword' -e "CREATE DATABASE yourDatabaseName CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 #### 启动后端服务
-> 配置好configs/config.yaml的mysql/mariadb路径
-
+> 配置好configs/config.yaml，尤其是mysql/mariadb路径
     cd /data/FreeOpsServer/ && go run main.go
     // 如果能启动，则Crtrl+C关闭，然后执行编译
     go build -o FreeOpsServer main.go
@@ -87,7 +88,7 @@ FreeOps是一个功能齐全的运维自动化平台，只需要接入运维入�
     mariadb -uroot -p'yourDBPassword' yourDatabaseName < /tmp/init.sql
 
 ### 前端
-> 配置好.env*的对应后端url后
+> 配置好.env*的对应后端url
 
     cd /data/FreeOpsClient && npm install -g pnpm
     pnpm i
