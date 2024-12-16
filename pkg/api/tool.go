@@ -1,7 +1,8 @@
 package api
 
 type WebSSHConnReq struct {
-	Hid        uint `json:"hid" form:"hid" binding:"required"` // 服务器id
+	Hid        uint `json:"hid" form:"hid" binding:"required"`               // 服务器id
+	IsIntranet bool `json:"isIntranet" form:"isIntranet" binding:"required"` // 是否内网
 	WindowSize      // 屏幕大小
 }
 

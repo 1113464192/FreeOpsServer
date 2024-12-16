@@ -28,9 +28,6 @@ func (s *ToolService) WebSSHSendText(wsConn *websocket.Conn, b []byte) error {
 	if err := wsConn.WriteMessage(websocket.TextMessage, b); err != nil {
 		return fmt.Errorf("发送信息给websocket报错: %v", err)
 	}
-	if err := wsConn.WriteMessage(websocket.TextMessage, []byte("Hello test")); err != nil {
-		return fmt.Errorf("发送信息给websocket报错: %v", err)
-	}
 	return nil
 }
 
@@ -63,11 +60,15 @@ func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param
 		return "", fmt.Errorf("服务器 %d 查询失败: %v", param.Hid, err)
 	}
 	sshParam := &api.SSHRunReq{
-		HostIp:     host.Ipv4,
 		SSHPort:    host.SSHPort,
 		Username:   global.Conf.SshConfig.OpsSSHUsername,
 		Key:        global.OpsSSHKey,
 		Passphrase: nil,
+	}
+	if param.IsIntranet {
+		sshParam.HostIp = host.Vip
+	} else {
+		sshParam.HostIp = host.Ipv4
 	}
 	if global.Conf.SshConfig.OpsKeyPassphrase != "" {
 		sshParam.Passphrase = []byte(global.Conf.SshConfig.OpsKeyPassphrase)
