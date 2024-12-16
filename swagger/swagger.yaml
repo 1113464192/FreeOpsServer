@@ -2181,6 +2181,25 @@ paths:
       summary: 查询运维操作模板对应的参数模板
       tags:
       - 运维操作相关
+  /api/ping2:
+    get:
+      description: 设置权限，返回"Hello world!~~(验证权限版)"
+      parameters:
+      - description: 格式为：Bearer 用户令牌
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": "0000", msg: "string", data: "string"}'
+          schema:
+            type: ""
+      summary: 测试Gin能否正常访问
+      tags:
+      - 测试相关
   /api/projects:
     delete:
       description: 删除指定项目
@@ -2814,6 +2833,47 @@ paths:
       summary: 获取角色的关联用户列表
       tags:
       - 角色相关
+  /api/tools/webSSH:
+    get:
+      description: webSSH连接Linux,这里用jumpserver举例，默认使用配置文件用户与密钥。可以改为自动获取当前用户，防止冒用其它user
+      parameters:
+      - description: 单位为字符
+        in: query
+        name: height
+        required: true
+        type: integer
+      - description: 服务器id
+        in: query
+        name: hid
+        required: true
+        type: integer
+      - description: 单位为字符
+        in: query
+        name: weight
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"data":{},"meta":{msg":"Success"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "401":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "403":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+        "500":
+          description: '{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}'
+          schema:
+            $ref: '#/definitions/api.Response'
+      summary: webSSH连接Linux
+      tags:
+      - 工具相关
   /api/users:
     get:
       description: 获取用户列表
@@ -3224,25 +3284,6 @@ paths:
   /ping:
     get:
       description: 无设置权限，返回"Hello world!~~(无权限版)"
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"code": "0000", msg: "string", data: "string"}'
-          schema:
-            type: ""
-      summary: 测试Gin能否正常访问
-      tags:
-      - 测试相关
-  /ping2:
-    get:
-      description: 设置权限，返回"Hello world!~~(验证权限版)"
-      parameters:
-      - description: 格式为：Bearer 用户令牌
-        in: header
-        name: Authorization
-        required: true
-        type: string
       produces:
       - application/json
       responses:

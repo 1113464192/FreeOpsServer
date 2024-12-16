@@ -3,8 +3,8 @@ package global
 type Config struct {
 	Mysql        Mysql        `json:"mysql"`
 	Logger       Logger       `json:"logger"`
-	SshConfig    SshConfig    `json:"ssh_timeout"`
-	Webssh       Webssh       `json:"webssh"`
+	SshConfig    SshConfig    `json:"sshConfig"`
+	WebSSH       WebSSH       `json:"webSSH "`
 	System       System       `json:"system"`
 	Concurrency  Concurrency  `json:"concurrency"`
 	GitWebhook   GitWebhook   `json:"git_webhook"`
@@ -31,13 +31,13 @@ type SshConfig struct {
 }
 
 // 保留，暂时不用改，有空再从以前的代码中迁移webSSH代码过来
-type Webssh struct {
+type WebSSH struct {
 	ReadBufferSize   int
 	WriteBufferSize  int
 	HandshakeTimeout string
 	SshEcho          uint32
-	SshTtyOpIspeed   uint32
-	SshTtyOpOspeed   uint32
+	SshTtyOpISpeed   uint32
+	SshTtyOpOSpeed   uint32
 	MaxConnNumber    uint32
 }
 

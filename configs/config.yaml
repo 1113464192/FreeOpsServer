@@ -26,7 +26,7 @@ sshConfig:
   opsKeyPassphrase : ""
 
 # 保留，暂时不用改，有空再从以前的代码中迁移webSSH代码过来
-webssh:
+webSSH:
   # 读写缓存大小
   readBufferSize: 4096
   writeBufferSize: 1024
@@ -36,8 +36,8 @@ webssh:
   # 是否在终端上显示输入。设置为0表示不显示输入，这在输入密码等敏感信息时很有用
   sshEcho: 1
   # 设置终端输入输出速度，视带宽而定(单位为byte)
-  sshTtyOpIspeed: 14400
-  sshTtyOpOspeed: 14400
+  sshTtyOpISpeed: 14400
+  sshTtyOpOSpeed: 14400
   # 支持最大同时连接的终端数量
   maxConnNumber: 100
 

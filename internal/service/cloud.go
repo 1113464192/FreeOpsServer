@@ -77,7 +77,7 @@ func (s *CloudService) UpdateCloudProject(name string, cloudPlatform string) err
 
 	cmd := exec.Command("python3", "/data/scripts/CloudManage.py", "-a", "updateProject", "-p", cloudPlatform, "-i", strconv.FormatUint(cid, 10), "-n", name)
 	if _, err = cmd.Output(); err != nil {
-		return fmt.Errorf("创建云项目失败: %v", err)
+		return fmt.Errorf("更新云项目失败: %v", err)
 	}
 	return err
 }

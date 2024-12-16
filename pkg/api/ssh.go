@@ -6,7 +6,7 @@ type SSHRunReq struct {
 	SSHPort    uint16 `json:"ssh_port"`
 	Key        []byte `json:"key"`
 	Passphrase []byte `json:"passphrase"`
-	Cmd        string `json:"cmd"` // webssh不用填Cmd
+	Cmd        string `json:"cmd"` // webSSH不用填Cmd
 }
 
 // 返回更改
