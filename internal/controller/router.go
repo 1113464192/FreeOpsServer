@@ -35,6 +35,11 @@ func NewRoute() *gin.Engine {
 		nonAuthOpsRoute.GET("task-need-approve", GetOpsTaskNeedApprove) // 查询用户是否有待审批的任务
 		nonAuthOpsRoute.GET("task-running-ws", GetOpsTaskRunningWS)     // 实时查看运行中的任务
 	}
+	// ----------工具相关------------
+	nonAuthToolRoute := apiRoute.Group("tools")
+	{
+		nonAuthToolRoute.GET("webSSH", WebSSHConn) // webSSH
+	}
 
 	// ---------Git-Webhook相关----------
 	//gitWebhookRouter := r.Group("git-gitWebhook")
@@ -168,10 +173,10 @@ func NewRoute() *gin.Engine {
 			opsRoute.GET("task-log", GetOpsTaskLog)                       // 查看任务日志
 		}
 		// ----------工具相关------------
-		toolRoute := apiRoute.Group("tools")
-		{
-			toolRoute.GET("webSSH", WebSSHConn) // webSSH
-		}
+		//toolRoute := apiRoute.Group("tools")
+		//{
+		//	toolRoute.GET("webSSH", WebSSHConn) // webSSH
+		//}
 		// ---------云平台相关------------
 		// 云平台一切操作运维脚本(因为脚本变动频繁，且便于运维随时配合自动化修改,平台只需要注意传参的参数即可)，云平台相关运维脚本路径和参数写死在service层
 		// 不建议平台写死代码，否则改动过于频繁，不能及时配合各项目运维自动化脚本实时改动

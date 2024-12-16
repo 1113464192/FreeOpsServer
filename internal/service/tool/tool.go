@@ -8,7 +8,6 @@ import (
 	"FreeOps/pkg/util"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"golang.org/x/crypto/ssh"
 )
@@ -27,6 +26,9 @@ func Tool() *ToolService {
 // 发送信息给websocket
 func (s *ToolService) WebSSHSendText(wsConn *websocket.Conn, b []byte) error {
 	if err := wsConn.WriteMessage(websocket.TextMessage, b); err != nil {
+		return fmt.Errorf("发送信息给websocket报错: %v", err)
+	}
+	if err := wsConn.WriteMessage(websocket.TextMessage, []byte("Hello test")); err != nil {
 		return fmt.Errorf("发送信息给websocket报错: %v", err)
 	}
 	return nil
@@ -49,11 +51,9 @@ func (s *ToolService) WebSSHSendErr(wsConn *websocket.Conn, msg string) error {
 	return nil
 }
 
-func (s *ToolService) WebSSHConn(c *gin.Context, param api.WebSSHConnReq) (wsRes string, err error) {
+func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param api.WebSSHConnReq) (wsRes string, err error) {
 	var (
-		user    *model.User
 		host    model.Host
-		wsConn  *websocket.Conn
 		sshConn *SSHConnect
 		client  *ssh.Client
 		session *ssh.Session
@@ -72,13 +72,6 @@ func (s *ToolService) WebSSHConn(c *gin.Context, param api.WebSSHConnReq) (wsRes
 	if global.Conf.SshConfig.OpsKeyPassphrase != "" {
 		sshParam.Passphrase = []byte(global.Conf.SshConfig.OpsKeyPassphrase)
 	}
-	if wsConn, user, _, err = util.UpgraderWebSocket(c, true); err != nil {
-		return "", fmt.Errorf("升级websocket失败: %v", err)
-	}
-	defer func() {
-		wsConn.WriteMessage(websocket.CloseMessage, []byte("websocket连接关闭"))
-		wsConn.Close()
-	}()
 
 	// 生成sshClient
 	if client, _, _, err = util.SSHNewClient(sshParam.HostIp, sshParam.Username, sshParam.SSHPort, sshParam.Key, sshParam.Passphrase, ""); err != nil {
