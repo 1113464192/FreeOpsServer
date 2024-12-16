@@ -68,8 +68,8 @@ func CreateCloudHost(c *gin.Context) {
 	}
 
 	if err = service.CloudServiceApp().CreateCloudHost(param.ProjectId, param.CloudPlatform, param.HostCount); err != nil {
-		logger.Log().Error("cloud", "创建云项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建云项目失败", err))
+		logger.Log().Error("cloud", "购买云服务器失败", err)
+		c.JSON(500, util.ServerErrorResponse("购买云服务器失败", err))
 		return
 	}
 

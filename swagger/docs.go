@@ -2909,6 +2909,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/ping2": {
+            "get": {
+                "description": "设置权限，返回\"Hello world!~~(验证权限版)\"",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "测试相关"
+                ],
+                "summary": "测试Gin能否正常访问",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "格式为：Bearer 用户令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                }
+            }
+        },
         "/api/projects": {
             "get": {
                 "description": "查询所有/指定条件项目的信息",
@@ -3862,6 +3891,67 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/tools/webSSH": {
+            "get": {
+                "description": "webSSH连接Linux,这里用jumpserver举例，默认使用配置文件用户与密钥。可以改为自动获取当前用户，防止冒用其它user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "工具相关"
+                ],
+                "summary": "webSSH连接Linux",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "单位为字符",
+                        "name": "height",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "服务器id",
+                        "name": "hid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "单位为字符",
+                        "name": "weight",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "{\"data\":{}, \"meta\":{\"msg\":\"错误信息\", \"error\":\"错误格式输出(如存在)\"}}",
+                        "schema": {
+                            "$ref": "#/definitions/api.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "description": "获取用户列表",
@@ -4489,35 +4579,6 @@ const docTemplate = `{
                     "测试相关"
                 ],
                 "summary": "测试Gin能否正常访问",
-                "responses": {
-                    "200": {
-                        "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",
-                        "schema": {
-                            "type": ""
-                        }
-                    }
-                }
-            }
-        },
-        "/ping2": {
-            "get": {
-                "description": "设置权限，返回\"Hello world!~~(验证权限版)\"",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "测试相关"
-                ],
-                "summary": "测试Gin能否正常访问",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "格式为：Bearer 用户令牌",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "{\"code\": \"0000\", msg: \"string\", data: \"string\"}",

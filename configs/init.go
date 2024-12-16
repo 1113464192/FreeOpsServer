@@ -78,7 +78,7 @@ func declareConcurrencyVar() {
 
 	// 设置总并发数
 	global.Sem = semaphore.NewWeighted(global.Conf.Concurrency.Number)
-	global.MaxWebSSH = uint64(global.Conf.Webssh.MaxConnNumber)
+	global.MaxWebSSH = uint64(global.Conf.WebSSH.MaxConnNumber)
 	global.WebSSHCounter = 0
 }
 

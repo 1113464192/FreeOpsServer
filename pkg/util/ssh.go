@@ -56,7 +56,7 @@ func SSHNewClient(hostIp string, username string, sshPort uint16, priKey []byte,
 			clientConfig.Auth = append(clientConfig.Auth, auth)
 		}
 	}
-	// 2. agent 模式放在key之后,意味着websocket连接，需要使用 openssh agent forwarding
+	// 2. agent 模式放在key之后,意味着agent连接，需要使用 openssh agent forwarding
 	if sockPath != "" {
 		if auth, netConn, sshAgentPointer, err = AuthWithAgent(sockPath); err != nil {
 			return nil, nil, nil, fmt.Errorf("agent模式生成ssh.AuthMethod失败: %v", err)

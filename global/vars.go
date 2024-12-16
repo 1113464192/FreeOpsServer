@@ -19,7 +19,7 @@ func IncreaseWebSSHConn() error {
 	mu.Lock()
 	defer mu.Unlock()
 	if WebSSHCounter >= MaxWebSSH {
-		return errors.New("已达到最大webssh数量")
+		return errors.New("已达到最大webSSH数量")
 	}
 
 	WebSSHCounter++
