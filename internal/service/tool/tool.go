@@ -1,9 +1,8 @@
-package service
+package tool
 
 import (
 	"FreeOps/global"
 	"FreeOps/internal/model"
-	"FreeOps/internal/service/webSSH"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
@@ -55,7 +54,7 @@ func (s *ToolService) WebSSHConn(c *gin.Context, param api.WebSSHConnReq) (wsRes
 		user    *model.User
 		host    model.Host
 		wsConn  *websocket.Conn
-		sshConn *webSSH.SSHConnect
+		sshConn *SSHConnect
 		client  *ssh.Client
 		session *ssh.Session
 	)
@@ -98,7 +97,7 @@ func (s *ToolService) WebSSHConn(c *gin.Context, param api.WebSSHConnReq) (wsRes
 	}
 
 	// 生成sshConn
-	if sshConn, err = webSSH.SSHNewConnect(client, session, param.WindowSize, user, &host); err != nil {
+	if sshConn, err = SSHNewConnect(client, session, param.WindowSize, user, &host); err != nil {
 		if e := s.WebSSHSendErr(wsConn, "创建ssh连接时发生错误: "+err.Error()); e != nil {
 			logger.Log().Error("tool", "发送错误信息至websocket失败", err)
 		}

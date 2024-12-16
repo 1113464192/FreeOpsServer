@@ -2,7 +2,7 @@ package controller
 
 import (
 	"FreeOps/global"
-	"FreeOps/internal/service"
+	"FreeOps/internal/service/tool"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
@@ -39,7 +39,7 @@ func WebSSHConn(c *gin.Context) {
 		return
 	}
 
-	wsRes, err := service.Tool().WebSSHConn(c, param)
+	wsRes, err := tool.Tool().WebSSHConn(c, param)
 	if err != nil {
 		logger.Log().Error("Webssh", wsRes+"连接Webssh失败", err)
 		c.JSON(500, util.ServerErrorResponse(wsRes+"连接Webssh失败", err))

@@ -1,4 +1,4 @@
-package webSSH
+package tool
 
 import (
 	"FreeOps/global"
