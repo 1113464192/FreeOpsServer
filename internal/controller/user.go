@@ -26,7 +26,7 @@ import (
 func UserLogin(c *gin.Context) {
 	var loginReq api.AuthLoginReq
 	if err := c.ShouldBind(&loginReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	u := &model.User{Username: loginReq.Username, Password: loginReq.Password}
@@ -36,7 +36,7 @@ func UserLogin(c *gin.Context) {
 	if err != nil {
 		if err2 := model.DB.Model(&model.User{}).Where("username = ?", u.Username).Count(&count).Error; err2 != nil {
 			logger.Log().Error("user", "查询用户账号失败", err2)
-			c.JSON(500, util.ServerErrorResponse("获取用户数量失败", err2))
+			c.JSON(200, util.ServerErrorResponse("获取用户数量失败", err2))
 			return
 		}
 		var errMessage string
@@ -45,7 +45,7 @@ func UserLogin(c *gin.Context) {
 		} else {
 			errMessage = fmt.Sprintf("登陆失败, %v", err)
 		}
-		c.JSON(500, util.ServerErrorResponse(errMessage, err))
+		c.JSON(200, util.ServerErrorResponse(errMessage, err))
 		return
 	}
 	logger.Log().Info("user", "登录成功", "用户名: "+loginReq.Username)
@@ -70,14 +70,14 @@ func UserLogin(c *gin.Context) {
 func RefreshToken(c *gin.Context) {
 	var requestBody map[string]string
 	if err := c.ShouldBindJSON(&requestBody); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	refreshToken, exists := requestBody["refreshToken"]
 	if !exists {
-		c.JSON(500, api.Response{
-			Code: "500",
+		c.JSON(200, api.Response{
+			Code: consts.SERVICE_ERROR_CODE,
 			Msg:  "refreshToken不存在",
 			Data: nil,
 		})
@@ -121,7 +121,7 @@ func UserLogout(c *gin.Context) {
 	jwt := &model.JwtBlacklist{Jwt: token}
 	if err := service.JwtServiceApp().JwtAddBlacklist(jwt); err != nil {
 		logger.Log().Error("user", "jwt没有拉入黑名单", err)
-		c.JSON(500, util.ServerErrorResponse("jwt没有成功拉入黑名单", err))
+		c.JSON(200, util.ServerErrorResponse("jwt没有成功拉入黑名单", err))
 		return
 	}
 	logger.Log().Info("user", "jwt拉入黑名单成功")
@@ -149,17 +149,17 @@ func UpdateUser(c *gin.Context) {
 		err     error
 	)
 	if err = c.ShouldBind(&userReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	passwd, err := service.UserServiceApp().UpdateUser(&userReq)
 	if err != nil {
 		logger.Log().Error("user", "添加/修改用户失败", err)
 		if err.Error() == "用户密码bcrypt加密失败" {
-			c.JSON(500, util.ServerErrorResponse("用户密码bcrypt加密失败", err))
+			c.JSON(200, util.ServerErrorResponse("用户密码bcrypt加密失败", err))
 			return
 		}
-		c.JSON(500, util.ServerErrorResponse("添加/修改用户失败", err))
+		c.JSON(200, util.ServerErrorResponse("添加/修改用户失败", err))
 		return
 	}
 
@@ -186,14 +186,14 @@ func UpdateUser(c *gin.Context) {
 func GetUsers(c *gin.Context) {
 	var params api.GetUsersReq
 	if err := c.ShouldBindQuery(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	res, err := service.UserServiceApp().GetUsers(params)
 	if err != nil {
 		logger.Log().Error("user", "获取用户列表失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取用户列表失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户列表失败", err))
 		return
 	}
 
@@ -237,7 +237,7 @@ func GetUserPrivilege(c *gin.Context) {
 	res, err := service.UserServiceApp().GetUserPrivilege(user, roles)
 	if err != nil {
 		logger.Log().Error("user", "获取用户权限失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取用户权限失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户权限失败", err))
 		return
 	}
 
@@ -267,7 +267,7 @@ func DeleteUsers(c *gin.Context) {
 		err   error
 	)
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
@@ -282,7 +282,7 @@ func DeleteUsers(c *gin.Context) {
 
 	for _, id := range param.Ids {
 		if user.ID == id {
-			c.JSON(500, api.Response{
+			c.JSON(200, api.Response{
 				Code: consts.SERVICE_ERROR_CODE,
 				Msg:  "不能删除自己",
 			})
@@ -293,7 +293,7 @@ func DeleteUsers(c *gin.Context) {
 
 	if err = service.UserServiceApp().DeleteUsers(param.Ids); err != nil {
 		logger.Log().Error("user", "删除用户失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除用户失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除用户失败", err))
 		return
 	}
 
@@ -323,7 +323,7 @@ func ChangeUserPassword(c *gin.Context) {
 		isAllow bool
 	)
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	// 判断是否管理员操作
@@ -347,7 +347,7 @@ func ChangeUserPassword(c *gin.Context) {
 	}
 
 	if !isAllow {
-		c.JSON(500, api.Response{
+		c.JSON(200, api.Response{
 			Code: consts.SERVICE_ERROR_CODE,
 			Msg:  "没有权限修改他人密码",
 		})
@@ -356,7 +356,7 @@ func ChangeUserPassword(c *gin.Context) {
 
 	if err = service.UserServiceApp().ChangeUserPassword(param); err != nil {
 		logger.Log().Error("user", "修改用户密码失败", err)
-		c.JSON(500, util.ServerErrorResponse("修改用户密码失败", err))
+		c.JSON(200, util.ServerErrorResponse("修改用户密码失败", err))
 		return
 	}
 
@@ -382,7 +382,7 @@ func GetUserRecordDate(c *gin.Context) {
 	dates, err := service.UserRecordApp().GetUserRecordDate()
 	if err != nil {
 		logger.Log().Error("user", "获取存在记录的月份失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取存在记录的月份失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取存在记录的月份失败", err))
 		return
 	}
 	logger.Log().Info("user", "获取存在记录的月份成功")
@@ -410,13 +410,13 @@ func GetUserRecordDate(c *gin.Context) {
 func GetUserRecordLogs(c *gin.Context) {
 	var params api.GetUserRecordLogsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	logs, total, err := service.UserRecordApp().GetUserRecordLogs(params)
 	if err != nil {
 		logger.Log().Error("user", "查询月份操作记录失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询月份操作记录失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询月份操作记录失败", err))
 		return
 	}
 	res := api.GetUserRecordLogsRes{
@@ -448,12 +448,12 @@ func GetUserRecordLogs(c *gin.Context) {
 func BindUserRoles(c *gin.Context) {
 	var params api.BindUserRolesReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.UserServiceApp().BindUserRoles(params.UserId, params.RoleIds); err != nil {
 		logger.Log().Error("user", "绑定用户角色失败", err)
-		c.JSON(500, util.ServerErrorResponse("绑定用户角色失败", err))
+		c.JSON(200, util.ServerErrorResponse("绑定用户角色失败", err))
 		return
 	}
 
@@ -479,21 +479,21 @@ func BindUserRoles(c *gin.Context) {
 func GetUserRoles(c *gin.Context) {
 	userId, err := strconv.ParseUint(c.Query("uid"), 10, 0)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	roles, err := service.UserServiceApp().GetUserRoles(uint(userId))
 	if err != nil {
 		logger.Log().Error("user", "获取用户角色失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取用户角色失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户角色失败", err))
 		return
 	}
 
 	res, err := service.RoleServiceApp().GetResults(&roles)
 	if err != nil {
 		logger.Log().Error("user", "获取用户角色失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取用户角色失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户角色失败", err))
 		return
 	}
 
@@ -522,7 +522,7 @@ func GetUserProjectOptions(c *gin.Context) {
 	res, err := service.UserServiceApp().GetUserProjectOptions(c)
 	if err != nil {
 		logger.Log().Error("user", "获取用户的项目选项失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取用户的项目选项失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户的项目选项失败", err))
 		return
 	}
 

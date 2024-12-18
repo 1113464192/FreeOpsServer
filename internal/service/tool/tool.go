@@ -74,7 +74,7 @@ func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param
 	// 生成sshClient
 	if client, _, _, err = util.SSHNewClient(sshParam.HostIp, sshParam.Username, sshParam.SSHPort, sshParam.Key, sshParam.Passphrase, ""); err != nil {
 		if e := s.WebSSHSendErr(wsConn, "生成ssh.Client时发生错误: "+err.Error()); e != nil {
-			logger.Log().Error("tool", "发送错误信息至websocket失败", err)
+			logger.Log().Warning("tool", "发送错误信息至websocket失败", err)
 		}
 		return "", fmt.Errorf("生成ssh.Client时发生错误: %v", err)
 	}
@@ -82,7 +82,7 @@ func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param
 	// 生成sshSession
 	if session, err = util.SSHNewSession(client); err != nil {
 		if e := s.WebSSHSendErr(wsConn, "生成ssh.Session时发生错误: "+err.Error()); e != nil {
-			logger.Log().Error("tool", "发送错误信息至websocket失败", err)
+			logger.Log().Warning("tool", "发送错误信息至websocket失败", err)
 		}
 		return "", fmt.Errorf("生成ssh.Session时发生错误: %v", err)
 	}
@@ -90,7 +90,7 @@ func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param
 	// 生成sshConn
 	if sshConn, err = SSHNewConnect(client, session, param.WindowSize, user, &host); err != nil {
 		if e := s.WebSSHSendErr(wsConn, "创建ssh连接时发生错误: "+err.Error()); e != nil {
-			logger.Log().Error("tool", "发送错误信息至websocket失败", err)
+			logger.Log().Warning("tool", "发送错误信息至websocket失败", err)
 		}
 		return "", fmt.Errorf("创建ssh连接时发生错误: %v", err)
 	}

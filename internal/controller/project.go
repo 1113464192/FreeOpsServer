@@ -29,12 +29,12 @@ func UpdateProject(c *gin.Context) {
 		err        error
 	)
 	if err = c.ShouldBind(&projectReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.ProjectServiceApp().UpdateProject(&projectReq); err != nil {
 		logger.Log().Error("project", "创建/修改项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改项目失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改项目失败", err))
 		return
 	}
 	c.JSON(200, api.Response{
@@ -58,13 +58,13 @@ func UpdateProject(c *gin.Context) {
 func GetProjects(c *gin.Context) {
 	var params api.GetProjectsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ProjectServiceApp().GetProjects(&params)
 	if err != nil {
 		logger.Log().Error("project", "查询项目信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询项目信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询项目信息失败", err))
 		return
 	}
 
@@ -92,7 +92,7 @@ func GetProjectList(c *gin.Context) {
 	res, err := service.ProjectServiceApp().GetProjectList()
 	if err != nil {
 		logger.Log().Error("project", "获取项目列表失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取项目列表失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取项目列表失败", err))
 		return
 	}
 
@@ -119,12 +119,12 @@ func GetProjectList(c *gin.Context) {
 func DeleteProjects(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.ProjectServiceApp().DeleteProjects(param.Ids); err != nil {
 		logger.Log().Error("project", "删除项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除项目失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除项目失败", err))
 		return
 	}
 
@@ -150,13 +150,13 @@ func DeleteProjects(c *gin.Context) {
 func GetProjectHosts(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ProjectServiceApp().GetProjectHosts(params)
 	if err != nil {
 		logger.Log().Error("project", "获取项目服务器失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取项目服务器失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取项目服务器失败", err))
 		return
 	}
 
@@ -183,13 +183,13 @@ func GetProjectHosts(c *gin.Context) {
 func GetProjectGames(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ProjectServiceApp().GetProjectHosts(params)
 	if err != nil {
 		logger.Log().Error("project", "获取项目游戏服失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取项目游戏服失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取项目游戏服失败", err))
 		return
 	}
 
@@ -219,13 +219,13 @@ func GetProjectAssetsTotal(c *gin.Context) {
 		err error
 	)
 	if id, err = strconv.ParseUint(c.Query("id"), 10, 32); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ProjectServiceApp().GetProjectAssetsTotal(uint(id))
 	if err != nil {
 		logger.Log().Error("project", "获取项目各资产总数失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取项目各资产总数失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取项目各资产总数失败", err))
 		return
 	}
 

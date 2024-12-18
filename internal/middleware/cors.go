@@ -16,7 +16,7 @@ func Cors() gin.HandlerFunc {
 		_, cidrNet, err := net.ParseCIDR(global.Conf.SecurityVars.AllowedCIDR)
 		if err != nil {
 			logger.Log().Error("net", "生成cidrNet错误: %s", err.Error())
-			c.JSON(500, api.Response{
+			c.JSON(200, api.Response{
 				Code: consts.SERVICE_ERROR_CODE,
 				Msg:  fmt.Sprintf("生成cidrNet错误: %s", err.Error()),
 			})

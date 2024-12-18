@@ -61,5 +61,6 @@ func CasbinHandler() gin.HandlerFunc {
 			Msg:  "权限不足",
 		})
 		c.Abort()
+		return
 	}
 }

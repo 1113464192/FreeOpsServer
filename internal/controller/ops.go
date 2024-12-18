@@ -32,12 +32,12 @@ func UpdateOpsTemplate(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&temReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.OpsServiceApp().UpdateOpsTemplate(&temReq); err != nil {
 		logger.Log().Error("ops", "创建/修改运维操作模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改运维操作模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改运维操作模板失败", err))
 		return
 	}
 
@@ -67,17 +67,17 @@ func GetOpsTemplate(c *gin.Context) {
 		err            error
 	)
 	if err = c.ShouldBind(&temReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户的项目IDs失败", err))
 		return
 	}
 	result, err := service.OpsServiceApp().GetOpsTemplate(&temReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询运维操作模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询运维操作模板失败", err))
 		return
 	}
 	logger.Log().Info("ops", "查询运维操作模板成功")
@@ -103,12 +103,12 @@ func GetOpsTemplate(c *gin.Context) {
 func DeleteOpsTemplate(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.OpsServiceApp().DeleteOpsTemplate(param.Ids); err != nil {
 		logger.Log().Error("ops", "删除运维操作模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除运维操作模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除运维操作模板失败", err))
 		return
 	}
 
@@ -137,12 +137,12 @@ func UpdateOpsParamsTemplate(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&temReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.OpsServiceApp().UpdateOpsParamsTemplate(temReq); err != nil {
 		logger.Log().Error("ops", "创建/修改运维操作的参数模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改运维操作的参数模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改运维操作的参数模板失败", err))
 		return
 	}
 	logger.Log().Info("ops", "创建/修改运维操作的参数模板成功")
@@ -170,13 +170,13 @@ func GetOpsParamsTemplate(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&temReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	result, err := service.OpsServiceApp().GetOpsParamsTemplate(temReq)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作的参数模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询运维操作的参数模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询运维操作的参数模板失败", err))
 		return
 	}
 	logger.Log().Info("ops", "查询运维操作的参数模板成功")
@@ -202,12 +202,12 @@ func GetOpsParamsTemplate(c *gin.Context) {
 func DeleteOpsParamsTemplate(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.OpsServiceApp().DeleteOpsParamsTemplate(param.Ids); err != nil {
 		logger.Log().Error("ops", "删除运维操作的参数模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除运维操作的参数模板失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除运维操作的参数模板失败", err))
 		return
 	}
 
@@ -236,12 +236,12 @@ func BindTemplateParams(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.OpsServiceApp().BindTemplateParams(params.TemplateID, params.ParamIDs); err != nil {
 		logger.Log().Error("ops", "绑定 运维操作模板与运维操作的参数模板 失败", err)
-		c.JSON(500, util.ServerErrorResponse("绑定 运维操作模板与运维操作的参数模板 失败", err))
+		c.JSON(200, util.ServerErrorResponse("绑定 运维操作模板与运维操作的参数模板 失败", err))
 		return
 	}
 
@@ -268,12 +268,12 @@ func GetTemplateParams(c *gin.Context) {
 	var res []model.OpsParam
 	id, err := strconv.ParseUint(c.Query("id"), 10, 0)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if res, err = service.OpsServiceApp().GetTemplateParams(uint(id)); err != nil {
 		logger.Log().Error("ops", "查询 运维操作模板与运维操作的参数模板 失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询 运维操作模板与运维操作的参数模板 失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询 运维操作模板与运维操作的参数模板 失败", err))
 		return
 	}
 
@@ -303,12 +303,12 @@ func UpdateOpsTask(c *gin.Context) {
 		err     error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.OpsServiceApp().UpdateOpsTask(taskReq); err != nil {
 		logger.Log().Error("ops", "创建/修改运维操作模板失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改运维操作任务信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改运维操作任务信息失败", err))
 		return
 	}
 
@@ -338,17 +338,17 @@ func GetOpsTask(c *gin.Context) {
 		err            error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户的项目IDs失败", err))
 		return
 	}
 	result, err := service.OpsServiceApp().GetOpsTask(taskReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作任务信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询运维操作任务信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询运维操作任务信息失败", err))
 		return
 	}
 	logger.Log().Info("ops", "查询运维操作任务信息成功")
@@ -374,12 +374,12 @@ func GetOpsTask(c *gin.Context) {
 func DeleteOpsTask(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.OpsServiceApp().DeleteOpsTask(param.Ids); err != nil {
 		logger.Log().Error("ops", "删除运维操作任务信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除运维操作任务信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除运维操作任务信息失败", err))
 		return
 	}
 
@@ -409,12 +409,12 @@ func RunOpsTaskCheckScript(c *gin.Context) {
 		result  *[]api.SSHResultRes
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if result, err = service.OpsServiceApp().RunOpsTaskCheckScript(taskReq); err != nil {
 		logger.Log().Error("ops", "执行单个运维任务失败", err)
-		c.JSON(500, util.ServerErrorResponse("执行单个运维任务失败", err))
+		c.JSON(200, util.ServerErrorResponse("执行单个运维任务失败", err))
 		return
 	}
 
@@ -444,14 +444,14 @@ func GetOpsTaskTmpCommands(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	res, err := service.OpsServiceApp().GetOpsTaskTmpCommands(params)
 	if err != nil {
 		logger.Log().Error("ops", "查看根据参数会生成的命令失败", err)
-		c.JSON(500, util.ServerErrorResponse("查看根据参数会生成的命令失败", err))
+		c.JSON(200, util.ServerErrorResponse("查看根据参数会生成的命令失败", err))
 		return
 	}
 
@@ -481,7 +481,7 @@ func SubmitOpsTask(c *gin.Context) {
 		err     error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	user, err := util.GetClaimsUser(c)
@@ -495,7 +495,7 @@ func SubmitOpsTask(c *gin.Context) {
 
 	if err = service.OpsServiceApp().SubmitOpsTask(taskReq, user.ID); err != nil {
 		logger.Log().Error("ops", "提交运维操作任务失败", err)
-		c.JSON(500, util.ServerErrorResponse("提交运维操作任务失败", err))
+		c.JSON(200, util.ServerErrorResponse("提交运维操作任务失败", err))
 		return
 	}
 
@@ -524,7 +524,7 @@ func ApproveOpsTask(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	user, err := util.GetClaimsUser(c)
@@ -538,7 +538,7 @@ func ApproveOpsTask(c *gin.Context) {
 
 	if err = service.OpsServiceApp().ApproveOpsTask(params, user.ID); err != nil {
 		logger.Log().Error("ops", "用户审批任务失败", err)
-		c.JSON(500, util.ServerErrorResponse("用户审批任务失败", err))
+		c.JSON(200, util.ServerErrorResponse("用户审批任务失败", err))
 		return
 	}
 
@@ -562,7 +562,7 @@ func ApproveOpsTask(c *gin.Context) {
 func GetOpsTaskNeedApprove(c *gin.Context) {
 	wsConn, user, _, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
-		c.JSON(500, util.ServerErrorResponse("WebSocket 连接升级失败", err))
+		c.JSON(200, util.ServerErrorResponse("WebSocket 连接升级失败", err))
 		return
 	}
 	logger.Log().Info("ops", "GetOpsTaskNeedApprove WebSocket 连接升级成功")
@@ -580,7 +580,7 @@ func GetOpsTaskNeedApprove(c *gin.Context) {
 
 	if err = service.OpsServiceApp().GetOpsTaskNeedApprove(wsConn, user.ID); err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, "任务审批查询失败")
-		logger.Log().Error("ops", "任务审批查询失败", err)
+		logger.Log().Warning("ops", "任务审批查询失败", err)
 		return
 	}
 
@@ -606,11 +606,11 @@ func GetUserTaskPending(c *gin.Context) {
 		err            error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户的项目IDs失败", err))
 		return
 	}
 	user, err := util.GetClaimsUser(c)
@@ -624,7 +624,7 @@ func GetUserTaskPending(c *gin.Context) {
 	res, err := service.OpsServiceApp().GetUserTaskPending(user.ID, bindProjectIds, taskReq)
 	if err != nil {
 		logger.Log().Error("ops", "查询待用户审批的任务失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询待用户审批的任务失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询待用户审批的任务失败", err))
 		return
 	}
 
@@ -655,17 +655,17 @@ func GetOpsTaskLog(c *gin.Context) {
 		err            error
 	)
 	if err = c.ShouldBind(&taskReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("获取用户的项目IDs失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取用户的项目IDs失败", err))
 		return
 	}
 	result, err := service.OpsServiceApp().GetOpsTaskLog(taskReq, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("ops", "查询运维操作任务日志失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询运维操作任务日志失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询运维操作任务日志失败", err))
 		return
 	}
 	logger.Log().Info("ops", "查询运维操作任务日志成功")
@@ -690,7 +690,7 @@ func GetOpsTaskLog(c *gin.Context) {
 func GetOpsTaskRunningWS(c *gin.Context) {
 	wsConn, _, roles, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
-		c.JSON(500, util.ServerErrorResponse("websocket连接升级失败", err))
+		c.JSON(200, util.ServerErrorResponse("websocket连接升级失败", err))
 		return
 	}
 	logger.Log().Info("ops", "GetOpsTaskRunningWS WebSocket 连接升级成功")
@@ -709,12 +709,12 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 	}
 	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("获取角色对应的项目ID失败: %s", err.Error()))
-		logger.Log().Error("ops", "获取角色对应的项目ID失败", err)
+		logger.Log().Warning("ops", "获取角色对应的项目ID失败", err)
 		return
 	}
 	if err = service.OpsServiceApp().GetOpsTaskRunningWS(wsConn, bindProjectIds); err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("实时同步执行中的任务状态失败: %s", err.Error()))
-		logger.Log().Error("ops", "实时同步执行中的任务状态失败", err)
+		logger.Log().Warning("ops", "实时同步执行中的任务状态失败", err)
 		return
 	}
 }

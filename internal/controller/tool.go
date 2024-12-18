@@ -32,7 +32,7 @@ func WebSSHConn(c *gin.Context) {
 		err    error
 	)
 	if err = global.IncreaseWebSSHConn(); err != nil {
-		c.JSON(500, util.ServerErrorResponse("已达到最大webSSH数量", err))
+		c.JSON(200, util.ServerErrorResponse("已达到最大webSSH数量", err))
 		return
 	}
 	defer func() {
@@ -40,7 +40,7 @@ func WebSSHConn(c *gin.Context) {
 	}()
 
 	if wsConn, user, _, err = util.UpgraderWebSocket(c, true); err != nil {
-		c.JSON(500, util.ServerErrorResponse("升级websocket失败", err))
+		c.JSON(200, util.ServerErrorResponse("升级websocket失败", err))
 		return
 	}
 	defer func() {
@@ -61,7 +61,7 @@ func WebSSHConn(c *gin.Context) {
 	wsRes, err := tool.Tool().WebSSHConn(wsConn, user, param)
 	if err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("连接Webssh失败: %s", err.Error()))
-		logger.Log().Error("tool", wsRes+"连接Webssh失败", err)
+		logger.Log().Warning("tool", wsRes+"连接Webssh失败", err)
 		return
 	}
 }

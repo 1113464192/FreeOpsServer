@@ -21,7 +21,7 @@ import (
 func CustomError(c *gin.Context) {
 	var param api.CustomErrorReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	logInfo := fmt.Sprintf("code: %s, msg: %s", param.Code, param.Msg)

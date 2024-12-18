@@ -29,12 +29,12 @@ func UpdateMenu(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.MenuServiceApp().UpdateMenu(&params); err != nil {
 		logger.Log().Error("menu", "创建/修改菜单失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改菜单失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改菜单失败", err))
 		return
 	}
 
@@ -60,13 +60,13 @@ func UpdateMenu(c *gin.Context) {
 func GetMenus(c *gin.Context) {
 	var param api.GetMenusReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.MenuServiceApp().GetMenus(&param)
 	if err != nil {
 		logger.Log().Error("menu", "查询菜单失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询菜单失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询菜单失败", err))
 		return
 	}
 
@@ -93,13 +93,13 @@ func GetMenus(c *gin.Context) {
 func DeleteMenu(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	err := service.MenuServiceApp().DeleteMenus(param.Ids)
 	if err != nil {
 		logger.Log().Error("menu", "查询菜单失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询菜单失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询菜单失败", err))
 		return
 	}
 
@@ -125,13 +125,13 @@ func DeleteMenu(c *gin.Context) {
 func GetMenuButtons(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Query("id"), 10, 0)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.MenuServiceApp().GetMenuButtons(uint(id))
 	if err != nil {
 		logger.Log().Error("menu", "获取菜单按钮失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取菜单按钮失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取菜单按钮失败", err))
 		return
 	}
 
@@ -158,7 +158,7 @@ func GetAllPages(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetAllPages()
 	if err != nil {
 		logger.Log().Error("menu", "获取所有页面失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取所有页面失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取所有页面失败", err))
 		return
 	}
 
@@ -184,7 +184,7 @@ func GetConstantRoutes(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetConstantRoutes()
 	if err != nil {
 		logger.Log().Error("menu", "获取所有页面失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取所有页面失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取所有页面失败", err))
 		return
 	}
 
@@ -219,7 +219,7 @@ func GetUserRoutes(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetUserRoutes(roles)
 	if err != nil {
 		logger.Log().Error("menu", "获取所有页面失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取所有页面失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取所有页面失败", err))
 		return
 	}
 
@@ -249,7 +249,7 @@ func GetMenuTree(c *gin.Context) {
 	res, err := service.MenuServiceApp().GetMenuTree()
 	if err != nil {
 		logger.Log().Error("menu", "获取菜单树失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取菜单树失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取菜单树失败", err))
 		return
 	}
 
@@ -278,7 +278,7 @@ func IsRouteExist(c *gin.Context) {
 	mBool, err := service.MenuServiceApp().IsRouteExist(routeName)
 	if err != nil {
 		logger.Log().Error("menu", "判断路由是否存在失败", err)
-		c.JSON(500, util.ServerErrorResponse("判断路由是否存在失败", err))
+		c.JSON(200, util.ServerErrorResponse("判断路由是否存在失败", err))
 		return
 	}
 

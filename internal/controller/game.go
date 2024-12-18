@@ -28,12 +28,12 @@ func UpdateGame(c *gin.Context) {
 		err     error
 	)
 	if err = c.ShouldBind(&gameReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.GameServiceApp().UpdateGame(&gameReq); err != nil {
 		logger.Log().Error("game", "创建/修改游戏服失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改游戏服失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改游戏服失败", err))
 		return
 	}
 	c.JSON(200, api.Response{
@@ -61,17 +61,17 @@ func GetGames(c *gin.Context) {
 	)
 	err := c.ShouldBind(&params)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("查询用户项目ID失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询用户项目ID失败", err))
 		return
 	}
 	res, err := service.GameServiceApp().GetGames(&params, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("game", "查询游戏服信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询游戏服信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询游戏服信息失败", err))
 		return
 	}
 
@@ -98,12 +98,12 @@ func GetGames(c *gin.Context) {
 func DeleteGames(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.GameServiceApp().DeleteGames(param.Ids); err != nil {
 		logger.Log().Error("game", "删除游戏服失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除游戏服失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除游戏服失败", err))
 		return
 	}
 
@@ -132,12 +132,12 @@ func UpdateGameStatus(c *gin.Context) {
 		err       error
 	)
 	if err = c.ShouldBind(&statusReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.GameServiceApp().UpdateGameStatus(&statusReq); err != nil {
 		logger.Log().Error("game", "修改游戏服状态失败", err)
-		c.JSON(500, util.ServerErrorResponse("修改游戏服状态失败", err))
+		c.JSON(200, util.ServerErrorResponse("修改游戏服状态失败", err))
 		return
 	}
 

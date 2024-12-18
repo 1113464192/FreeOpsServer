@@ -24,7 +24,7 @@ func GetHomeInfo(c *gin.Context) {
 	res, err := service.HomeServiceApp().GetHomeInfo()
 	if err != nil {
 		logger.Log().Error("home", "获取首页展示信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取首页展示信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取首页展示信息失败", err))
 		return
 	}
 

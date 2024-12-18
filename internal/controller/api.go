@@ -29,17 +29,17 @@ func UpdateApi(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	if strings.ToUpper(params.Method) != params.Method {
-		c.JSON(500, util.BindErrorResponse(fmt.Errorf("method必须大写,当前值: %s", params.Method)))
+		c.JSON(200, util.BindErrorResponse(fmt.Errorf("method必须大写,当前值: %s", params.Method)))
 	}
 
 	if err = service.ApiServiceApp().UpdateApi(&params); err != nil {
 		logger.Log().Error("api", "创建/修改Api失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改Api失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改Api失败", err))
 		return
 	}
 
@@ -65,13 +65,13 @@ func UpdateApi(c *gin.Context) {
 func GetApis(c *gin.Context) {
 	var params api.GetApiReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ApiServiceApp().GetApis(&params)
 	if err != nil {
 		logger.Log().Error("api", "创建/修改Api失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改Api失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改Api失败", err))
 		return
 	}
 
@@ -98,12 +98,12 @@ func GetApis(c *gin.Context) {
 func DeleteApi(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.ApiServiceApp().DeleteApi(params); err != nil {
 		logger.Log().Error("api", "删除Api失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除Api失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除Api失败", err))
 		return
 	}
 
@@ -129,7 +129,7 @@ func GetApiGroup(c *gin.Context) {
 	res, err := service.ApiServiceApp().GetApiGroup()
 	if err != nil {
 		logger.Log().Error("api", "查询Api组群失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询Api组群失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询Api组群失败", err))
 		return
 	}
 
@@ -156,7 +156,7 @@ func GetApiTree(c *gin.Context) {
 	res, err := service.ApiServiceApp().GetApiTree()
 	if err != nil {
 		logger.Log().Error("api", "获取API树失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取API树失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取API树失败", err))
 		return
 	}
 

@@ -28,13 +28,13 @@ func CreateCloudProject(c *gin.Context) {
 	)
 
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	if err = service.CloudServiceApp().CreateCloudProject(param.Name, param.CloudPlatform); err != nil {
 		logger.Log().Error("cloud", "创建云项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建云项目失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建云项目失败", err))
 		return
 	}
 
@@ -63,13 +63,13 @@ func CreateCloudHost(c *gin.Context) {
 	)
 
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	if err = service.CloudServiceApp().CreateCloudHost(param.ProjectId, param.CloudPlatform, param.HostCount); err != nil {
 		logger.Log().Error("cloud", "购买云服务器失败", err)
-		c.JSON(500, util.ServerErrorResponse("购买云服务器失败", err))
+		c.JSON(200, util.ServerErrorResponse("购买云服务器失败", err))
 		return
 	}
 
@@ -98,13 +98,13 @@ func UpdateCloudProject(c *gin.Context) {
 	)
 
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	if err = service.CloudServiceApp().UpdateCloudProject(param.Name, param.CloudPlatform); err != nil {
 		logger.Log().Error("cloud", "更新云项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("更新云项目失败", err))
+		c.JSON(200, util.ServerErrorResponse("更新云项目失败", err))
 		return
 	}
 
@@ -133,14 +133,14 @@ func GetCloudProjectId(c *gin.Context) {
 	)
 
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	cid, err := service.CloudServiceApp().GetCloudProjectId(param.Name, param.CloudPlatform, 0)
 	if err != nil {
 		logger.Log().Error("cloud", "获取云项目ID失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取云项目ID失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取云项目ID失败", err))
 		return
 	}
 	c.JSON(200, api.Response{

@@ -29,12 +29,12 @@ func UpdateHost(c *gin.Context) {
 		err     error
 	)
 	if err = c.ShouldBind(&hostReq); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.HostServiceApp().UpdateHost(&hostReq); err != nil {
 		logger.Log().Error("host", "创建/修改服务器失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改服务器失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改服务器失败", err))
 		return
 	}
 	c.JSON(200, api.Response{
@@ -62,17 +62,17 @@ func GetHosts(c *gin.Context) {
 	)
 	err := c.ShouldBind(&params)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if bindProjectIds, err = service.UserServiceApp().GetUserProjectIDs(c); err != nil {
-		c.JSON(500, util.ServerErrorResponse("查询用户项目ID失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询用户项目ID失败", err))
 		return
 	}
 	res, err := service.HostServiceApp().GetHosts(&params, bindProjectIds)
 	if err != nil {
 		logger.Log().Error("host", "查询服务器信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询服务器信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询服务器信息失败", err))
 		return
 	}
 
@@ -99,12 +99,12 @@ func GetHosts(c *gin.Context) {
 func DeleteHosts(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.HostServiceApp().DeleteHosts(param.Ids); err != nil {
 		logger.Log().Error("host", "删除服务器失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除服务器失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除服务器失败", err))
 		return
 	}
 
@@ -131,13 +131,13 @@ func GetHostList(c *gin.Context) {
 	pidStr := c.Query("id")
 	pid, err := strconv.ParseUint(pidStr, 10, 64)
 	if err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	var res []api.GetHostListRes
 	if res, err = service.HostServiceApp().GetHostList(uint(pid)); err != nil {
 		logger.Log().Error("host", "获取服务器列表失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取服务器列表失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取服务器列表失败", err))
 		return
 	}
 
@@ -167,13 +167,13 @@ func GetHostGameInfo(c *gin.Context) {
 		err error
 	)
 	if id, err = strconv.ParseUint(c.Query("id"), 10, 32); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.HostServiceApp().GetHostGameInfo(uint(id))
 	if err != nil {
 		logger.Log().Error("host", "获取服务器各资产总数失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取服务器各资产总数失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取服务器各资产总数失败", err))
 		return
 	}
 

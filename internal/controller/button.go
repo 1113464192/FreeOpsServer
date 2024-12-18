@@ -27,12 +27,12 @@ func UpdateButton(c *gin.Context) {
 	var params api.UpdateButtonsReq
 	var err error
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.ButtonServiceApp().UpdateButtons(&params); err != nil {
 		logger.Log().Error("button", "创建/修改按钮失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改按钮失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改按钮失败", err))
 		return
 	}
 
@@ -58,13 +58,13 @@ func UpdateButton(c *gin.Context) {
 func GetButtons(c *gin.Context) {
 	var params api.GetButtonsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.ButtonServiceApp().GetButtons(&params)
 	if err != nil {
 		logger.Log().Error("button", "查询按钮信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询按钮信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询按钮信息失败", err))
 		return
 	}
 
@@ -91,14 +91,14 @@ func GetButtons(c *gin.Context) {
 func DeleteMenuButtons(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	tx := model.DB.Begin()
 	if err := service.ButtonServiceApp().DeleteMenuButtons(param.Ids, tx); err != nil {
 		tx.Rollback()
 		logger.Log().Error("button", "删除按钮失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除按钮失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除按钮失败", err))
 		return
 	}
 	tx.Commit()

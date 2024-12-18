@@ -42,18 +42,18 @@ func (s *SSHConnect) WsSend(wsConn *websocket.Conn, quitCh chan struct{}) {
 			//write combine output bytes into websocket response
 			if err := flushCombOutput(s.CombineOutput, wsConn); err != nil {
 				if e := Tool().WebSSHSendErr(wsConn, "发送服务器返回信息到websocket失败: "+err.Error()); e != nil {
-					s.Logger.Error("tool", "发送错误信息至websocket失败", err)
+					s.Logger.Warning("tool", "发送错误信息至websocket失败", err)
 				}
-				s.Logger.Error("tool", "发送服务器返回信息到websocket失败", err)
+				s.Logger.Warning("tool", "发送服务器返回信息到websocket失败", err)
 				return
 			}
 			// 发送ping至websocket
 		case <-pingTick.C:
 			if err := wsConn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
 				if e := Tool().WebSSHSendErr(wsConn, "发送Ping至websocket失败: "+err.Error()); e != nil {
-					s.Logger.Error("tool", "发送错误信息至websocket失败", err)
+					s.Logger.Warning("tool", "发送错误信息至websocket失败", err)
 				}
-				s.Logger.Error("tool", "发送Ping至websocket失败", err)
+				s.Logger.Warning("tool", "发送Ping至websocket失败", err)
 				return
 			}
 
@@ -83,9 +83,9 @@ func (s *SSHConnect) WsRec(wsConn *websocket.Conn, quitCh chan struct{}) {
 			_, wsData, err := wsConn.ReadMessage()
 			if err != nil {
 				if e := Tool().WebSSHSendErr(wsConn, "接收websocket发送的信息失败: "+err.Error()); e != nil {
-					s.Logger.Error("tool", "发送错误信息至websocket失败", err)
+					s.Logger.Warning("tool", "发送错误信息至websocket失败", err)
 				}
-				s.Logger.Error("tool", "接收websocket发送的信息失败", err)
+				s.Logger.Warning("tool", "接收websocket发送的信息失败", err)
 				return
 			}
 
@@ -100,9 +100,9 @@ func (s *SSHConnect) WsRec(wsConn *websocket.Conn, quitCh chan struct{}) {
 				if resize.Height > 0 && resize.Width > 0 {
 					if err = s.Session.WindowChange(resize.Height, resize.Width); err != nil {
 						if e := Tool().WebSSHSendErr(wsConn, "变更WindowSize失败: "+err.Error()); e != nil {
-							s.Logger.Error("tool", "发送错误信息至websocket失败", err)
+							s.Logger.Warning("tool", "发送错误信息至websocket失败", err)
 						}
-						s.Logger.Error("tool", "变更WindowSize失败", err)
+						s.Logger.Warning("tool", "变更WindowSize失败", err)
 						break
 					}
 				} else {
@@ -114,9 +114,9 @@ func (s *SSHConnect) WsRec(wsConn *websocket.Conn, quitCh chan struct{}) {
 		SEND:
 			if _, err = s.StdinPipe.Write(wsData); err != nil {
 				if e := Tool().WebSSHSendErr(wsConn, "发送服务器信息到前端失败: "+err.Error()); e != nil {
-					s.Logger.Error("tool", "发送错误信息至websocket失败", err)
+					s.Logger.Warning("tool", "发送错误信息至websocket失败", err)
 				}
-				s.Logger.Error("tool", "发送服务器信息到前端失败", err)
+				s.Logger.Warning("tool", "发送服务器信息到前端失败", err)
 				break
 			}
 		}
@@ -127,7 +127,7 @@ func (s *SSHConnect) WsRec(wsConn *websocket.Conn, quitCh chan struct{}) {
 func (s *SSHConnect) SessionWait(quitChan chan struct{}) {
 	// 等待远程命令的执行完成。它会阻塞当前的 Go 协程，直到远程命令执行完毕或会话被关闭。
 	if err := s.Session.Wait(); err != nil {
-		s.Logger.Error("tool", "Session.Wait报错", err)
+		s.Logger.Warning("tool", "Session.Wait报错", err)
 		s.wsQuit(quitChan)
 	}
 }

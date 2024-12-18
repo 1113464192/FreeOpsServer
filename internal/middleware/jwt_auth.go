@@ -68,7 +68,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 				jwt := &model.JwtBlacklist{Jwt: parts[1]}
 				if err := service.JwtServiceApp().JwtAddBlacklist(jwt); err != nil {
 					logger.Log().Error("jwt", "jwt没有拉入黑名单", err)
-					c.JSON(500, util.ServerErrorResponse("用户登出失败,jwt没有成功拉入黑名单", err))
+					c.JSON(200, util.ServerErrorResponse("用户登出失败,jwt没有成功拉入黑名单", err))
 					c.Abort()
 					return
 				}

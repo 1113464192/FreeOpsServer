@@ -28,12 +28,12 @@ func UpdateRole(c *gin.Context) {
 		err    error
 	)
 	if err = c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.RoleServiceApp().UpdateRole(&params); err != nil {
 		logger.Log().Error("role", "创建/修改组失败", err)
-		c.JSON(500, util.ServerErrorResponse("创建/修改组失败", err))
+		c.JSON(200, util.ServerErrorResponse("创建/修改组失败", err))
 		return
 	}
 
@@ -59,13 +59,13 @@ func UpdateRole(c *gin.Context) {
 func GetRoles(c *gin.Context) {
 	var params api.GetRolesReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.RoleServiceApp().GetRoles(&params)
 	if err != nil {
 		logger.Log().Error("role", "查询角色信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询角色信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询角色信息失败", err))
 		return
 	}
 
@@ -92,7 +92,7 @@ func GetAllRolesSummary(c *gin.Context) {
 	roles, err := service.RoleServiceApp().GetAllRolesSummary()
 	if err != nil {
 		logger.Log().Error("role", "查询所有角色的简略信息失败", err)
-		c.JSON(500, util.ServerErrorResponse("查询所有角色的简略信息失败", err))
+		c.JSON(200, util.ServerErrorResponse("查询所有角色的简略信息失败", err))
 		return
 	}
 
@@ -119,12 +119,12 @@ func GetAllRolesSummary(c *gin.Context) {
 func DeleteRoles(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err := service.RoleServiceApp().DeleteRoles(param.Ids); err != nil {
 		logger.Log().Error("role", "删除角色失败", err)
-		c.JSON(500, util.ServerErrorResponse("删除角色失败", err))
+		c.JSON(200, util.ServerErrorResponse("删除角色失败", err))
 		return
 	}
 
@@ -151,12 +151,12 @@ func BindRoleRelation(c *gin.Context) {
 	var param api.BindRoleRelationReq
 	var err error
 	if err = c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	if err = service.RoleServiceApp().BindRoleRelation(param); err != nil {
 		logger.Log().Error("role", "绑定角色关系失败", err)
-		c.JSON(500, util.ServerErrorResponse("绑定角色关系失败", err))
+		c.JSON(200, util.ServerErrorResponse("绑定角色关系失败", err))
 		return
 	}
 
@@ -182,13 +182,13 @@ func BindRoleRelation(c *gin.Context) {
 func GetRoleMenus(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.RoleServiceApp().GetRoleMenus(params)
 	if err != nil {
 		logger.Log().Error("role", "获取角色菜单失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色菜单失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取角色菜单失败", err))
 		return
 	}
 
@@ -215,13 +215,13 @@ func GetRoleMenus(c *gin.Context) {
 func GetRoleApis(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.CasbinServiceApp().GetPolicyPathByGroupIds(param.Ids)
 	if err != nil {
 		logger.Log().Error("role", "获取角色API失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色API失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取角色API失败", err))
 		return
 	}
 
@@ -248,13 +248,13 @@ func GetRoleApis(c *gin.Context) {
 func GetRoleButtons(c *gin.Context) {
 	var params api.IdsReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.RoleServiceApp().GetRoleButtons(params)
 	if err != nil {
 		logger.Log().Error("role", "获取角色按钮失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色按钮失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取角色按钮失败", err))
 		return
 	}
 
@@ -281,13 +281,13 @@ func GetRoleButtons(c *gin.Context) {
 func GetRoleUsers(c *gin.Context) {
 	var params api.IdPageReq
 	if err := c.ShouldBind(&params); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 	res, err := service.RoleServiceApp().GetRoleUsers(params)
 	if err != nil {
 		logger.Log().Error("role", "获取角色用户失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色用户失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取角色用户失败", err))
 		return
 	}
 
@@ -314,14 +314,14 @@ func GetRoleUsers(c *gin.Context) {
 func GetRoleProjects(c *gin.Context) {
 	var param api.IdsReq
 	if err := c.ShouldBind(&param); err != nil {
-		c.JSON(500, util.BindErrorResponse(err))
+		c.JSON(200, util.BindErrorResponse(err))
 		return
 	}
 
 	res, err := service.RoleServiceApp().GetRoleProjects(param.Ids)
 	if err != nil {
 		logger.Log().Error("role", "获取角色项目失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色项目失败", err))
+		c.JSON(200, util.ServerErrorResponse("获取角色项目失败", err))
 		return
 	}
 
