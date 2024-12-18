@@ -56,7 +56,7 @@ func SSHNewConnect(client *ssh.Client, session *ssh.Session, windowSize api.Wind
 	}
 	// 伪终端屏幕高、宽大小(单位为字符)
 	// 基本的操作是所有终端类型都支持的。不同的终端类型可能会支持不同的特性，比如颜色、鼠标事件、窗口大小改变事件等。然而，许多基本的终端操作，比如输入和输出文本，是所有终端类型都支持的。
-	if err = session.RequestPty(consts.WebSSHXTerminal, windowSize.Height, windowSize.Weight, modes); err != nil {
+	if err = session.RequestPty(consts.WebSSHXTerminal, windowSize.Height, windowSize.Width, modes); err != nil {
 		return nil, fmt.Errorf("生成Session.RequestPty失败: %v", err)
 	}
 

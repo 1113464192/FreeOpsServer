@@ -4,6 +4,7 @@ import (
 	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/internal/service"
+	"FreeOps/internal/service/tool"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
@@ -573,11 +574,12 @@ func GetOpsTaskNeedApprove(c *gin.Context) {
 	}()
 
 	if wsConn == nil || user == nil {
-		c.JSON(500, util.ServerErrorResponse("WebSocket 连接或用户信息为空", nil))
+		tool.Tool().WebSSHSendErr(wsConn, "WebSocket 连接或用户信息为空")
 		return
 	}
 
 	if err = service.OpsServiceApp().GetOpsTaskNeedApprove(wsConn, user.ID); err != nil {
+		tool.Tool().WebSSHSendErr(wsConn, "任务审批查询失败")
 		logger.Log().Error("ops", "任务审批查询失败", err)
 		return
 	}
@@ -706,11 +708,12 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 		roleIds = append(roleIds, role.ID)
 	}
 	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
+		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("获取角色对应的项目ID失败: %s", err.Error()))
 		logger.Log().Error("ops", "获取角色对应的项目ID失败", err)
-		c.JSON(500, util.ServerErrorResponse("获取角色对应的项目ID失败: %v", err))
 		return
 	}
 	if err = service.OpsServiceApp().GetOpsTaskRunningWS(wsConn, bindProjectIds); err != nil {
+		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("实时同步执行中的任务状态失败: %s", err.Error()))
 		logger.Log().Error("ops", "实时同步执行中的任务状态失败", err)
 		return
 	}

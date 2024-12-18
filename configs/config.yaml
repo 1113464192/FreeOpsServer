@@ -34,7 +34,7 @@ webSSH:
   handshakeTimeout: 1m
   # 回显是否开启，1为开启，0为关闭
   # 是否在终端上显示输入。设置为0表示不显示输入，这在输入密码等敏感信息时很有用
-  sshEcho: 1
+  sshEcho: 0
   # 设置终端输入输出速度，视带宽而定(单位为byte)
   sshTtyOpISpeed: 14400
   sshTtyOpOSpeed: 14400

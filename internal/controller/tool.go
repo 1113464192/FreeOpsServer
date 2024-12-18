@@ -8,6 +8,7 @@ import (
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -48,18 +49,18 @@ func WebSSHConn(c *gin.Context) {
 	}()
 	_, message, err := wsConn.ReadMessage()
 	if err != nil {
-		c.JSON(500, util.ServerErrorResponse("读取websocket消息失败", err))
+		tool.Tool().WebSSHSendErr(wsConn, "读取websocket消息失败")
 		return
 	}
 
 	if err = json.Unmarshal(message, &param); err != nil {
-		c.JSON(500, util.ServerErrorResponse("解析参数失败", err))
+		tool.Tool().WebSSHSendErr(wsConn, "解析参数失败")
 		return
 	}
 
 	wsRes, err := tool.Tool().WebSSHConn(wsConn, user, param)
 	if err != nil {
-		c.JSON(500, util.ServerErrorResponse(wsRes+"连接Webssh失败", err))
+		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("连接Webssh失败: %s", err.Error()))
 		logger.Log().Error("tool", wsRes+"连接Webssh失败", err)
 		return
 	}

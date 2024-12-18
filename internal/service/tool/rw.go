@@ -97,8 +97,8 @@ func (s *SSHConnect) WsRec(wsConn *websocket.Conn, quitCh chan struct{}) {
 				if err != nil {
 					goto SEND
 				}
-				if resize.Height > 0 && resize.Weight > 0 {
-					if err = s.Session.WindowChange(resize.Height, resize.Weight); err != nil {
+				if resize.Height > 0 && resize.Width > 0 {
+					if err = s.Session.WindowChange(resize.Height, resize.Width); err != nil {
 						if e := Tool().WebSSHSendErr(wsConn, "变更WindowSize失败: "+err.Error()); e != nil {
 							s.Logger.Error("tool", "发送错误信息至websocket失败", err)
 						}

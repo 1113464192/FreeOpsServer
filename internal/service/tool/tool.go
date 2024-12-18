@@ -61,15 +61,12 @@ func (s *ToolService) WebSSHConn(wsConn *websocket.Conn, user *model.User, param
 	}
 	sshParam := &api.SSHRunReq{
 		SSHPort:    host.SSHPort,
+		HostIp:     host.Ipv4,
 		Username:   global.Conf.SshConfig.OpsSSHUsername,
 		Key:        global.OpsSSHKey,
 		Passphrase: nil,
 	}
-	if param.IsIntranet {
-		sshParam.HostIp = host.Vip
-	} else {
-		sshParam.HostIp = host.Ipv4
-	}
+
 	if global.Conf.SshConfig.OpsKeyPassphrase != "" {
 		sshParam.Passphrase = []byte(global.Conf.SshConfig.OpsKeyPassphrase)
 	}

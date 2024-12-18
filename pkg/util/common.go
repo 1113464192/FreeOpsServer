@@ -324,8 +324,8 @@ func UpgraderWebSocket(c *gin.Context, isAuth bool) (*websocket.Conn, *model.Use
 		}
 
 		conn.WriteMessage(websocket.TextMessage, []byte(`{"type": "auth_result", "success": true}`))
+		logger.Log().Info("common", "websocket auth认证通过")
 		return conn, user, roles, err
 	}
-	logger.Log().Info("common", "websocket auth认证通过")
 	return conn, nil, nil, err
 }
