@@ -182,6 +182,7 @@ func IsSelf(c *gin.Context, userId uint) (bool, error) {
 	return user.ID == userId, nil
 }
 
+// websocket不可用该函数
 func IsSelfAdmin(c *gin.Context) (bool, error) {
 	getAdmin, isExist := c.Get("isAdmin")
 	if !isExist {

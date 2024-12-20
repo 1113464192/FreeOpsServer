@@ -217,7 +217,8 @@ INSERT INTO `api` VALUES
 (81,'2024-12-12 15:13:25.000','2024-12-12 15:13:25.000',NULL,'/api/games','POST','games','新增/修改游戏'),
 (82,'2024-12-12 15:13:52.000','2024-12-12 15:13:52.000',NULL,'/api/games','GET','games','查询游戏'),
 (83,'2024-12-12 15:14:03.000','2024-12-12 15:14:03.000',NULL,'/api/games','DELETE','games','删除游戏'),
-(84,'2024-12-12 15:14:27.000','2024-12-12 15:14:27.000',NULL,'/api/games/status','PATCH','games','更新游戏状态');
+(84,'2024-12-12 15:14:27.000','2024-12-12 15:14:27.000',NULL,'/api/games/status','PATCH','games','更新游戏状态'),
+(85,'2024-12-20 10:32:51.000','2024-12-20 10:32:51.000',NULL,'/api/tools/webSSH','GET','tools','webSSH连接Linux');
 /*!40000 ALTER TABLE `api` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -251,4 +252,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-12-18  6:53:21
+-- Dump completed on 2024-12-20  6:56:13

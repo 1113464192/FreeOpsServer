@@ -162,6 +162,7 @@ type GetOpsTaskLogRes struct {
 	ProjectId           uint                   `json:"projectId"`
 	Submitter           uint                   `json:"submitter"`
 	SubmitterName       string                 `json:"submitterName"`
+	ExecTime            string                 `json:"execTime"`
 }
 
 type GetOpsTaskLogsRes struct {

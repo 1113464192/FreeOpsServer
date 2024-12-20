@@ -709,17 +709,25 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 		sub            string
 		e              *casbin.SyncedEnforcer
 		// 记录casbin权限审核成功次数
+		isAdmin bool
 		success int
 	)
 	for _, role := range *roles {
-		sub = strconv.FormatUint(uint64(role.ID), 10)
-		e = service.CasbinServiceApp().Casbin()
-		if s, _ := e.Enforce(sub, obj, act); s {
-			success++
+		if role.RoleCode == consts.RoleModelAdminCode {
+			isAdmin = true
+		}
+	}
+	for _, role := range *roles {
+		if !isAdmin {
+			sub = strconv.FormatUint(uint64(role.ID), 10)
+			e = service.CasbinServiceApp().Casbin()
+			if s, _ := e.Enforce(sub, obj, act); s {
+				success++
+			}
 		}
 		roleIds = append(roleIds, role.ID)
 	}
-	if success == 0 {
+	if !isAdmin && success == 0 {
 		tool.Tool().WebSSHSendErr(wsConn, "无权限")
 		return
 	}

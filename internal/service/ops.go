@@ -805,9 +805,17 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		taskLog        model.OpsTaskLog
 		stepStatusList []api.OpsTaskLogStepStatus
 		commands       []string
+		execTime       time.Time
 	)
 	if len(params.TemplateIds) < 1 {
 		return errors.New("模板ID不能为空")
+	}
+	// 检查execTime是否小于当前时间
+	if params.ExecTime != 0 {
+		execTime = time.UnixMilli(params.ExecTime)
+		if execTime.Before(time.Now()) {
+			return errors.New("execTime不能小于当前时间")
+		}
 	}
 	if err = model.DB.Model(&model.OpsTask{}).Where("id = ?", params.TaskId).First(&task).Error; err != nil {
 		return fmt.Errorf("查询task失败，taskID: %d, err: %v", params.TaskId, err)
@@ -884,9 +892,6 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 	}
 	taskLog.StepStatus = string(stepStatusByte)
 	if params.ExecTime != 0 {
-		var execTime time.Time
-		// 时间戳转换为时间
-		execTime = time.Unix(params.ExecTime, 0)
 		taskLog.ExecTime = &execTime
 	}
 	if err = model.DB.Create(&taskLog).Error; err != nil {
@@ -1100,18 +1105,22 @@ func (s *OpsService) runOpsTaskCommands(taskLog *model.OpsTaskLog) (err error) {
 	if sshReqs, err = s.generateSSHCmd(&host, commands, task.IsIntranet); err != nil {
 		return fmt.Errorf("生成SSH命令失败: %v", err)
 	}
-
-	if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("start_time", time.Now()).Error; err != nil {
-		return fmt.Errorf("更新taskLog的startTime失败: %v", err)
-	}
-
 	go func() {
 		// 如果有指定执行时间，等待到指定时间再执行
 		if taskLog.ExecTime != nil {
 			execTime := *taskLog.ExecTime
 			if !execTime.IsZero() {
+				if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("status", consts.OpsTaskStatusIsWaiting).Error; err != nil {
+					logger.Log().Error("ops", "runOpsTaskCommands等待执行时间的任务更新taskLog的status为wait失败", err)
+				}
 				time.Sleep(time.Until(execTime))
+				if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("status", consts.OpsTaskStatusIsRunning).Error; err != nil {
+					logger.Log().Error("ops", "runOpsTaskCommands等待执行时间的任务更新taskLog的status为running失败", err)
+				}
 			}
+		}
+		if err = model.DB.Model(&model.OpsTaskLog{}).Where("id = ?", taskLog.ID).Update("start_time", time.Now()).Error; err != nil {
+			logger.Log().Error("ops", "runOpsTaskCommands更新taskLog的start_time失败", err)
 		}
 		// 按照属性决定并发执行还是串行执行
 		if task.IsConcurrent {
@@ -1131,10 +1140,10 @@ func checkExecTime(taskLog *model.OpsTaskLog) error {
 			if err := json.Unmarshal([]byte(taskLog.StepStatus), &stepStatusList); err != nil {
 				return fmt.Errorf("查询任务日志中的StepStatus失败: %v", err)
 			}
-			taskLog.Status = consts.OpsTaskStatusIsRejected
+			taskLog.Status = consts.OpsTaskStatusIsFailed
 			if len(stepStatusList) > 0 {
 				stepStatusList[0].Response = "execTime已超时"
-				stepStatusList[0].Status = consts.OpsTaskStatusIsRejected
+				stepStatusList[0].Status = consts.OpsTaskStatusIsFailed
 				stepStatusByte, err := json.Marshal(stepStatusList)
 				if err != nil {
 					return fmt.Errorf("转换 StepStatus 失败: %v", err)
@@ -1400,6 +1409,9 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 			if taskLog.EndTime != nil {
 				res.EndTime = taskLog.EndTime.Format("2006-01-02 15:04:05")
 			}
+			if taskLog.ExecTime != nil {
+				res.ExecTime = taskLog.ExecTime.Format("2006-01-02 15:04:05")
+			}
 			if err = json.Unmarshal([]byte(taskLog.Auditors), &res.Auditors); err != nil {
 				return nil, fmt.Errorf("taskLog中的Auditors 不符合 json 格式: %v", err)
 			}
@@ -1444,6 +1456,9 @@ func (s *OpsService) getOpsTaskLogResult(opsObj any, isDetail bool) (*[]api.GetO
 		}
 		if taskLog.EndTime != nil {
 			res.EndTime = taskLog.EndTime.Format("2006-01-02 15:04:05")
+		}
+		if taskLog.ExecTime != nil {
+			res.ExecTime = taskLog.ExecTime.Format("2006-01-02 15:04:05")
 		}
 		if err = model.DB.Model(&model.Project{}).Where("id = ?", taskLog.ProjectId).Pluck("name", &res.ProjectName).Error; err != nil {
 			return nil, fmt.Errorf("查询项目名称失败: %v", err)

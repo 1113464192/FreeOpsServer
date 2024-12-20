@@ -6,7 +6,6 @@ import (
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"golang.org/x/crypto/ssh"
@@ -37,12 +36,8 @@ func (s *ToolService) WebSSHSendErr(wsConn *websocket.Conn, msg string) error {
 	errMsg := map[string]string{
 		"wsError": msg,
 	}
-	errMsgBytes, err := json.Marshal(errMsg)
-	if err != nil {
-		return err
-	}
 
-	if err = wsConn.WriteJSON(errMsgBytes); err != nil {
+	if err := wsConn.WriteJSON(errMsg); err != nil {
 		return err
 	}
 	return nil

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"FreeOps/global"
+	"FreeOps/internal/consts"
 	"FreeOps/internal/model"
 	"FreeOps/internal/service"
 	"FreeOps/internal/service/tool"
@@ -58,26 +59,37 @@ func WebSSHConn(c *gin.Context) {
 		e   *casbin.SyncedEnforcer
 		// 记录casbin权限审核成功次数
 		success int
+		isAdmin bool
 	)
+	// 判断是否管理员操作
 	for _, role := range *roles {
-		sub = strconv.FormatUint(uint64(role.ID), 10)
-		e = service.CasbinServiceApp().Casbin()
-		if s, _ := e.Enforce(sub, obj, act); s {
-			success++
+		if role.RoleCode == consts.RoleModelAdminCode {
+			isAdmin = true
 		}
 	}
-	if success == 0 {
-		tool.Tool().WebSSHSendErr(wsConn, "无权限")
-		return
+	if !isAdmin {
+		for _, role := range *roles {
+			sub = strconv.FormatUint(uint64(role.ID), 10)
+			e = service.CasbinServiceApp().Casbin()
+			if s, _ := e.Enforce(sub, obj, act); s {
+				success++
+			}
+		}
+		if success == 0 {
+			tool.Tool().WebSSHSendErr(wsConn, "无权限")
+			return
+		}
 	}
 	_, message, err := wsConn.ReadMessage()
 	if err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, "读取websocket消息失败")
+		logger.Log().Warning("tool", "读取websocket消息失败", err)
 		return
 	}
 
 	if err = json.Unmarshal(message, &param); err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, "解析参数失败")
+		logger.Log().Error("tool", "解析参数失败", err)
 		return
 	}
 

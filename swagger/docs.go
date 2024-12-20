@@ -3901,29 +3901,6 @@ const docTemplate = `{
                     "工具相关"
                 ],
                 "summary": "webSSH连接Linux",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "单位为字符",
-                        "name": "height",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "服务器id",
-                        "name": "hid",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "单位为字符",
-                        "name": "weight",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "{\"data\":{},\"meta\":{msg\":\"Success\"}}",
@@ -4783,6 +4760,10 @@ const docTemplate = `{
                 "execContent": {
                     "description": "运营的执行内容文案，从中根据Params提取参数放入各个模板中执行",
                     "type": "string"
+                },
+                "execTime": {
+                    "description": "指定执行时间(不选默认审批完或者没有审批人就立即执行)",
+                    "type": "integer"
                 },
                 "submitter": {
                     "description": "提交者",
