@@ -118,6 +118,7 @@ type SubmitOpsTaskReq struct {
 	TemplateIds   []uint `form:"templateIds" json:"templateIds" binding:"required"` // 模板是可勾选的，因此不一定完全执行taskId的所有模板，所以需要单独传。按顺序如:1,2,3
 	Auditors      []uint `form:"auditors" json:"auditors"`
 	Submitter     uint   `form:"submitter" json:"submitter" binding:"required"` // 提交者
+	ExecTime      int64  `json:"execTime"`                                      // 指定执行时间(不选默认审批完或者没有审批人就立即执行)
 }
 
 type ApproveOpsTaskReq struct {

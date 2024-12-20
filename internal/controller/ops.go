@@ -9,6 +9,7 @@ import (
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
 	"fmt"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"strconv"
@@ -579,7 +580,7 @@ func GetOpsTaskNeedApprove(c *gin.Context) {
 	}
 
 	if err = service.OpsServiceApp().GetOpsTaskNeedApprove(wsConn, user.ID); err != nil {
-		tool.Tool().WebSSHSendErr(wsConn, "任务审批查询失败")
+		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("任务审批查询失败: %s", err.Error()))
 		logger.Log().Warning("ops", "任务审批查询失败", err)
 		return
 	}
@@ -688,6 +689,8 @@ func GetOpsTaskLog(c *gin.Context) {
 // @Failure 500 {object} api.Response "{"data":{}, "meta":{"msg":"错误信息", "error":"错误格式输出(如存在)"}}"
 // @Router /api/ops/task-running-ws [get]
 func GetOpsTaskRunningWS(c *gin.Context) {
+	obj := c.Request.URL.RequestURI()
+	act := c.Request.Method
 	wsConn, _, roles, err := util.UpgraderWebSocket(c, true)
 	if err != nil {
 		c.JSON(200, util.ServerErrorResponse("websocket连接升级失败", err))
@@ -703,9 +706,22 @@ func GetOpsTaskRunningWS(c *gin.Context) {
 	var (
 		roleIds        []uint
 		bindProjectIds []uint
+		sub            string
+		e              *casbin.SyncedEnforcer
+		// 记录casbin权限审核成功次数
+		success int
 	)
 	for _, role := range *roles {
+		sub = strconv.FormatUint(uint64(role.ID), 10)
+		e = service.CasbinServiceApp().Casbin()
+		if s, _ := e.Enforce(sub, obj, act); s {
+			success++
+		}
 		roleIds = append(roleIds, role.ID)
+	}
+	if success == 0 {
+		tool.Tool().WebSSHSendErr(wsConn, "无权限")
+		return
 	}
 	if bindProjectIds, err = service.RoleServiceApp().GetRoleProjects(roleIds); err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, fmt.Sprintf("获取角色对应的项目ID失败: %s", err.Error()))

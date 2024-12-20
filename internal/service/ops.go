@@ -883,6 +883,12 @@ func (s *OpsService) SubmitOpsTask(params api.SubmitOpsTaskReq, submitter uint) 
 		return fmt.Errorf("stepStatus转换json失败: %v", err)
 	}
 	taskLog.StepStatus = string(stepStatusByte)
+	if params.ExecTime != 0 {
+		var execTime time.Time
+		// 时间戳转换为时间
+		execTime = time.Unix(params.ExecTime, 0)
+		taskLog.ExecTime = &execTime
+	}
 	if err = model.DB.Create(&taskLog).Error; err != nil {
 		return fmt.Errorf("创建运维操作任务日志失败: %v", err)
 	}
@@ -1099,8 +1105,15 @@ func (s *OpsService) runOpsTaskCommands(taskLog *model.OpsTaskLog) (err error) {
 		return fmt.Errorf("更新taskLog的startTime失败: %v", err)
 	}
 
-	// 按照属性决定并发执行还是串行执行
 	go func() {
+		// 如果有指定执行时间，等待到指定时间再执行
+		if taskLog.ExecTime != nil {
+			execTime := *taskLog.ExecTime
+			if !execTime.IsZero() {
+				time.Sleep(time.Until(execTime))
+			}
+		}
+		// 按照属性决定并发执行还是串行执行
 		if task.IsConcurrent {
 			s.RunOpsTaskConcurrent(sshReqs, taskLog)
 		} else {
@@ -1108,6 +1121,33 @@ func (s *OpsService) runOpsTaskCommands(taskLog *model.OpsTaskLog) (err error) {
 		}
 	}()
 	return err
+}
+
+func checkExecTime(taskLog *model.OpsTaskLog) error {
+	if taskLog.ExecTime != nil {
+		execTime := *taskLog.ExecTime
+		if !execTime.IsZero() && time.Now().After(execTime) {
+			var stepStatusList []api.OpsTaskLogStepStatus
+			if err := json.Unmarshal([]byte(taskLog.StepStatus), &stepStatusList); err != nil {
+				return fmt.Errorf("查询任务日志中的StepStatus失败: %v", err)
+			}
+			taskLog.Status = consts.OpsTaskStatusIsRejected
+			if len(stepStatusList) > 0 {
+				stepStatusList[0].Response = "execTime已超时"
+				stepStatusList[0].Status = consts.OpsTaskStatusIsRejected
+				stepStatusByte, err := json.Marshal(stepStatusList)
+				if err != nil {
+					return fmt.Errorf("转换 StepStatus 失败: %v", err)
+				}
+				taskLog.StepStatus = string(stepStatusByte)
+				if err = model.DB.Save(taskLog).Error; err != nil {
+					return fmt.Errorf("保存 taskLog 失败: %v", err)
+				}
+			}
+			return fmt.Errorf("execTime已超时")
+		}
+	}
+	return nil
 }
 
 func (s *OpsService) ApproveOpsTask(params api.ApproveOpsTaskReq, uid uint) (err error) {
@@ -1155,6 +1195,10 @@ func (s *OpsService) ApproveOpsTask(params api.ApproveOpsTaskReq, uid uint) (err
 	}
 	tx.Commit()
 	if taskLog.Status == consts.OpsTaskStatusIsRunning {
+		// 判断taskLog的执行时间是否已经过了，过了的话返回错误
+		if err = checkExecTime(&taskLog); err != nil {
+			return err
+		}
 		if err = s.runOpsTaskCommands(&taskLog); err != nil {
 			return fmt.Errorf("最后一人审批完毕，但是启动执行task命令失败: %v", err)
 		}

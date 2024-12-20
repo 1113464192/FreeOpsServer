@@ -70,11 +70,11 @@ func (s *CasbinService) UpdateCasbinApi(oldPath string, newPath string, oldMetho
 
 // @function: GetPolicyPathByGroupIds
 // @description: 获取权限列表
-// @param: groupId string
-// @return: res []uint
+// @param: roleIds []uint
+// @return: res []uint, err error
 func (s *CasbinService) GetPolicyPathByGroupIds(roleIds []uint) (res []uint, err error) {
 	e := s.Casbin()
-	var paths []string
+	var policies [][]string
 
 	for _, roleId := range roleIds {
 		// 0是从0开始，全部检索
@@ -82,19 +82,22 @@ func (s *CasbinService) GetPolicyPathByGroupIds(roleIds []uint) (res []uint, err
 		if err != nil {
 			return nil, err
 		}
-		for _, v := range list {
-			paths = append(paths, v[1])
-		}
+		policies = append(policies, list...)
 	}
 
-	var apis []model.Api
+	apiIdMap := make(map[uint]struct{})
 	// 去重并取出
-	if err := model.DB.Select("DISTINCT id").Where("path IN (?)", paths).Find(&apis).Error; err != nil {
-		return nil, err
+	for _, policy := range policies {
+		var api model.Api
+		if err = model.DB.Where("path = ? AND method = ?", policy[1], policy[2]).Select("id").First(&api).Error; err != nil {
+			return nil, err
+		}
+		apiIdMap[api.ID] = struct{}{}
 	}
 
-	for _, v := range apis {
-		res = append(res, v.ID)
+	// 去重
+	for apiId := range apiIdMap {
+		res = append(res, apiId)
 	}
 
 	return res, nil

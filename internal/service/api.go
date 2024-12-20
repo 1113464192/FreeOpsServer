@@ -97,9 +97,9 @@ func (s *ApiService) getApiResTree(apis []model.Api, apiGroup string) (apiMap ma
 	vid := -1
 	for _, value := range *apiGroups {
 		apiMap[vid] = api.ApiRes{
-			ID:          vid,
-			Path:        fmt.Sprintf("/api/%s", value),
-			Method:      "GET",
+			ID:   vid,
+			Path: fmt.Sprintf("/api/%s", value),
+			//Method:      "GET",
 			ApiGroup:    value,
 			Description: "模拟生成的父目录,无实际数据",
 			Children:    &[]api.ApiRes{},

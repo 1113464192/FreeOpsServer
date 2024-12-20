@@ -3,14 +3,17 @@ package controller
 import (
 	"FreeOps/global"
 	"FreeOps/internal/model"
+	"FreeOps/internal/service"
 	"FreeOps/internal/service/tool"
 	"FreeOps/pkg/api"
 	"FreeOps/pkg/logger"
 	"FreeOps/pkg/util"
 	"encoding/json"
 	"fmt"
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"strconv"
 )
 
 // WebSSHConn
@@ -29,8 +32,11 @@ func WebSSHConn(c *gin.Context) {
 		param  api.WebSSHConnReq
 		wsConn *websocket.Conn
 		user   *model.User
+		roles  *[]model.Role
 		err    error
 	)
+	obj := c.Request.URL.RequestURI()
+	act := c.Request.Method
 	if err = global.IncreaseWebSSHConn(); err != nil {
 		c.JSON(200, util.ServerErrorResponse("已达到最大webSSH数量", err))
 		return
@@ -39,7 +45,7 @@ func WebSSHConn(c *gin.Context) {
 		global.ReduceWebSSHConn()
 	}()
 
-	if wsConn, user, _, err = util.UpgraderWebSocket(c, true); err != nil {
+	if wsConn, user, roles, err = util.UpgraderWebSocket(c, true); err != nil {
 		c.JSON(200, util.ServerErrorResponse("升级websocket失败", err))
 		return
 	}
@@ -47,6 +53,23 @@ func WebSSHConn(c *gin.Context) {
 		wsConn.WriteMessage(websocket.CloseMessage, []byte("websocket连接关闭"))
 		wsConn.Close()
 	}()
+	var (
+		sub string
+		e   *casbin.SyncedEnforcer
+		// 记录casbin权限审核成功次数
+		success int
+	)
+	for _, role := range *roles {
+		sub = strconv.FormatUint(uint64(role.ID), 10)
+		e = service.CasbinServiceApp().Casbin()
+		if s, _ := e.Enforce(sub, obj, act); s {
+			success++
+		}
+	}
+	if success == 0 {
+		tool.Tool().WebSSHSendErr(wsConn, "无权限")
+		return
+	}
 	_, message, err := wsConn.ReadMessage()
 	if err != nil {
 		tool.Tool().WebSSHSendErr(wsConn, "读取websocket消息失败")

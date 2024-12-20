@@ -22,4 +22,6 @@ type OpsTaskLog struct {
 	TaskId          uint       `json:"taskId" gorm:"comment: 任务ID"`
 	ProjectId       uint       `json:"projectId" gorm:"comment: 项目ID;index"`
 	Submitter       uint       `json:"submitter" gorm:"comment: 提交的用户"`
+	// 指定执行任务的时间(为空则默认审批完或者没有审批人就立即执行)
+	ExecTime *time.Time `json:"execTime" gorm:"comment: 指定执行任务的时间"`
 }

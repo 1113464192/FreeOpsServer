@@ -28,7 +28,7 @@ func NewRoute() *gin.Engine {
 		authRoute.GET("error", CustomError)
 		authRoute.GET("constant-routes", GetConstantRoutes) // 获取所有常量路由
 	}
-	// --------不走头信息权限验证的功能接口----------
+	// --------不走头信息验证的功能接口----------
 	//websocket
 	nonAuthOpsRoute := apiRoute.Group("ops")
 	{
